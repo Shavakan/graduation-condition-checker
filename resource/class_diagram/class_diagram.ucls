@@ -3,7 +3,7 @@
   realizations="true" associations="true" dependencies="true" nesting-relationships="true">  
   <class id="1" language="java" name="org.sparcs.gnu.catalog.Catalog" project="GCC" 
     file="/GCC/src/org/sparcs/gnu/catalog/Catalog.java" binary="false" corner="BOTTOM_RIGHT">    
-    <position height="-1" width="-1" x="606" y="373"/>    
+    <position height="99" width="157" x="651" y="194"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="true" signature="true" accessors="true" 
       visibility="true">      
       <attributes public="true" package="true" protected="true" private="true" static="true"/>      
@@ -12,7 +12,7 @@
   </class>  
   <class id="2" language="java" name="org.sparcs.gnu.catalog.Exception" project="GCC" 
     file="/GCC/src/org/sparcs/gnu/catalog/Exception.java" binary="false" corner="BOTTOM_RIGHT">    
-    <position height="-1" width="-1" x="725" y="503"/>    
+    <position height="81" width="105" x="506" y="333"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="true" signature="true" accessors="true" 
       visibility="true">      
       <attributes public="true" package="true" protected="true" private="true" static="true"/>      
@@ -21,7 +21,7 @@
   </class>  
   <class id="3" language="java" name="org.sparcs.gnu.catalog.Replace" project="GCC" 
     file="/GCC/src/org/sparcs/gnu/catalog/Replace.java" binary="false" corner="BOTTOM_RIGHT">    
-    <position height="-1" width="-1" x="435" y="503"/>    
+    <position height="81" width="105" x="796" y="333"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="true" signature="true" accessors="true" 
       visibility="true">      
       <attributes public="true" package="true" protected="true" private="true" static="true"/>      
@@ -30,7 +30,7 @@
   </class>  
   <class id="4" language="java" name="org.sparcs.gnu.catalog.Rule" project="GCC" 
     file="/GCC/src/org/sparcs/gnu/catalog/Rule.java" binary="false" corner="BOTTOM_RIGHT">    
-    <position height="-1" width="-1" x="580" y="503"/>    
+    <position height="81" width="105" x="651" y="333"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="true" signature="true" accessors="true" 
       visibility="true">      
       <attributes public="true" package="true" protected="true" private="true" static="true"/>      
@@ -39,7 +39,7 @@
   </class>  
   <class id="5" language="java" name="org.sparcs.gnu.checker.GraduationChecker" project="GCC" 
     file="/GCC/src/org/sparcs/gnu/checker/GraduationChecker.java" binary="false" corner="BOTTOM_RIGHT">    
-    <position height="-1" width="-1" x="396" y="216"/>    
+    <position height="99" width="183" x="1049" y="37"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="true" signature="true" accessors="true" 
       visibility="true">      
       <attributes public="true" package="true" protected="true" private="true" static="true"/>      
@@ -48,7 +48,7 @@
   </class>  
   <class id="6" language="java" name="org.sparcs.gnu.checker.ProcessInfo" project="GCC" 
     file="/GCC/src/org/sparcs/gnu/checker/ProcessInfo.java" binary="false" corner="BOTTOM_RIGHT">    
-    <position height="-1" width="-1" x="434" y="364"/>    
+    <position height="81" width="108" x="901" y="194"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="true" signature="true" accessors="true" 
       visibility="true">      
       <attributes public="true" package="true" protected="true" private="true" static="true"/>      
@@ -57,7 +57,7 @@
   </class>  
   <class id="7" language="java" name="org.sparcs.gnu.course.GradeInfo" project="GCC" 
     file="/GCC/src/org/sparcs/gnu/course/GradeInfo.java" binary="false" corner="BOTTOM_RIGHT">    
-    <position height="-1" width="-1" x="288" y="364"/>    
+    <position height="81" width="103" x="1049" y="194"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="true" signature="true" accessors="true" 
       visibility="true">      
       <attributes public="true" package="true" protected="true" private="true" static="true"/>      
@@ -66,7 +66,7 @@
   </class>  
   <class id="8" language="java" name="org.sparcs.gnu.converter.Converter" project="GCC" 
     file="/GCC/src/org/sparcs/gnu/converter/Converter.java" binary="false" corner="BOTTOM_RIGHT">    
-    <position height="-1" width="-1" x="830" y="225"/>    
+    <position height="117" width="191" x="213" y="37"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="true" signature="true" accessors="true" 
       visibility="true">      
       <attributes public="true" package="true" protected="true" private="true" static="true"/>      
@@ -75,7 +75,7 @@
   </class>  
   <class id="9" language="java" name="org.sparcs.gnu.converter.ExcelConverter" project="GCC" 
     file="/GCC/src/org/sparcs/gnu/converter/ExcelConverter.java" binary="false" corner="BOTTOM_RIGHT">    
-    <position height="-1" width="-1" x="803" y="373"/>    
+    <position height="99" width="136" x="390" y="194"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="true" signature="true" accessors="true" 
       visibility="true">      
       <attributes public="true" package="true" protected="true" private="true" static="true"/>      
@@ -84,61 +84,133 @@
   </class>  
   <class id="10" language="java" name="org.sparcs.gnu.parser.Parse" project="GCC" 
     file="/GCC/src/org/sparcs/gnu/parser/Parse.java" binary="false" corner="BOTTOM_RIGHT">    
-    <position height="-1" width="-1" x="611" y="225"/>    
+    <position height="117" width="167" x="444" y="37"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="true" signature="true" accessors="true" 
       visibility="true">      
       <attributes public="true" package="true" protected="true" private="true" static="true"/>      
       <operations public="true" package="true" protected="true" private="true" static="true"/>    
     </display>  
   </class>  
-  <dependency id="11">    
-    <end type="SOURCE" refId="10"/>    
-    <end type="TARGET" refId="1"/>  
-  </dependency>  
-  <association id="12">    
-    <end type="SOURCE" refId="5" navigable="false">      
-      <attribute id="13" name="catalog"/>      
-      <multiplicity id="14" minimum="0" maximum="1"/>    
-    </end>    
-    <end type="TARGET" refId="1" navigable="true"/>    
-    <display labels="true" multiplicity="true"/>  
-  </association>  
-  <dependency id="15">    
-    <end type="SOURCE" refId="5"/>    
-    <end type="TARGET" refId="6"/>  
-  </dependency>  
-  <association id="16">    
-    <end type="SOURCE" refId="1" navigable="false">      
-      <attribute id="17" name="exception"/>      
-      <multiplicity id="18" minimum="0" maximum="1"/>    
-    </end>    
-    <end type="TARGET" refId="2" navigable="true"/>    
-    <display labels="true" multiplicity="true"/>  
-  </association>  
-  <association id="19">    
-    <end type="SOURCE" refId="1" navigable="false">      
-      <attribute id="20" name="rule"/>      
-      <multiplicity id="21" minimum="0" maximum="1"/>    
-    </end>    
-    <end type="TARGET" refId="4" navigable="true"/>    
-    <display labels="true" multiplicity="true"/>  
-  </association>  
-  <dependency id="22">    
-    <end type="SOURCE" refId="5"/>    
-    <end type="TARGET" refId="7"/>  
-  </dependency>  
-  <generalization id="23">    
+  <class id="11" language="java" name="org.sparcs.gnu.converter.WebConverter" project="GCC" 
+    file="/GCC/src/org/sparcs/gnu/converter/WebConverter.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="99" width="132" x="41" y="194"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="true" signature="true" accessors="true" 
+      visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <class id="12" language="java" name="org.sparcs.gnu.converter.PortalConverter" project="GCC" 
+    file="/GCC/src/org/sparcs/gnu/converter/PortalConverter.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="294" y="244"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="true" signature="true" accessors="true" 
+      visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <class id="13" language="java" name="org.sparcs.gnu.gui.VisualizeCatalog" project="GCC" 
+    file="/GCC/src/org/sparcs/gnu/gui/VisualizeCatalog.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="99" width="150" x="651" y="37"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="true" signature="true" accessors="true" 
+      visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <class id="14" language="java" name="org.sparcs.gnu.gui.VisualizeOutput" project="GCC" 
+    file="/GCC/src/org/sparcs/gnu/gui/VisualizeOutput.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="99" width="168" x="841" y="37"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="true" signature="true" accessors="true" 
+      visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <generalization id="15">    
     <end type="SOURCE" refId="9"/>    
     <end type="TARGET" refId="8"/>  
   </generalization>  
-  <association id="24">    
+  <dependency id="16">    
+    <end type="SOURCE" refId="10"/>    
+    <end type="TARGET" refId="1"/>  
+  </dependency>  
+  <dependency id="17">    
+    <end type="SOURCE" refId="5"/>    
+    <end type="TARGET" refId="7"/>  
+  </dependency>  
+  <association id="18">    
     <end type="SOURCE" refId="1" navigable="false">      
-      <attribute id="25" name="replace"/>      
-      <multiplicity id="26" minimum="0" maximum="1"/>    
+      <attribute id="19" name="replace"/>      
+      <multiplicity id="20" minimum="0" maximum="1"/>    
     </end>    
     <end type="TARGET" refId="3" navigable="true"/>    
     <display labels="true" multiplicity="true"/>  
   </association>  
+  <dependency id="21">    
+    <end type="SOURCE" refId="8"/>    
+    <end type="TARGET" refId="9"/>  
+  </dependency>  
+  <dependency id="22">    
+    <end type="SOURCE" refId="8"/>    
+    <end type="TARGET" refId="12"/>  
+  </dependency>  
+  <association id="23">    
+    <end type="SOURCE" refId="5" navigable="false">      
+      <attribute id="24" name="catalog"/>      
+      <multiplicity id="25" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="1" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="26">    
+    <end type="SOURCE" refId="1" navigable="false">      
+      <attribute id="27" name="rule"/>      
+      <multiplicity id="28" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="4" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <generalization id="29">    
+    <end type="SOURCE" refId="12"/>    
+    <end type="TARGET" refId="8"/>  
+  </generalization>  
+  <dependency id="30">    
+    <end type="SOURCE" refId="8"/>    
+    <end type="TARGET" refId="11"/>  
+  </dependency>  
+  <dependency id="31">    
+    <end type="SOURCE" refId="5"/>    
+    <end type="TARGET" refId="6"/>  
+  </dependency>  
+  <association id="32">    
+    <end type="SOURCE" refId="14" navigable="false">      
+      <attribute id="33" name="processInfo"/>      
+      <multiplicity id="34" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="6" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="35">    
+    <end type="SOURCE" refId="13" navigable="false">      
+      <attribute id="36" name="catalog"/>      
+      <multiplicity id="37" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="1" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="38">    
+    <end type="SOURCE" refId="1" navigable="false">      
+      <attribute id="39" name="exception"/>      
+      <multiplicity id="40" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="2" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <generalization id="41">    
+    <end type="SOURCE" refId="11"/>    
+    <end type="TARGET" refId="8"/>  
+  </generalization>  
   <classifier-display autosize="true" stereotype="true" package="true" initial-value="true" signature="true" 
     accessors="true" visibility="true">    
     <attributes public="true" package="true" protected="true" private="true" static="true"/>    
