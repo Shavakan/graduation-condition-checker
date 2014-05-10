@@ -10,7 +10,8 @@ class ExcelConverter extends Converter {
 	}
 	
 	/**
-	 * 
+	 * Converts Excel(.csv) file to sqlite file.
+	 * @param outputFilename Filename of sqlite containing a user's file history
 	 */
 	@Override
 	public void convert(String outputFilename) {

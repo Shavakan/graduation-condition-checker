@@ -25,5 +25,9 @@ public abstract class Converter {
 		return converter;
 	}
 	
+	/**
+	 * Wrapper method for converting user's course history.
+	 * @param outputFilename Filename of sqlite containing a user's course history.
+	 */
 	public abstract void convert(String outputFilename);
 }
