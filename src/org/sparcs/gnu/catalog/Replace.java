@@ -1,14 +1,14 @@
 package org.sparcs.gnu.catalog;
 /**
- * 대체할 과목 정보를 갖고 있는다.
+ * Having information for substitution.
  * @author Alphamin
  *
  */
 public class Replace {
 	/**
-	 * 생성자.
+	 * Constructor.
 	 */
 	public Replace(){
+		//TODO fill in.
 	}
-
 }
