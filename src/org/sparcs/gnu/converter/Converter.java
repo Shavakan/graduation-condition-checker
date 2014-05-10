@@ -20,6 +20,12 @@ public abstract class Converter {
 		if (arg.endsWith(".csv")) {
 			converter = new ExcelConverter(arg);
 		}
+		else if (arg.startsWith("http")) {
+			converter = new WebConverter(arg); 
+		}
+		else if (arg.toLowerCase().startsWith("mysql")) {
+			converter = new PortalConverter(arg);
+		}
 		// TODO more types of file inputs
 		
 		return converter;
