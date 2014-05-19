@@ -1,43 +1,31 @@
 package org.sparcs.gnu.converter;
 
 import java.util.HashMap;
-import java.util.Set;
+import java.util.Map;
 
 public class HangulExcelConfig extends ExcelConfig{
-	HashMap<String, String> column_map;
-	HashMap<String, HashMap<String,String>> value_map;
-	public HangulExcelConfig(){
-		column_map = new HashMap<String, String>() {{
-			put("No", "index");
-			put("년도", "year");
-			put("학기", "semester");
-			put("교과목", "number");
-			put("과목번호", "code");
-			put("분반", "section");
-			put("구분", "type");
-			put("학", "credit");
-			put("AU", "au");
-			put("성적", "grade");
-		}};
-		value_map = new HashMap<String, HashMap<String, String>>(){{
-			put("학기", new HashMap<String, String>(){{
-				put("기이수", "transfer");
-				put("봄학기", "spring");
-				put("가을학기", "autumn");
-				put("여름학기", "summer");
-				put("겨울학기", "winter");
-			}});
-		}};
-	}
-	public Set<String> getAllColumn(){
-		return column_map.keySet();
-	}
-	public String transformColumn(String column){
-		return column_map.get(column);
+	public HangulExcelConfig()
+	{
+		column_map = new HashMap<String, String>();
+		column_map.put("No", "index");
+		column_map.put("년도", "year");
+		column_map.put("학기", "semester");
+		column_map.put("교과목", "number");
+		column_map.put("과목번호", "code");
+		column_map.put("분반", "section");
+		column_map.put("구분", "type");
+		column_map.put("학", "credit");
+		column_map.put("AU", "au");
+		column_map.put("성적", "grade");
 		
-	}
-	public String transformValue(String column, String value){
-		return (value_map.get(column)).get(value);
 		
+		value_map = new HashMap<String, Map<String, String> >();
+		Map<String, String> semester_map = new HashMap<>();
+		semester_map.put("기이수", "transfer");
+		semester_map.put("봄학기", "spring");
+		semester_map.put("가을학기", "autumn");
+		semester_map.put("여름학기", "summer");
+		semester_map.put("겨울학기", "winter");
+		value_map.put("학기", semester_map);
 	}
 }

@@ -1,41 +1,31 @@
 package org.sparcs.gnu.converter;
 
 import java.util.HashMap;
-import java.util.Set;
+import java.util.Map;
 
-public class EnglishExcelConfig {
-	HashMap<String, String> column_map;
-	HashMap<String, HashMap<String,String>> value_map;
+public class EnglishExcelConfig extends ExcelConfig{
 	public EnglishExcelConfig(){
-		column_map = new HashMap<String, String>() {{
-			put("No", "index");
-			put("Year", "year");
-			put("Term", "semester");
-			put("System No.", "number");
-			put("Course No.", "code");
-			put("Section", "section");
-			put("Classification", "type");
-			put("Credit", "credit");
-			put("AU", "au");
-			put("Grade", "grade");
-		}};
-		value_map = new HashMap<String, HashMap<String, String>>(){{
-			put("Term", new HashMap<String, String>(){{
-				put("Transfer", "transfer");
-				put("Spring", "spring");
-				put("Autumn", "autumn");
-				put("Summer", "summer");
-				put("Winter", "winter");
-			}});
-		}};
-	}
-	public Set<String> getAllColumn(){
-		return column_map.keySet();
-	}
-	public String transformColumn(String column){
-		return column_map.get(column);
-	}
-	public String transformValue(String column, String value){
-		return (value_map.get(column)).get(value);
+		column_map = new HashMap<String, String>();
+
+		column_map.put("No", "index");
+		column_map.put("Year", "year");
+		column_map.put("Term", "semester");
+		column_map.put("System No.", "number");
+		column_map.put("Course No.", "code");
+		column_map.put("Section", "section");
+		column_map.put("Classification", "type");
+		column_map.put("Credit", "credit");
+		column_map.put("AU", "au");
+		column_map.put("Grade", "grade");
+
+		Map<String, String> semester_map = new HashMap<>();
+		semester_map.put("Transfer", "transfer");
+		semester_map.put("Spring", "spring");
+		semester_map.put("Autumn", "autumn");
+		semester_map.put("Summer", "summer");
+		semester_map.put("Winter", "winter");
+		value_map = new HashMap<String, Map<String, String>>();
+		value_map.put("Term", semester_map);
+			
 	}
 }
