@@ -2,7 +2,7 @@ package org.sparcs.gnu.converter;
 
 import java.io.File;
 import java.sql.Connection;
-import java.sql.DriverManager;
+import java.sql.PreparedStatement;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
@@ -27,20 +27,15 @@ class ExcelConverter extends Converter {
 	 */
 	@Override
 	public boolean convert(String outputFilename) {
-		// TODO parse .csv file and write sqlite file of name outputFilename
-		List<String> indexField = new LinkedList<>();
-		indexField.add("No");
-		indexField.add("년도");
-		indexField.add("학기");
-		indexField.add("학과");
-		indexField.add("교과목");
-		indexField.add("과목번호");
-		indexField.add("분반");
-		indexField.add("구분");
 		
-		Set<String> allField = new HashSet<>();
-		for(String field : indexField)
-			allField.add(field.trim());
+		ExcelConfig hangul = new HangulExcelConfig();
+		ExcelConfig eng = new EnglishExcelConfig();
+		
+		ExcelConfig finalConfig = null;
+		Set<String> finalFields = null;
+		
+		Set<String> hanFields = hangul.getAllColumn();
+		Set<String> engFields = eng.getAllColumn();
 		
 		try
 		{
@@ -56,9 +51,21 @@ class ExcelConverter extends Converter {
 				for(Cell cell : cells)
 					allCell.add(cell.getContents().trim());
 				
-				if(allCell.containsAll(allField))
+				if(allCell.containsAll(hanFields))
 				{
-					for(String field : allField)
+					finalFields = hanFields;
+					finalConfig = hangul;
+				}
+				else if(allCell.containsAll(engFields))
+				{
+					finalFields = engFields;
+					finalConfig = eng;
+				}
+					
+				
+				if(finalConfig != null)
+				{
+					for(String field : finalFields)
 					{
 						for(int k=0; k<cells.length; k++)
 						{
@@ -80,18 +87,51 @@ class ExcelConverter extends Converter {
 			}
 			
 			Connection conn = SQLiteManager.createDatabase(outputFilename, true);
+			
+			List<String> finalFieldList = new LinkedList<>();
+			for(String field : finalFields)
+				finalFieldList.add(finalConfig.transformColumn(field));
+			
+			String format = "";
+			String sqlFields = "";
+			for(int k=0; k< finalFieldList.size(); k++)
+			{
+				if(k+1 == finalFields.size())
+				{
+					sqlFields += "`" + finalFieldList.get(k) + "`";
+					format += "?";
+				}
+				else
+				{
+					sqlFields += "`" + finalFieldList.get(k) + "`,";
+					format += "?,";
+				}
+			}
+			
+			PreparedStatement stmt = conn.prepareStatement("INSERT INTO `grade`(" + sqlFields + ") VALUES(" + format + ")");
+			for(startRow = startRow + 1; startRow < sheet.getRows(); startRow++)
+			{
+				Cell[] cells = sheet.getRow(startRow);
+				stmt.clearParameters();
+				for(String key : fieldToIndex.keySet())
+				{
+					int index = fieldToIndex.get(key);
+					String finalKey = finalConfig.transformColumn(key);
+					String finalValue = finalConfig.transformValue(key, cells[index].getContents().trim());
+					
+					int sqlIndex = finalFieldList.indexOf(finalKey);
+					stmt.setString(sqlIndex + 1, finalValue);
+				}
+				stmt.executeUpdate();
+			}
+			stmt.close();
+			conn.close();
 			return true;
 		}
 		catch(Exception e)
 		{
+			e.printStackTrace(System.err);
 			return false;
 		}
-	}
-	
-	//TODO this is temp, remove
-	public static void main(String[] args)
-	{
-		ExcelConverter conv = new ExcelConverter("grade.xls");
-		conv.convert("output.db");
 	}
 }
