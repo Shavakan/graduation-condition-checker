@@ -7,21 +7,21 @@
 	<property name="GCC" value="."/>
 	<property name="packagePrefix" value="org/sparcs/gnu"/>
 	<property name="package.prefix" value="org.sparcs.gnu"/>
-	<property name="bigStack" value="-Xss32m"/>
-	<property name="ANT_OPTS" value="-Xmx1024m"/>
-	<property name="build" location="${GCC}/build"/>
 	<property name="src" location="${GCC}/src"/>
-	<property name="xtc" location="${GCC}/xtc"/>
 	<property name="parser"  location="${src}/${packagePrefix}/parser"/>
-	<property name="junitMem" value="768m"/>
-	<property name="javaSourceVersion" value="1.5"/>
-	<property name="plugin.destination" value="${basedir}"/>
-	<property name="ivy.home" value="${GCC}/lib"/>
 
 	<target name="checkMGUptodate">
 		<condition property="MGparser.uptodate">
 			<uptodate targetfile="${parser}/IntermediateGrammar.java" >
 				<srcfiles dir= "${parser}" includes="IntermediateGrammar.rats"/>
+			</uptodate>
+		</condition>
+	</target>
+
+	<target name="checkIGUptodate">
+		<condition property="IGparser.uptodate">
+			<uptodate targetfile="${parser}/InputGrammar.java" >
+				<srcfiles dir= "${parser}" includes="InputGrammar.rats"/>
 			</uptodate>
 		</condition>
 	</target>
@@ -36,7 +36,7 @@
 				  failonerror="yes"
 				  dir="@{dir}"
 				  classname="xtc.parser.Rats"
-				  classpath="${ivy.home}/rats-2.3.1.jar">
+				  classpath="./lib/jars/rats.jar">
 				<arg value="-in"/>
 				<arg value="${src}"/>
 				<arg value="-enc-out"/>
@@ -45,15 +45,26 @@
 			</java>
 		</sequential>
 	</macrodef>
+	
+	<target name="resolve">
+		<ivy:retrieve pattern="./lib/[conf]/[artifact].[ext]" conf="jars"/>
+	</target>
 
-<target name="parser">
-  	<echo>${ivy.home}</echo>
-    <ant target="MGparser"/>
-  </target>
+	<target name="parser" depends="resolve">
+		<echo>${env_IVY_HOME}</echo>
+		<ant target="MGparser"/>
+		<ant target="IGparser"/>
+	</target>
 
-  <target name="MGparser"
-  		  unless="MGparser.uptodate"
-          depends="checkMGUptodate">
-    <buildparser name="MG" dir="${parser}" file="IntermediateGrammar.rats" />
-  </target>
+	<target name="MGparser"
+			unless="MGparser.uptodate"
+			depends="checkMGUptodate">
+		<buildparser name="MG" dir="${parser}" file="IntermediateGrammar.rats" />
+	</target>
+
+	<target name="IGparser"
+			unless="IGparser.uptodate"
+			depends="checkIGUptodate">
+		<buildparser name="IG" dir="${parser}" file="InputGrammar.rats" />
+	</target>
 </project>

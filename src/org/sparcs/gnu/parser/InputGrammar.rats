@@ -1,0 +1,39 @@
+module org.sparcs.gnu.parser.InputGrammar;
+
+header {
+}
+
+body {
+}
+
+option parser(org.sparcs.gnu.parser.InputGrammar);
+
+public void Spec =
+		w EndOfFile 
+		{
+		};
+
+private void	w =			Space*{/*System.out.println("blank");*/};
+private void	EndOfFile =!_{};
+
+private void Space =
+		EOL
+		{
+		}
+	/	'\t'
+		{
+		}
+	/	' '
+		{
+		};
+
+private void EOL =
+		'\r' '\n'
+		{
+		}
+	/	'\r'
+		{
+		}
+	/	'\n'
+		{
+		};

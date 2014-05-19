@@ -24,11 +24,14 @@
         module="gcc"
         status="integration">
 	</info>
+	<configurations>
+        <conf name="jars" description="binary jars"/>
+    </configurations>
 	<dependencies>
-	    <dependency org="org.jdom" name="jdom2" rev="2.0.5"/>
-	    <dependency org="net.sourceforge.jexcelapi" name="jxl" rev="2.6.12"/>
-	    <dependency org="org.xerial" name="sqlite-jdbc" rev="3.7.2"/>
-	    <dependency org="xtc" name="rats" rev="2.3.1"/>
-	    <dependency org="de.fau.cs.osr.maven.plugins" name="maven-rats-plugin" rev="1.3.1"/>
+	    <dependency org="org.jdom" name="jdom2" rev="2.0.5" conf="jars->default"/>
+	    <dependency org="net.sourceforge.jexcelapi" name="jxl" rev="2.6.12" conf="jars->default"/>
+	    <dependency org="org.xerial" name="sqlite-jdbc" rev="3.7.2" conf="jars->default"/>
+	    <dependency org="xtc" name="rats" rev="2.3.1" conf="jars->default"/>
+	    <dependency org="de.fau.cs.osr.maven.plugins" name="maven-rats-plugin" rev="1.3.1" conf="jars->default"/>
 	</dependencies>
 </ivy-module>
