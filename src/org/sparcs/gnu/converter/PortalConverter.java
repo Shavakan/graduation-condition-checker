@@ -11,9 +11,9 @@ public class PortalConverter extends Converter {
 	 * @param outputFilename Filename of sqlite containing a user's file history
 	 */
 	@Override
-	public void convert(String outputFilename) {
+	public boolean convert(String outputFilename) {
 		// TODO Auto-generated method stub
-
+		return false;
 	}
 
 }
