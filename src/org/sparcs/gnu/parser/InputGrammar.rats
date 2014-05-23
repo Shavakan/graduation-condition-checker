@@ -3,14 +3,13 @@ module org.sparcs.gnu.parser.InputGrammar;
 header {
 import org.jdom2.Document;
 import org.jdom2.Element;
-import org.jdom2.input.SAXBuilder;
-import org.jdom2.output.Format;
-import org.jdom2.output.XMLOutputter;
 }
 
 body {
 	Document d;
 	Element root;
+	String curType;
+	String curName;
 	private void initD(String name, String code)
 	{
 		d = new Document();
@@ -24,116 +23,135 @@ body {
 option parser(org.sparcs.gnu.parser.InputGrammar);
 
 public Document Spec =
-	Dept w e1:Total w e2:General w e3:Basic w e4:Major w e5:Elective w e6:Research w e7:English w e8:Foreign w e9:Etc w EndOfFile
+	Dept w Total w General w Basic w Major w Elective w Research w English w Foreign w Etc w EndOfFile
 	{
-		root.addContent(e1);
-		root.addContent(e2);
-		root.addContent(e3);
-		root.addContent(e4);
-		root.addContent(e5);
-		root.addContent(e6);
-		root.addContent(e7);
-		root.addContent(e8);
-		root.addContent(e9);
 		yyValue = d;
 	};
 
 private void Dept =
-	"[" name:("전산"/"전자") "학과:" n1:Number "]"
+	"[" name:DeptName "학과"? ":" n1:Number "]"
 	{
 		initD(name, n1);
 	};
 
-private Element Total =
+private String DeptName =
+	name:("전산"/"전자")
+	{
+		yyValue = name;
+	};
+
+private void Total =
 	"총" w n1:Number w "학점" w "평점" w f1:FNumber w "/" w f2:FNumber w "이상"
 	{
 		System.out.println("총 " + n1 + "학점");
 		System.out.println("평점 " + f1 + "/" + f2 + " 이상");
+
+		curType = "이수학점";
+		curName = curType;
 		Element e = new Element("조건");
-		e.setAttribute("name", "종합");
-		Element e1 = new Element("조건");
-		e1.setAttribute("name", "학점");
-		e1.addContent((new Element("원문")).setText("총 " + n1 + "학점"));
-		Element e2 = new Element("조건");
-		e2.setAttribute("name", "평점");
-		e2.addContent((new Element("원문")).setText("평점 " + f1 + "/" + f2 + " 이상"));
-		e.addContent(e1);
-		e.addContent(e2);
-		yyValue = e;
+		e.setAttribute("name", curType);
+		e.addContent((new Element("쿼리")).setText("SELECT value FROM metadata WHERE index=\"gpa\""));
+		e.addContent((new Element("최소")).setText(n1));
+		e.addContent((new Element("원문")).setText("총 " + n1 + "학점"));
+		root.addContent(e);
+
+		curType = "평점";
+		curName = curType;
+		e = new Element("조건");
+		e.setAttribute("name", curType);
+		e.addContent((new Element("쿼리")).setText("SELECT value FROM metadata WHERE index=\"total_credit\""));
+		e.addContent((new Element("최소")).setText(f1));
+		e.addContent((new Element("원문")).setText("평점 " + f1 + "/" + f2 + " 이상"));
+		root.addContent(e);
 	};
 
-private Element General =
-	("교필"/"교양필수") w c1:Condition w ("인사선"/"인문사회선택") w c2:Condition
+private void General =
+	MdtrG w c1:Condition w EltvG w c2:Condition
 	{
 		System.out.println("교필 " + c1);
 		System.out.println("인사선 " + c2);
-		Element e = new Element("조건");
-		e.setAttribute("name", "교양");
-		Element e1 = new Element("조건");
-		e1.setAttribute("name", "교필");
-		e1.addContent((new Element("원문")).setText(c1));
-		Element e2 = new Element("조건");
-		e2.setAttribute("name", "인사선");
-		e2.addContent((new Element("원문")).setText(c2));
-		e.addContent(e1);
-		e.addContent(e2);
-		yyValue = e;
 	};
 
-private Element Basic =
-	("기필"/"기초필수") w c1:Condition w ("기선"/"기초선택") w c2:Condition
+private void MdtrG =
+	name:("교양필수"/"교필")
+	{
+		curType = "교필";
+		curName = name;
+	};
+
+private void EltvG =
+	name:("인문사회선택"/"인사선"/"인선")
+	{
+		curType = "인선";
+		curName = name;
+	};
+
+private void Basic =
+	MdtrB w c1:Condition w EltvB w c2:Condition
 	{
 		System.out.println("기필 " + c1);
 		System.out.println("기선 " + c2);
-		Element e = new Element("조건");
-		e.setAttribute("name", "기초");
-		Element e1 = new Element("조건");
-		e1.setAttribute("name", "기필");
-		e1.addContent((new Element("원문")).setText(c1));
-		Element e2 = new Element("조건");
-		e2.setAttribute("name", "기선");
-		e2.addContent((new Element("원문")).setText(c2));
-		e.addContent(e1);
-		e.addContent(e2);
-		yyValue = e;
 	};
 
-private Element Major =
-	("전필"/"전공필수") w c1:Condition w ("전선"/"전공선택") w c2:Condition 
+private void MdtrB =
+	name:("기초필수"/"기필")
+	{
+		curType = "기필";
+		curName = name;
+	};
+
+private void EltvB =
+	name:("기초선택"/"기선")
+	{
+		curType = "기선";
+		curName = name;
+	};
+
+private void Major =
+	MdtrM w c1:Condition w EltvM w c2:Condition 
 	{
 		System.out.println("전필 " + c1);
 		System.out.println("전선 " + c2);
-		Element e = new Element("조건");
-		e.setAttribute("name", "전공");
-		Element e1 = new Element("조건");
-		e1.setAttribute("name", "전필");
-		e1.addContent((new Element("원문")).setText(c1));
-		Element e2 = new Element("조건");
-		e2.setAttribute("name", "전선");
-		e2.addContent((new Element("원문")).setText(c2));
-		e.addContent(e1);
-		e.addContent(e2);
-		yyValue = e;
 	};
 
-private Element Elective =
-	("자선"/"자유선택") w c1:Condition
+private void MdtrM =
+	name:("전공필수"/"전필")
+	{
+		curType = "전필";
+		curName = name;
+	};
+
+private void EltvM =
+	name:("전공선택"/"전선")
+	{
+		curType = "전선";
+		curName = name;
+	};
+
+private void Elective =
+	ElectiveName w c1:Condition
 	{
 		System.out.println("자선 " + c1);
-		Element e = new Element("조건");
-		e.setAttribute("name", "자선");
-		e.addContent((new Element("원문")).setText(c1));
-		yyValue = e;
 	};
 
-private Element Research =
-	("연구과목"/"연구") w c1:Condition
+private void ElectiveName =
+	name:("자유선택"/"자선")
+	{
+		curType = "자선";
+		curName = name;
+	};
+
+private void Research =
+	ResearchName w c1:Condition
 	{
 		System.out.println("연구 " + c1);
-		Element e = new Element("조건");
-		e.setAttribute("name", "연구");
-		e.addContent((new Element("원문")).setText(c1));
-		yyValue = e;
+	};
+
+private void ResearchName =
+	name:("연구과목"/"연구")
+	{
+		curType = "연구";
+		curName = name;
 	};
 
 private Element English =
@@ -157,14 +175,42 @@ private Element Etc =
 private String Condition =
 		n1:Number w "학점" w n2:Number w "AU"
 		{
+			Element e = new Element("조건");
+			e.setAttribute("name", curType+"학점");
+			e.addContent((new Element("쿼리")).setText("SELECT SUM(credit) FROM grade WHERE type=\"" + curType + "\" AND grade!=\"F\" AND grade!=\"U\" AND grade!=\"W\" AND grade!=\"I\" AND grade!=\"R\""));
+			e.addContent((new Element("최소")).setText(n1));
+			e.addContent((new Element("원문")).setText(curName + " " + n1 + "학점"));
+			root.addContent(e);
+
+			e = new Element("조건");
+			e.setAttribute("name", curType+"AU");
+			e.addContent((new Element("쿼리")).setText("SELECT SUM(au) FROM grade WHERE type=\"" + curType + "\" AND grade!=\"F\" AND grade!=\"U\" AND grade!=\"W\" AND grade!=\"I\" AND grade!=\"R\""));
+			e.addContent((new Element("최소")).setText(n2));
+			e.addContent((new Element("원문")).setText(curName + " " + n2 + "AU"));
+			root.addContent(e);
+
 			yyValue = n1 + "학점 " + n2 + "AU";
 		}
 	/	n1:Number w "학점" w "이상"
 		{
+			Element e = new Element("조건");
+			e.setAttribute("name", curType+"학점");
+			e.addContent((new Element("쿼리")).setText("SELECT SUM(credit) FROM grade WHERE type=\"" + curType + "\" AND grade!=\"F\" AND grade!=\"U\" AND grade!=\"W\" AND grade!=\"I\" AND grade!=\"R\""));
+			e.addContent((new Element("최소")).setText(n1));
+			e.addContent((new Element("원문")).setText(curName + " " + n1 + "학점 이상"));
+			root.addContent(e);
+
 			yyValue = n1 + "학점 이상";
 		}
 	/	n1:Number w "학점"
 		{
+			Element e = new Element("조건");
+			e.setAttribute("name", curType+"학점");
+			e.addContent((new Element("쿼리")).setText("SELECT SUM(credit) FROM grade WHERE type=\"" + curType + "\" AND grade!=\"F\" AND grade!=\"U\" AND grade!=\"W\" AND grade!=\"I\" AND grade!=\"R\""));
+			e.addContent((new Element("최소")).setText(n1));
+			e.addContent((new Element("원문")).setText(curName + " " + n1 + "학점"));
+			root.addContent(e);
+
 			yyValue = n1 + "학점";
 		}
 	/	"없음"

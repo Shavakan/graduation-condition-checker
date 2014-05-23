@@ -1,6 +1,8 @@
 package org.sparcs.gnu.parser;
 
+import java.io.File;
 import java.io.FileReader;
+import java.io.FileWriter;
 
 import org.jdom2.Document;
 import org.jdom2.output.Format;
@@ -30,9 +32,9 @@ public class Parse {
 	 * @return intermediate representation
 	 * @throws Exception 
 	 */
-	public static String parseRawInput(String input) throws Exception {
-		String result = null;
-		String filename = System.getProperty("user.dir") + "/conf/cs.conf";
+	public static boolean parseRawInput(String input, String output) throws Exception {
+		boolean result = false;
+		String filename = input;
 		
 		InputGrammar parse = new InputGrammar(new FileReader(filename), filename);
 		Object o = parse.pSpec(0);
@@ -41,7 +43,10 @@ public class Parse {
 			SemanticValue res = (SemanticValue) o;
 			Document d = res.semanticValue();
 			XMLOutputter out = new XMLOutputter(Format.getPrettyFormat());
+			FileWriter outfile = new FileWriter(output);
+			out.output(d, outfile);
 			out.output(d, System.out);
+			//XXX printing xml is also for test
 		}
 		else if(o instanceof ParseError) {
 			System.err.println("?");
@@ -54,11 +59,11 @@ public class Parse {
 	}
 	
 	/** this main method is for testing above functions.
-	 * free to remove this
+	 * free to remove this function
 	 * @author coffee
 	 * @throws Exception 
-	 */
+	 *//*
 	public static void main(String[] args) throws Exception {
-		parseRawInput("");
-	}
+		parseRawInput("conf" + File.separator + "cs.conf", "tmp" + File.separator + "cs.xml");
+	}*/
 }
