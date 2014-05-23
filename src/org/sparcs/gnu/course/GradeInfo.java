@@ -21,15 +21,16 @@ public class GradeInfo {
 		try
 		{
 			PreparedStatement stmt = conn.prepareStatement("SELECT `credit`,`grade` FROM `grade`");
-
+			long intcredit = 0;
 			ResultSet result = stmt.executeQuery();
 			double totalCredit = 0.0;
 			double totalGrade = 0.0;
 			result_loop: while(result.next())
 			{
 				double credit = Double.parseDouble(result.getString("credit"));
+				
 				double grade = 0.0;
-				switch(result.getString("credit"))
+				switch(result.getString("grade"))
 				{
 				case "A+":
 					grade = 4.3;
@@ -74,20 +75,37 @@ public class GradeInfo {
 				case "F":
 					grade = 0.0;
 					break;
+				case "S":
+					intcredit += Long.parseLong(result.getString("credit"));
 				default:
 					continue result_loop;
 				}
 
+				intcredit += Long.parseLong(result.getString("credit"));
 				totalCredit += credit;
-				totalGrade += grade;
+				totalGrade += grade * credit;
 			}
 			result.close();
 
 			PreparedStatement updateStmt = conn.prepareStatement("INSERT INTO `metadata`(`index`,`value`) VALUES (?,?)");
-			String gpa = Long.toString(Math.round(Math.floor((totalGrade / totalCredit) * 100) / 100));
-			updateStmt.setString(1, "gpa");
-			updateStmt.setString(2, gpa);
-			updateStmt.executeUpdate();
+			
+			{
+				updateStmt.clearParameters();
+				long intgpa = Math.round(Math.floor((totalGrade / totalCredit) * 100));
+				String gpa = String.format("%d.%02d", intgpa/100 , intgpa%100);
+				updateStmt.setString(1, "gpa");
+				updateStmt.setString(2, gpa);
+				updateStmt.executeUpdate();
+			}
+			{
+				updateStmt.clearParameters();
+				String total_credit = Long.toString(intcredit);
+				updateStmt.setString(1, "total_credit");
+				updateStmt.setString(2, total_credit);
+				updateStmt.executeUpdate();
+			}
+			
+			
 			updateStmt.close();
 			stmt.close();
 			return true;
