@@ -1,5 +1,6 @@
 PRAGMA encoding = "UTF-8"; 
 DROP TABLE IF EXISTS `grade` ;
+DROP TABLE IF EXISTS `metadata` ;
 
 -- -----------------------------------------------------
 -- Table `mydb`.`table1`
@@ -15,5 +16,11 @@ CREATE TABLE IF NOT EXISTS `grade` (
   `credit` INT NOT NULL,
   `au` INT NOT NULL,
   `grade` TEXT NOT NULL,
+  PRIMARY KEY (`index`))
+;
+
+CREATE TABLE IF NOT EXISTS `metadata` (
+  `index` TEXT NOT NULL,
+  `value` TEXT NOT NULL,
   PRIMARY KEY (`index`))
 ;
