@@ -1,8 +1,8 @@
 package org.sparcs.gnu.parser;
 
-import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
+import java.io.IOException;
 
 import org.jdom2.Document;
 import org.jdom2.output.Format;
@@ -32,30 +32,34 @@ public class Parse {
 	 * @return intermediate representation
 	 * @throws Exception 
 	 */
-	public static boolean parseRawInput(String input, String output) throws Exception {
-		boolean result = false;
-		String filename = input;
-		
-		InputGrammar parse = new InputGrammar(new FileReader(filename), filename);
-		Object o = parse.pSpec(0);
-		System.out.println();
-		if(o instanceof SemanticValue) {
-			SemanticValue res = (SemanticValue) o;
-			Document d = res.semanticValue();
-			XMLOutputter out = new XMLOutputter(Format.getPrettyFormat());
-			FileWriter outfile = new FileWriter(output);
-			out.output(d, outfile);
-			out.output(d, System.out);
-			//XXX printing xml is also for test
+	public static boolean parseRawInput(String input, String output) {
+		try
+		{
+			String filename = input;
+
+			InputGrammar parse = new InputGrammar(new FileReader(filename), filename);
+			Object o = parse.pSpec(0);
+			if(o instanceof SemanticValue) {
+				SemanticValue res = (SemanticValue) o;
+				Document d = res.semanticValue();
+				XMLOutputter out = new XMLOutputter(Format.getPrettyFormat());
+				FileWriter outfile = new FileWriter(output);
+				out.output(d, outfile);
+			}
+			else if(o instanceof ParseError) {
+				System.err.println("?");
+			}
+			else {
+				System.out.println("?");
+			}
+
+			return true;
 		}
-		else if(o instanceof ParseError) {
-			System.err.println("?");
+		catch(IOException e)
+		{
+			e.printStackTrace(System.err);
+			return false;
 		}
-		else {
-			System.out.println("?");
-		}
-		
-		return result;
 	}
 	
 	/** this main method is for testing above functions.

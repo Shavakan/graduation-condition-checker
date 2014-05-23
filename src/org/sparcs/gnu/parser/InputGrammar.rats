@@ -43,14 +43,14 @@ private String DeptName =
 private void Total =
 	"총" w n1:Number w "학점" w "평점" w f1:FNumber w "/" w f2:FNumber w "이상"
 	{
-		System.out.println("총 " + n1 + "학점");
-		System.out.println("평점 " + f1 + "/" + f2 + " 이상");
+		//System.out.println("총 " + n1 + "학점");
+		//System.out.println("평점 " + f1 + "/" + f2 + " 이상");
 
 		curType = "이수학점";
 		curName = curType;
 		Element e = new Element("조건");
 		e.setAttribute("name", curType);
-		e.addContent((new Element("쿼리")).setText("SELECT value FROM metadata WHERE index=\"gpa\""));
+		e.addContent((new Element("쿼리")).setText("SELECT `value` FROM `metadata` WHERE `index`='total_credit'"));
 		e.addContent((new Element("최소")).setText(n1));
 		e.addContent((new Element("원문")).setText("총 " + n1 + "학점"));
 		root.addContent(e);
@@ -59,7 +59,7 @@ private void Total =
 		curName = curType;
 		e = new Element("조건");
 		e.setAttribute("name", curType);
-		e.addContent((new Element("쿼리")).setText("SELECT value FROM metadata WHERE index=\"total_credit\""));
+		e.addContent((new Element("쿼리")).setText("SELECT `value` FROM `metadata` WHERE `index`='gpa'"));
 		e.addContent((new Element("최소")).setText(f1));
 		e.addContent((new Element("원문")).setText("평점 " + f1 + "/" + f2 + " 이상"));
 		root.addContent(e);
@@ -68,8 +68,8 @@ private void Total =
 private void General =
 	MdtrG w c1:Condition w EltvG w c2:Condition
 	{
-		System.out.println("교필 " + c1);
-		System.out.println("인사선 " + c2);
+		//System.out.println("교필 " + c1);
+		//System.out.println("인사선 " + c2);
 	};
 
 private void MdtrG =
@@ -89,8 +89,8 @@ private void EltvG =
 private void Basic =
 	MdtrB w c1:Condition w EltvB w c2:Condition
 	{
-		System.out.println("기필 " + c1);
-		System.out.println("기선 " + c2);
+		//System.out.println("기필 " + c1);
+		//System.out.println("기선 " + c2);
 	};
 
 private void MdtrB =
@@ -110,8 +110,8 @@ private void EltvB =
 private void Major =
 	MdtrM w c1:Condition w EltvM w c2:Condition 
 	{
-		System.out.println("전필 " + c1);
-		System.out.println("전선 " + c2);
+		//System.out.println("전필 " + c1);
+		//System.out.println("전선 " + c2);
 	};
 
 private void MdtrM =
@@ -131,7 +131,7 @@ private void EltvM =
 private void Elective =
 	ElectiveName w c1:Condition
 	{
-		System.out.println("자선 " + c1);
+		//System.out.println("자선 " + c1);
 	};
 
 private void ElectiveName =
@@ -144,7 +144,7 @@ private void ElectiveName =
 private void Research =
 	ResearchName w c1:Condition
 	{
-		System.out.println("연구 " + c1);
+		//System.out.println("연구 " + c1);
 	};
 
 private void ResearchName =
@@ -177,14 +177,14 @@ private String Condition =
 		{
 			Element e = new Element("조건");
 			e.setAttribute("name", curType+"학점");
-			e.addContent((new Element("쿼리")).setText("SELECT SUM(credit) FROM grade WHERE type=\"" + curType + "\" AND grade!=\"F\" AND grade!=\"U\" AND grade!=\"W\" AND grade!=\"I\" AND grade!=\"R\""));
+			e.addContent((new Element("쿼리")).setText("SELECT SUM(`credit`) FROM `grade` WHERE `type`='" + curType + "' AND `grade`!='F' AND `grade`!='U' AND `grade`!='W' AND `grade`!='I' AND `grade`!='R'"));
 			e.addContent((new Element("최소")).setText(n1));
 			e.addContent((new Element("원문")).setText(curName + " " + n1 + "학점"));
 			root.addContent(e);
 
 			e = new Element("조건");
 			e.setAttribute("name", curType+"AU");
-			e.addContent((new Element("쿼리")).setText("SELECT SUM(au) FROM grade WHERE type=\"" + curType + "\" AND grade!=\"F\" AND grade!=\"U\" AND grade!=\"W\" AND grade!=\"I\" AND grade!=\"R\""));
+			e.addContent((new Element("쿼리")).setText("SELECT SUM(au) FROM `grade` WHERE type='" + curType + "' AND `grade`!='F' AND `grade`!='U' AND `grade`!='W' AND `grade`!='I' AND `grade`!='R'"));
 			e.addContent((new Element("최소")).setText(n2));
 			e.addContent((new Element("원문")).setText(curName + " " + n2 + "AU"));
 			root.addContent(e);
@@ -195,7 +195,7 @@ private String Condition =
 		{
 			Element e = new Element("조건");
 			e.setAttribute("name", curType+"학점");
-			e.addContent((new Element("쿼리")).setText("SELECT SUM(credit) FROM grade WHERE type=\"" + curType + "\" AND grade!=\"F\" AND grade!=\"U\" AND grade!=\"W\" AND grade!=\"I\" AND grade!=\"R\""));
+			e.addContent((new Element("쿼리")).setText("SELECT SUM(credit) FROM `grade` WHERE type='" + curType + "' AND `grade`!='F' AND `grade`!='U' AND `grade`!='W' AND `grade`!='I' AND `grade`!='R'"));
 			e.addContent((new Element("최소")).setText(n1));
 			e.addContent((new Element("원문")).setText(curName + " " + n1 + "학점 이상"));
 			root.addContent(e);
@@ -206,7 +206,7 @@ private String Condition =
 		{
 			Element e = new Element("조건");
 			e.setAttribute("name", curType+"학점");
-			e.addContent((new Element("쿼리")).setText("SELECT SUM(credit) FROM grade WHERE type=\"" + curType + "\" AND grade!=\"F\" AND grade!=\"U\" AND grade!=\"W\" AND grade!=\"I\" AND grade!=\"R\""));
+			e.addContent((new Element("쿼리")).setText("SELECT SUM(credit) FROM `grade` WHERE type='" + curType + "' AND `grade`!='F' AND `grade`!='U' AND `grade`!='W' AND `grade`!='I' AND `grade`!='R'"));
 			e.addContent((new Element("최소")).setText(n1));
 			e.addContent((new Element("원문")).setText(curName + " " + n1 + "학점"));
 			root.addContent(e);
