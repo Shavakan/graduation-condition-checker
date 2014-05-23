@@ -116,6 +116,25 @@ public class GradeInfo {
 			return false;
 		}
 	}
-	public void check(){
+	public String check(String sql){
+		try
+		{
+			PreparedStatement stmt = conn.prepareStatement(sql);
+			ResultSet result = stmt.executeQuery();
+
+			String ret = null;
+			if(result.next())
+			{
+				ret = result.getString(1);
+			}
+			result.close();
+			stmt.close();
+			return ret;
+		}
+		catch(java.lang.Exception e)
+		{
+			e.printStackTrace(System.err);
+			return null;
+		}
 	}
 }

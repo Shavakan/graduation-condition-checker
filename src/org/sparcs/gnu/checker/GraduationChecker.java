@@ -1,6 +1,7 @@
 package org.sparcs.gnu.checker;
 
 import org.sparcs.gnu.catalog.Catalog;
+import org.sparcs.gnu.catalog.Rule;
 import org.sparcs.gnu.course.GradeInfo;
 
 /**
@@ -28,7 +29,33 @@ public class GraduationChecker {
 	 */
 	public ProcessInfo process(GradeInfo info)
 	{
+		info.preprocess();
 		//TODO fill in
+
+		for(Rule rule : catalog.getRules())
+		{
+			String msg = "";
+			String value = rule.getMinRequirement();
+			boolean ret = false;
+			if(value.contains("."))
+			{
+				double comp = Double.parseDouble(value);
+
+				double myComp = Double.parseDouble(info.check(rule.getQuery()));
+				if(myComp >= comp)
+					ret = true;
+				msg = "" + myComp + "/" + comp;
+			}
+			else
+			{
+				long comp = Long.parseLong(value);
+				long myComp = Long.parseLong(info.check(rule.getQuery()));
+				if(myComp >= comp)
+					ret = true;
+				msg = "" + myComp + "/" + comp;
+			}
+			System.out.println("" + ret + " " + msg);
+		}
 		return null;
 	}
 }
