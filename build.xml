@@ -37,6 +37,8 @@
 				  dir="@{dir}"
 				  classname="xtc.parser.Rats"
 				  classpath="./lib/jars/rats.jar">
+				<arg value="-enc-in"/>
+				<arg value="UTF-8"/>
 				<arg value="-in"/>
 				<arg value="${src}"/>
 				<arg value="-enc-out"/>
@@ -51,7 +53,6 @@
 	</target>
 
 	<target name="parser" depends="resolve">
-		<echo>${env_IVY_HOME}</echo>
 		<ant target="MGparser"/>
 		<ant target="IGparser"/>
 	</target>
