@@ -17,7 +17,7 @@ public abstract class Converter {
 	public static Converter converterObject(String arg) {
 		Converter converter = null;
 		
-		if (arg.endsWith(".csv")) {
+		if (arg.endsWith(".xls")) {
 			converter = new ExcelConverter(arg);
 		}
 		else if (arg.startsWith("http")) {
