@@ -180,7 +180,7 @@ private String Condition =
 			Element e = new Element("조건");
 			e.setAttribute("name", curType+"학점");
 			if(curType.equals("전필") || curType.equals("전선"))
-				e.addContent((new Element("쿼리")).setText("SELECT SUM(`credit`) FROM `grade` WHERE `type`='" + curType + "' AND `grade`!='F' AND `grade`!='U' AND `grade`!='W' AND `grade`!='I' AND `grade`!='R' AND SUBSTR(`number`,0,2)='" + curCode + "'"));
+				e.addContent((new Element("쿼리")).setText("SELECT SUM(`credit`) FROM `grade` WHERE `type`='" + curType + "' AND `grade`!='F' AND `grade`!='U' AND `grade`!='W' AND `grade`!='I' AND `grade`!='R' AND SUBSTR(`number`,1,2)='" + curCode + "'"));
 			else
 				e.addContent((new Element("쿼리")).setText("SELECT SUM(`credit`) FROM `grade` WHERE `type`='" + curType + "' AND `grade`!='F' AND `grade`!='U' AND `grade`!='W' AND `grade`!='I' AND `grade`!='R'"));
 			e.addContent((new Element("최소")).setText(n1));
@@ -190,7 +190,7 @@ private String Condition =
 			e = new Element("조건");
 			e.setAttribute("name", curType+"AU");
 			if(curType.equals("전필") || curType.equals("전선"))
-				e.addContent((new Element("쿼리")).setText("SELECT SUM(au) FROM `grade` WHERE type='" + curType + "' AND `grade`!='F' AND `grade`!='U' AND `grade`!='W' AND `grade`!='I' AND `grade`!='R' AND SUBSTR(`number`,0,2)='" + curCode + "'"));
+				e.addContent((new Element("쿼리")).setText("SELECT SUM(au) FROM `grade` WHERE type='" + curType + "' AND `grade`!='F' AND `grade`!='U' AND `grade`!='W' AND `grade`!='I' AND `grade`!='R' AND SUBSTR(`number`,1,2)='" + curCode + "'"));
 			else
 				e.addContent((new Element("쿼리")).setText("SELECT SUM(au) FROM `grade` WHERE type='" + curType + "' AND `grade`!='F' AND `grade`!='U' AND `grade`!='W' AND `grade`!='I' AND `grade`!='R'"));
 			e.addContent((new Element("최소")).setText(n2));
@@ -204,7 +204,7 @@ private String Condition =
 			Element e = new Element("조건");
 			e.setAttribute("name", curType+"학점");
 			if(curType.equals("전필") || curType.equals("전선"))
-				e.addContent((new Element("쿼리")).setText("SELECT SUM(credit) FROM `grade` WHERE type='" + curType + "' AND `grade`!='F' AND `grade`!='U' AND `grade`!='W' AND `grade`!='I' AND `grade`!='R' AND SUBSTR(`number`,0,2)='" + curCode + "'"));
+				e.addContent((new Element("쿼리")).setText("SELECT SUM(credit) FROM `grade` WHERE type='" + curType + "' AND `grade`!='F' AND `grade`!='U' AND `grade`!='W' AND `grade`!='I' AND `grade`!='R' AND SUBSTR(`number`,1,2)='" + curCode + "'"));
 			else
 				e.addContent((new Element("쿼리")).setText("SELECT SUM(credit) FROM `grade` WHERE type='" + curType + "' AND `grade`!='F' AND `grade`!='U' AND `grade`!='W' AND `grade`!='I' AND `grade`!='R'"));
 			e.addContent((new Element("최소")).setText(n1));
@@ -218,7 +218,7 @@ private String Condition =
 			Element e = new Element("조건");
 			e.setAttribute("name", curType+"학점");
 			if(curType.equals("전필") || curType.equals("전선"))
-				e.addContent((new Element("쿼리")).setText("SELECT SUM(credit) FROM `grade` WHERE type='" + curType + "' AND `grade`!='F' AND `grade`!='U' AND `grade`!='W' AND `grade`!='I' AND `grade`!='R' AND SUBSTR(`number`,0,2)='" + curCode + "'"));
+				e.addContent((new Element("쿼리")).setText("SELECT SUM(credit) FROM `grade` WHERE type='" + curType + "' AND `grade`!='F' AND `grade`!='U' AND `grade`!='W' AND `grade`!='I' AND `grade`!='R' AND SUBSTR(`number`,1,2)='" + curCode + "'"));
 			else
 				e.addContent((new Element("쿼리")).setText("SELECT SUM(credit) FROM `grade` WHERE type='" + curType + "' AND `grade`!='F' AND `grade`!='U' AND `grade`!='W' AND `grade`!='I' AND `grade`!='R'"));
 			e.addContent((new Element("최소")).setText(n1));
@@ -232,7 +232,7 @@ private String Condition =
 			Element e = new Element("조건");
 			e.setAttribute("name", curType+"학점");
 			if(curType.equals("전필") || curType.equals("전선"))
-				e.addContent((new Element("쿼리")).setText("SELECT SUM(credit) FROM `grade` WHERE type='" + curType + "' AND `grade`!='F' AND `grade`!='U' AND `grade`!='W' AND `grade`!='I' AND `grade`!='R' AND SUBSTR(`number`,0,2)='" + curCode + "'"));
+				e.addContent((new Element("쿼리")).setText("SELECT SUM(credit) FROM `grade` WHERE type='" + curType + "' AND `grade`!='F' AND `grade`!='U' AND `grade`!='W' AND `grade`!='I' AND `grade`!='R' AND SUBSTR(`number`,1,2)='" + curCode + "'"));
 			else
 				e.addContent((new Element("쿼리")).setText("SELECT SUM(credit) FROM `grade` WHERE type='" + curType + "' AND `grade`!='F' AND `grade`!='U' AND `grade`!='W' AND `grade`!='I' AND `grade`!='R'"));
 			e.addContent((new Element("최소")).setText("0"));
