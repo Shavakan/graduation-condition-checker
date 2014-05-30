@@ -10,7 +10,6 @@ public class HangulExcelConfig extends ExcelConfig{
 		column_map.put("No", "index");
 		column_map.put("년도", "year");
 		column_map.put("학기", "semester");
-		column_map.put("학과", "dept");
 		column_map.put("교과목", "number");
 		column_map.put("과목번호", "code");
 		column_map.put("분반", "section");
@@ -29,5 +28,17 @@ public class HangulExcelConfig extends ExcelConfig{
 		value_map.put("학기", semester_map);
 		
 		
+	}
+	
+	@Override
+	public String transformValue(String column, String value){
+		if(column.equals("교과목"))
+		{
+			//10.xxx -> 10
+		}
+		else
+		{
+			return super.transformValue(column, value);
+		}
 	}
 }
