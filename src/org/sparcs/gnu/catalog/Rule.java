@@ -7,14 +7,20 @@ package org.sparcs.gnu.catalog;
 public class Rule {
 	private String query;
 	private String min;
+	private String name;
 
 	/**
 	 * Constructor.
 	 */
 	public Rule(String name, String query, String min){
-		//TODO fill in.
+		this.name = name;
 		this.query = query;
 		this.min = min;
+	}
+	
+	public String getName()
+	{
+		return name;
 	}
 	
 	public String getQuery()
