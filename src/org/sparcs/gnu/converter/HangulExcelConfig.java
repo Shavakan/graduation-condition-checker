@@ -29,16 +29,4 @@ public class HangulExcelConfig extends ExcelConfig{
 		
 		
 	}
-	
-	@Override
-	public String transformValue(String column, String value){
-		if(column.equals("교과목"))
-		{
-			//10.xxx -> 10
-		}
-		else
-		{
-			return super.transformValue(column, value);
-		}
-	}
 }
