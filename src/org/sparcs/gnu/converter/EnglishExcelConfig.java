@@ -9,7 +9,6 @@ public class EnglishExcelConfig extends ExcelConfig{
 		column_map.put("No", "index");
 		column_map.put("Year", "year");
 		column_map.put("Term", "semester");
-		column_map.put("Department", "dept");
 		column_map.put("System No.", "number");
 		column_map.put("Course No.", "code");
 		column_map.put("Section", "section");

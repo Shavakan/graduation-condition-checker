@@ -10,6 +10,7 @@ body {
 	Element root;
 	String curType;
 	String curName;
+	String curCode;
 	private void initD(String name, String code)
 	{
 		d = new Document();
@@ -17,6 +18,7 @@ body {
 	    d.setRootElement(root);
 	    root.setAttribute("name", name + "학과");
 	    root.setAttribute("code", code);
+	    curCode = code;
 	}
 }
 
@@ -177,14 +179,20 @@ private String Condition =
 		{
 			Element e = new Element("조건");
 			e.setAttribute("name", curType+"학점");
-			e.addContent((new Element("쿼리")).setText("SELECT SUM(`credit`) FROM `grade` WHERE `type`='" + curType + "' AND `grade`!='F' AND `grade`!='U' AND `grade`!='W' AND `grade`!='I' AND `grade`!='R'"));
+			if(curType.equals("전필") || curType.equals("전선"))
+				e.addContent((new Element("쿼리")).setText("SELECT SUM(`credit`) FROM `grade` WHERE `type`='" + curType + "' AND `grade`!='F' AND `grade`!='U' AND `grade`!='W' AND `grade`!='I' AND `grade`!='R' AND SUBSTR(`number`,1,2)='" + curCode + "'"));
+			else
+				e.addContent((new Element("쿼리")).setText("SELECT SUM(`credit`) FROM `grade` WHERE `type`='" + curType + "' AND `grade`!='F' AND `grade`!='U' AND `grade`!='W' AND `grade`!='I' AND `grade`!='R'"));
 			e.addContent((new Element("최소")).setText(n1));
 			e.addContent((new Element("원문")).setText(curName + " " + n1 + "학점"));
 			root.addContent(e);
 
 			e = new Element("조건");
 			e.setAttribute("name", curType+"AU");
-			e.addContent((new Element("쿼리")).setText("SELECT SUM(au) FROM `grade` WHERE type='" + curType + "' AND `grade`!='F' AND `grade`!='U' AND `grade`!='W' AND `grade`!='I' AND `grade`!='R'"));
+			if(curType.equals("전필") || curType.equals("전선"))
+				e.addContent((new Element("쿼리")).setText("SELECT SUM(au) FROM `grade` WHERE type='" + curType + "' AND `grade`!='F' AND `grade`!='U' AND `grade`!='W' AND `grade`!='I' AND `grade`!='R' AND SUBSTR(`number`,1,2)='" + curCode + "'"));
+			else
+				e.addContent((new Element("쿼리")).setText("SELECT SUM(au) FROM `grade` WHERE type='" + curType + "' AND `grade`!='F' AND `grade`!='U' AND `grade`!='W' AND `grade`!='I' AND `grade`!='R'"));
 			e.addContent((new Element("최소")).setText(n2));
 			e.addContent((new Element("원문")).setText(curName + " " + n2 + "AU"));
 			root.addContent(e);
@@ -195,7 +203,10 @@ private String Condition =
 		{
 			Element e = new Element("조건");
 			e.setAttribute("name", curType+"학점");
-			e.addContent((new Element("쿼리")).setText("SELECT SUM(credit) FROM `grade` WHERE type='" + curType + "' AND `grade`!='F' AND `grade`!='U' AND `grade`!='W' AND `grade`!='I' AND `grade`!='R'"));
+			if(curType.equals("전필") || curType.equals("전선"))
+				e.addContent((new Element("쿼리")).setText("SELECT SUM(credit) FROM `grade` WHERE type='" + curType + "' AND `grade`!='F' AND `grade`!='U' AND `grade`!='W' AND `grade`!='I' AND `grade`!='R' AND SUBSTR(`number`,1,2)='" + curCode + "'"));
+			else
+				e.addContent((new Element("쿼리")).setText("SELECT SUM(credit) FROM `grade` WHERE type='" + curType + "' AND `grade`!='F' AND `grade`!='U' AND `grade`!='W' AND `grade`!='I' AND `grade`!='R'"));
 			e.addContent((new Element("최소")).setText(n1));
 			e.addContent((new Element("원문")).setText(curName + " " + n1 + "학점 이상"));
 			root.addContent(e);
@@ -206,7 +217,10 @@ private String Condition =
 		{
 			Element e = new Element("조건");
 			e.setAttribute("name", curType+"학점");
-			e.addContent((new Element("쿼리")).setText("SELECT SUM(credit) FROM `grade` WHERE type='" + curType + "' AND `grade`!='F' AND `grade`!='U' AND `grade`!='W' AND `grade`!='I' AND `grade`!='R'"));
+			if(curType.equals("전필") || curType.equals("전선"))
+				e.addContent((new Element("쿼리")).setText("SELECT SUM(credit) FROM `grade` WHERE type='" + curType + "' AND `grade`!='F' AND `grade`!='U' AND `grade`!='W' AND `grade`!='I' AND `grade`!='R' AND SUBSTR(`number`,1,2)='" + curCode + "'"));
+			else
+				e.addContent((new Element("쿼리")).setText("SELECT SUM(credit) FROM `grade` WHERE type='" + curType + "' AND `grade`!='F' AND `grade`!='U' AND `grade`!='W' AND `grade`!='I' AND `grade`!='R'"));
 			e.addContent((new Element("최소")).setText(n1));
 			e.addContent((new Element("원문")).setText(curName + " " + n1 + "학점"));
 			root.addContent(e);
@@ -215,7 +229,17 @@ private String Condition =
 		}
 	/	"없음"
 		{
-			yyValue = "없음";
+			Element e = new Element("조건");
+			e.setAttribute("name", curType+"학점");
+			if(curType.equals("전필") || curType.equals("전선"))
+				e.addContent((new Element("쿼리")).setText("SELECT SUM(credit) FROM `grade` WHERE type='" + curType + "' AND `grade`!='F' AND `grade`!='U' AND `grade`!='W' AND `grade`!='I' AND `grade`!='R' AND SUBSTR(`number`,1,2)='" + curCode + "'"));
+			else
+				e.addContent((new Element("쿼리")).setText("SELECT SUM(credit) FROM `grade` WHERE type='" + curType + "' AND `grade`!='F' AND `grade`!='U' AND `grade`!='W' AND `grade`!='I' AND `grade`!='R'"));
+			e.addContent((new Element("최소")).setText("0"));
+			e.addContent((new Element("원문")).setText(curName + " 없음"));
+			root.addContent(e);
+
+			yyValue = "0학점";
 		};
 
 private String Number =

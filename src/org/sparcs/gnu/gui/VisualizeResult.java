@@ -1,9 +1,9 @@
 package org.sparcs.gnu.gui;
 
 
-import java.awt.Canvas;
 import java.awt.Color;
 import java.awt.Graphics;
+import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
@@ -13,11 +13,14 @@ import java.util.LinkedList;
 import java.util.List;
 
 import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.ToolTipManager;
 
 import org.sparcs.gnu.checker.ProcessInfo;
 
 public class VisualizeResult extends GCCContainer{
 	private HashMap<String, BarGraph> bars;
+	private HashMap<String, JLabel> scores;
 	
 	/**
 	 * Create the application.
@@ -25,6 +28,7 @@ public class VisualizeResult extends GCCContainer{
 	public VisualizeResult(GUIMain root) {
 		super(root);
 		bars = new HashMap<String, BarGraph>();
+		scores = new HashMap<String, JLabel>();
 		initialize();
 	}
 
@@ -105,11 +109,15 @@ public class VisualizeResult extends GCCContainer{
 			Rectangle r = l.getBounds();
 			BarGraph b = new BarGraph(150, r.y, 550, r.height);
 			bars.put(l.getText(), b);
+			JLabel label = new JLabel();
+			label.setBounds(710, r.y, 80, r.height);
+			scores.put(l.getText(), label);
 			this.getContainer().add(l);
 			this.getContainer().add(b);
+			this.getContainer().add(label);
 		}
 	}
-	
+
 	public void update(ProcessInfo info)
 	{
 		for(String barName : bars.keySet())
@@ -124,91 +132,101 @@ public class VisualizeResult extends GCCContainer{
 				System.err.println("No barname " + barName);
 				continue;
 			}
-			bar.setLength(complete, exception, total - complete - exception);
+			bar.setLength(Math.min(complete, total - exception), exception, Math.max(0, total - complete - exception));
+			JLabel label = scores.get(barName);
+			if (barName.equals("평점"))
+				label.setText("["+complete+"/"+Math.round(total-exception)+"]");	
+			else
+				label.setText("["+Math.round(complete)+"/"+Math.round(total-exception)+"]");	
 		}
 	}
 
-	private class BarGraph extends Canvas
+	private class BarGraph extends JPanel
 	{
 		private boolean isMouseIn = false;
 		private String current = "None";
-		
+
 		private int green_start = 0;
 		private int green_len = 0;
 		private int yellow_start = 0;
 		private int yellow_len = 0;
 		private int red_start = 0;
 		private int red_len = 0;
+
+		private Point toolTipLocation;
 		public BarGraph(int x, int y, int w, int h)
 		{
 			setBounds(x, y, w, h);
+			setToolTipText("기본");
 			this.addMouseListener(new MouseListener() {
-				
+
+				private int prevInitDelay;
+				private int prevDismissDelay;
+				private int prevReshowDelay;
+
 				@Override
 				public void mouseReleased(MouseEvent e) {
 					// TODO Auto-generated method stub
-					
+
 				}
-				
+
 				@Override
 				public void mousePressed(MouseEvent e) {
 					// TODO Auto-generated method stub
-					
+
 				}
-				
+
 				@Override
 				public void mouseExited(MouseEvent e) {
 					// TODO Auto-generated method stub
 					isMouseIn = false;
 					System.out.println("Mouse Out");
+					current = "None";
+					toolTipLocation = null;
+
+					ToolTipManager.sharedInstance().setInitialDelay(prevInitDelay);
+					ToolTipManager.sharedInstance().setDismissDelay(prevDismissDelay);
+					ToolTipManager.sharedInstance().setReshowDelay(prevReshowDelay);
 				}
-				
+
 				@Override
 				public void mouseEntered(MouseEvent e) {
 					// TODO Auto-generated method stub
 					isMouseIn = true;
 					System.out.println("Mouse In");
 					current = "None";
+					toolTipLocation = e.getPoint();
+
+					prevInitDelay = ToolTipManager.sharedInstance().getInitialDelay();
+					prevDismissDelay = ToolTipManager.sharedInstance().getDismissDelay();
+					prevReshowDelay = ToolTipManager.sharedInstance().getReshowDelay();
+					ToolTipManager.sharedInstance().setInitialDelay(0);
+					ToolTipManager.sharedInstance().setDismissDelay(Integer.MAX_VALUE);
+					ToolTipManager.sharedInstance().setReshowDelay(0);
 				}
-				
+
 				@Override
 				public void mouseClicked(MouseEvent arg0) {
 					// TODO Auto-generated method stub
-					
+
 				}
-				
+
 			});
 			this.addMouseMotionListener(new MouseMotionListener() {
 				@Override
 				public void mouseMoved(MouseEvent arg0) {
 					// TODO Auto-generated method stub
-					String prev = current;
-					if(arg0.getX() < green_start + green_len)
-					{
-						current = "Green";
-					}
-					else if(arg0.getX() < yellow_start + yellow_len)
-					{
-						current = "Yellow";
-					}
-					else
-					{
-						current = "Red";
-					}
-					if(!current.equals(prev))
-					{
-						System.out.println(current);
-					}
+
 				}
-				
+
 				@Override
 				public void mouseDragged(MouseEvent arg0) {
 					// TODO Auto-generated method stub
-					
+
 				}
 			});
-			
-			
+
+
 			green_start = 0;
 			green_len = getWidth()/3;
 			yellow_start = getWidth()/3;
@@ -216,11 +234,49 @@ public class VisualizeResult extends GCCContainer{
 			red_start = (getWidth() * 2)/3;
 			red_len = getWidth()/3;			
 		}
+
+		@Override
+		public Point getToolTipLocation(MouseEvent e)
+		{
+			String prev = current;
+			int x = 0;
+			int y = 0;
+			if(e.getX() < green_start + green_len)
+			{
+				current = "Green";
+				setToolTipText("그린");
+				x = green_start + green_len / 2;
+				y = this.getHeight()/2;
+			}
+			else if(e.getX() < yellow_start + yellow_len)
+			{
+				current = "Yellow";
+				setToolTipText("옐로");
+
+				x = yellow_start + yellow_len / 2;
+				y = this.getHeight()/2;
+			}
+			else
+			{
+				current = "Red";
+				setToolTipText("레드");
+
+				x = red_start + red_len / 2;
+				y = this.getHeight()/2;
+			}
+			if(!current.equals(prev))
+			{
+				System.out.println(current + " " + x + " " + y);
+				toolTipLocation = new Point(x,y);
+			}
+
+			return toolTipLocation;
+		}
 		/**
 		 * 
 		 */
 		private static final long serialVersionUID = 1L;
-		
+
 		@Override
 		public void paint(Graphics g) {
 			g.clearRect(0, 0, getWidth(), getHeight());
@@ -237,26 +293,37 @@ public class VisualizeResult extends GCCContainer{
 			g.setColor(Color.black);
 			g.drawRect(red_start, 0, Math.min(getWidth()-red_start-1,red_len), getHeight()-1);
 		}
-		
+
 		public void setLength(double green, double yellow, double red)
 		{
 			double total = green + yellow + red;
-			double green_start_ratio = 0;
-			double red_start_ratio = 1-red/total;
-			double red_len_ratio = red/total;
-			double yellow_start_ratio = red_start_ratio - yellow/total;
-			double yellow_len_ratio = yellow/total;
-			double green_len_ratio = 1 - red_len_ratio - yellow_len_ratio;
-			
-			
-			this.green_start = (int)Math.floor(this.getWidth() * green_start_ratio);
-			this.yellow_start = (int)Math.floor(this.getWidth() * yellow_start_ratio);
-			this.red_start = (int)Math.floor(this.getWidth() * red_start_ratio);
-			
-			this.green_len = (int)Math.floor(this.getWidth() * green_len_ratio);
-			this.yellow_len = (int)Math.floor(this.getWidth() * yellow_len_ratio);
-			this.red_len = (int)Math.floor(this.getWidth() * red_len_ratio);
-			
+			if (total>0.00001)
+			{
+				double green_start_ratio = 0;
+				double green_len_ratio = green / total;
+				double yellow_start_ratio = green_start_ratio + green_len_ratio;
+				double yellow_len_ratio = yellow/total;
+
+				double red_start_ratio = yellow_start_ratio + yellow_len_ratio;
+				double red_len_ratio = red/total;
+
+
+				this.green_start = (int)Math.floor(this.getWidth() * green_start_ratio);
+				this.yellow_start = (int)Math.floor(this.getWidth() * yellow_start_ratio);
+				this.red_start = (int)Math.floor(this.getWidth() * red_start_ratio);
+
+				this.green_len = (int)Math.floor(this.getWidth() * green_len_ratio);
+				this.yellow_len = (int)Math.floor(this.getWidth() * yellow_len_ratio);
+				this.red_len = (int)Math.floor(this.getWidth() * red_len_ratio);
+			}
+			else
+			{
+				this.green_start = 0;
+				this.yellow_start = this.red_start = this.getWidth();
+				this.yellow_len = this.red_len = 0;
+				this.green_len = this.getWidth();
+			}
+
 			this.invalidate();
 		}
 	}
