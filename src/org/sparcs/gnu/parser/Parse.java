@@ -2,7 +2,6 @@ package org.sparcs.gnu.parser;
 
 import java.io.FileReader;
 import java.io.FileWriter;
-import java.io.IOException;
 
 import org.jdom2.Document;
 import org.jdom2.output.Format;
@@ -55,7 +54,7 @@ public class Parse {
 
 			return true;
 		}
-		catch(IOException e)
+		catch(Exception e)
 		{
 			e.printStackTrace(System.err);
 			return false;
