@@ -217,10 +217,16 @@ public class VisualizeResult {
 			g.clearRect(0, 0, getWidth(), getHeight());
 			g.setColor(Color.decode("#7CE700"));
 			g.fillRect(0, 0, getWidth()/3, getHeight());
+			g.setColor(Color.black);
+			g.drawRect(0, 0, getWidth()/3 , getHeight()-1);
 			g.setColor(Color.decode("#FFDE00"));
-			g.fillRect(getWidth()/3, 0, getWidth()/3 * 2, getHeight());
+			g.fillRect(getWidth()/3, 0, getWidth()/3, getHeight());
+			g.setColor(Color.black);
+			g.drawRect(getWidth()/3, 0, getWidth()/3 , getHeight()-1);
 			g.setColor(Color.decode("#FF0000"));
-			g.fillRect(getWidth()/3 * 2, 0, getWidth(), getHeight());
+			g.fillRect(getWidth()/3 * 2, 0, getWidth()/3, getHeight());
+			g.setColor(Color.black);
+			g.drawRect(getWidth()/3 * 2, 0, getWidth()/3, getHeight()-1);
 		}
 		
 	}
