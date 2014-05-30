@@ -48,7 +48,10 @@ public class GraduationChecker {
 			if(value.contains("."))
 			{
 				double comp = Double.parseDouble(value);
-				double myComp = Double.parseDouble(info.check(rule.getQuery()));
+				String checkData = info.check(rule.getQuery());
+				if(checkData == null)
+					checkData = "0.0";
+				double myComp = Double.parseDouble(checkData);
 				if(myComp >= comp)
 					ret = true;
 				msg = "" + myComp + "/" + comp;
@@ -60,7 +63,10 @@ public class GraduationChecker {
 			else
 			{
 				long comp = Long.parseLong(value);
-				long myComp = Long.parseLong(info.check(rule.getQuery()));
+				String checkData = info.check(rule.getQuery());
+				if(checkData == null)
+					checkData = "0";
+				long myComp = Long.parseLong(checkData);
 				if(myComp >= comp)
 					ret = true;
 				msg = "" + myComp + "/" + comp;
