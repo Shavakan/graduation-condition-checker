@@ -214,6 +214,7 @@ public class VisualizeResult {
 					// TODO Auto-generated method stub
 					isMouseIn = true;
 					System.out.println("Mouse In");
+					current = "None";
 				}
 				
 				@Override
@@ -224,22 +225,21 @@ public class VisualizeResult {
 				
 			});
 			this.addMouseMotionListener(new MouseMotionListener() {
-				
 				@Override
 				public void mouseMoved(MouseEvent arg0) {
 					// TODO Auto-generated method stub
 					String prev = current;
-					if(arg0.getX() < getWidth()/3)
+					if(arg0.getX() < green_start + green_len)
 					{
-						current = "Red";
+						current = "Green";
 					}
-					else if(arg0.getX() < getWidth()*2/3)
+					else if(arg0.getX() < yellow_start + yellow_len)
 					{
-						current = "Blue";
+						current = "Yellow";
 					}
 					else
 					{
-						current = "Green";
+						current = "Red";
 					}
 					if(!current.equals(prev))
 					{
@@ -273,15 +273,15 @@ public class VisualizeResult {
 			g.setColor(Color.decode("#7CE700"));
 			g.fillRect(green_start, 0, green_len, getHeight());
 			g.setColor(Color.black);
-			g.drawRect(green_start, 0, green_len , getHeight()-1);
+			g.drawRect(green_start, 0, Math.min(getWidth()-green_start-1,green_len), getHeight()-1);
 			g.setColor(Color.decode("#FFDE00"));
 			g.fillRect(yellow_start, 0, yellow_len, getHeight());
 			g.setColor(Color.black);
-			g.drawRect(yellow_start, 0, yellow_len, getHeight()-1);
+			g.drawRect(yellow_start, 0, Math.min(getWidth()-yellow_start-1,yellow_len), getHeight()-1);
 			g.setColor(Color.decode("#FF0000"));
 			g.fillRect(red_start, 0, red_len, getHeight());
 			g.setColor(Color.black);
-			g.drawRect(red_start, 0, red_len, getHeight()-1);
+			g.drawRect(red_start, 0, Math.min(getWidth()-red_start-1,red_len), getHeight()-1);
 		}
 		
 		public void setLength(double green, double yellow, double red)
@@ -295,13 +295,13 @@ public class VisualizeResult {
 			double green_len_ratio = 1 - red_len_ratio - yellow_len_ratio;
 			
 			
-			this.green_start = (int)Math.round(this.getWidth() * green_start_ratio);
-			this.yellow_start = (int)Math.round(this.getWidth() * yellow_start_ratio);
-			this.red_start = (int)Math.round(this.getWidth() * red_start_ratio);
+			this.green_start = (int)Math.floor(this.getWidth() * green_start_ratio);
+			this.yellow_start = (int)Math.floor(this.getWidth() * yellow_start_ratio);
+			this.red_start = (int)Math.floor(this.getWidth() * red_start_ratio);
 			
-			this.green_len = (int)Math.round(this.getWidth() * green_len_ratio);
-			this.yellow_len = (int)Math.round(this.getWidth() * yellow_len_ratio);
-			this.red_len = (int)Math.round(this.getWidth() * red_len_ratio);
+			this.green_len = (int)Math.floor(this.getWidth() * green_len_ratio);
+			this.yellow_len = (int)Math.floor(this.getWidth() * yellow_len_ratio);
+			this.red_len = (int)Math.floor(this.getWidth() * red_len_ratio);
 			
 			this.invalidate();
 		}
