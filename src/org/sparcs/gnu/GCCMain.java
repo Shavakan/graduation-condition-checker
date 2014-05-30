@@ -5,6 +5,7 @@ import java.sql.Connection;
 
 import org.sparcs.gnu.catalog.Catalog;
 import org.sparcs.gnu.checker.GraduationChecker;
+import org.sparcs.gnu.checker.ProcessInfo;
 import org.sparcs.gnu.converter.Converter;
 import org.sparcs.gnu.converter.SQLiteManager;
 import org.sparcs.gnu.course.GradeInfo;
@@ -24,6 +25,6 @@ public class GCCMain {
 		Catalog catalog = Catalog.loadCatalog("tmp" + File.separator + "cs.xml");
 
 		GraduationChecker checker = new GraduationChecker(catalog);
-		checker.process(info);
+		ProcessInfo result = checker.process(info);
 	}
 }

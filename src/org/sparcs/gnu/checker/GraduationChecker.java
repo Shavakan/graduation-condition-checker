@@ -31,20 +31,31 @@ public class GraduationChecker {
 	{
 		info.preprocess();
 		//TODO fill in
+		
+		ProcessInfo result = new ProcessInfo();
 
 		for(Rule rule : catalog.getRules())
 		{
 			String msg = "";
 			String value = rule.getMinRequirement();
 			boolean ret = false;
+			
+			String resultKey = rule.getName();
+			double resultTotal = 0.0;
+			double resultComplete = 0.0;
+			double resultException = 0.0;
+			
 			if(value.contains("."))
 			{
 				double comp = Double.parseDouble(value);
-
 				double myComp = Double.parseDouble(info.check(rule.getQuery()));
 				if(myComp >= comp)
 					ret = true;
 				msg = "" + myComp + "/" + comp;
+				
+				resultTotal = comp;
+				resultComplete = myComp;
+				//TODO exception 처리
 			}
 			else
 			{
@@ -53,9 +64,17 @@ public class GraduationChecker {
 				if(myComp >= comp)
 					ret = true;
 				msg = "" + myComp + "/" + comp;
+				
+				resultTotal = comp;
+				resultComplete = myComp;
+				//TODO exception 처리
 			}
+			
+			result.addTotal(resultKey, resultTotal);
+			result.addException(resultKey, resultException);
+			result.addComplete(resultKey, resultComplete);
 			System.out.println("" + ret + " " + msg);
 		}
-		return null;
+		return result;
 	}
 }
