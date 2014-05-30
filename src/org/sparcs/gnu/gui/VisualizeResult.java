@@ -20,13 +20,15 @@ import org.sparcs.gnu.checker.ProcessInfo;
 
 public class VisualizeResult extends GCCContainer{
 	private HashMap<String, BarGraph> bars;
-
+	private HashMap<String, JLabel> scores;
+	
 	/**
 	 * Create the application.
 	 */
 	public VisualizeResult(GUIMain root) {
 		super(root);
 		bars = new HashMap<String, BarGraph>();
+		scores = new HashMap<String, JLabel>();
 		initialize();
 	}
 
@@ -107,8 +109,12 @@ public class VisualizeResult extends GCCContainer{
 			Rectangle r = l.getBounds();
 			BarGraph b = new BarGraph(150, r.y, 550, r.height);
 			bars.put(l.getText(), b);
+			JLabel label = new JLabel();
+			label.setBounds(710, r.y, 80, r.height);
+			scores.put(l.getText(), label);
 			this.getContainer().add(l);
 			this.getContainer().add(b);
+			this.getContainer().add(label);
 		}
 	}
 
@@ -127,6 +133,11 @@ public class VisualizeResult extends GCCContainer{
 				continue;
 			}
 			bar.setLength(Math.min(complete, total - exception), exception, Math.max(0, total - complete - exception));
+			JLabel label = scores.get(barName);
+			if (barName.equals("평점"))
+				label.setText("["+complete+"/"+Math.round(total-exception)+"]");	
+			else
+				label.setText("["+Math.round(complete)+"/"+Math.round(total-exception)+"]");	
 		}
 	}
 
