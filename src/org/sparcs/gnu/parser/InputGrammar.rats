@@ -215,7 +215,14 @@ private String Condition =
 		}
 	/	"없음"
 		{
-			yyValue = "없음";
+			Element e = new Element("조건");
+			e.setAttribute("name", curType+"학점");
+			e.addContent((new Element("쿼리")).setText("SELECT SUM(credit) FROM `grade` WHERE type='" + curType + "' AND `grade`!='F' AND `grade`!='U' AND `grade`!='W' AND `grade`!='I' AND `grade`!='R'"));
+			e.addContent((new Element("최소")).setText("0"));
+			e.addContent((new Element("원문")).setText(curName + " 없음"));
+			root.addContent(e);
+
+			yyValue = "0학점";
 		};
 
 private String Number =
