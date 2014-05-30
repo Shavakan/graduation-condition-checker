@@ -16,6 +16,7 @@ CREATE TABLE IF NOT EXISTS `grade` (
   `credit` INT NOT NULL,
   `au` INT NOT NULL,
   `grade` TEXT NOT NULL,
+  `dept` TEXT NOT NULL,
   PRIMARY KEY (`index`))
 ;
 
