@@ -16,10 +16,10 @@ import org.sparcs.gnu.parser.Parse;
 
 public class GUIMain {
 
-	private VisualizeResult vresult;
-	private SelectFile selectFile;
+	protected SelectFile selectFile;
+	protected VisualizeResult vResult;
 	
-	private JFrame frame;
+	protected JFrame frame;
 	/**
 	 * Launch the application.
 	 */
@@ -27,26 +27,10 @@ public class GUIMain {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					Converter conv = Converter.converterObject("tmp" + File.separator + "근홍.xls");
-					conv.convert("tmp" + File.separator + "output.db");
-					Connection conn = SQLiteManager.createDatabase("tmp" + File.separator + "output.db", false);
-					Class.forName("org.sparcs.gnu.course.GradeInfo");
-					
-					GradeInfo info = new GradeInfo(conn);
-					Parse.parseRawInput("conf" + File.separator + "cs.conf", "tmp" + File.separator + "cs.xml");
-					Catalog catalog = Catalog.loadCatalog("tmp" + File.separator + "cs.xml");
-
-					GraduationChecker checker = new GraduationChecker(catalog);
-					ProcessInfo result = checker.process(info);
-					
-					/////////////////
 					GUIMain window = new GUIMain();
 					
-					window.vresult = new VisualizeResult(window);
-					window.vresult.update(result);
-					
 					window.selectFile = new SelectFile(window);
-					
+					window.vResult = new VisualizeResult(window);
 					
 					window.frame.setVisible(true);
 					window.frame.setContentPane(window.selectFile.getContainer());
@@ -66,7 +50,6 @@ public class GUIMain {
 	
 	void showResult()
 	{
-		frame.setContentPane(vresult.getContainer());
 		frame.getContentPane().invalidate();
 	}
 
