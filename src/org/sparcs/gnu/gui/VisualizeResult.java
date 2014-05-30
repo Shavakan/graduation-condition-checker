@@ -3,65 +3,27 @@ package org.sparcs.gnu.gui;
 
 import java.awt.Canvas;
 import java.awt.Color;
-import java.awt.EventQueue;
 import java.awt.Graphics;
 import java.awt.Rectangle;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
-import java.io.File;
-import java.sql.Connection;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 
-import javax.swing.JFrame;
 import javax.swing.JLabel;
 
-import org.sparcs.gnu.catalog.Catalog;
-import org.sparcs.gnu.checker.GraduationChecker;
 import org.sparcs.gnu.checker.ProcessInfo;
-import org.sparcs.gnu.converter.Converter;
-import org.sparcs.gnu.converter.SQLiteManager;
-import org.sparcs.gnu.course.GradeInfo;
-import org.sparcs.gnu.parser.Parse;
 
-public class VisualizeResult {
-	HashMap<String, BarGraph> bars;
-	private JFrame frame;
-
-	/**
-	 * Launch the application.
-	 */
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					Converter conv = Converter.converterObject("tmp" + File.separator + "근홍.xls");
-					conv.convert("tmp" + File.separator + "output.db");
-					Connection conn = SQLiteManager.createDatabase("tmp" + File.separator + "output.db", false);
-					Class.forName("org.sparcs.gnu.course.GradeInfo");
-					
-					GradeInfo info = new GradeInfo(conn);
-					Parse.parseRawInput("conf" + File.separator + "cs.conf", "tmp" + File.separator + "cs.xml");
-					Catalog catalog = Catalog.loadCatalog("tmp" + File.separator + "cs.xml");
-
-					GraduationChecker checker = new GraduationChecker(catalog);
-					ProcessInfo result = checker.process(info);
-					VisualizeResult window = new VisualizeResult();
-					window.update(result);
-					window.frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
-
+public class VisualizeResult extends GCCContainer{
+	private HashMap<String, BarGraph> bars;
+	
 	/**
 	 * Create the application.
 	 */
-	public VisualizeResult() {
+	public VisualizeResult(GUIMain root) {
+		super(root);
 		bars = new HashMap<String, BarGraph>();
 		initialize();
 	}
@@ -70,14 +32,6 @@ public class VisualizeResult {
 	 * Initialize the contents of the frame.
 	 */
 	private void initialize() {
-		frame = new JFrame();
-		frame.getContentPane().setForeground(Color.WHITE);
-		frame.getContentPane().setBackground(Color.WHITE);
-		frame.setBounds(100, 100, 800, 600);
-		frame.setResizable(false);
-		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		frame.getContentPane().setLayout(null);
-
 		List<JLabel> allLabel = new LinkedList<>();
 		{
 			JLabel label = new JLabel();
@@ -151,8 +105,8 @@ public class VisualizeResult {
 			Rectangle r = l.getBounds();
 			BarGraph b = new BarGraph(150, r.y, 550, r.height);
 			bars.put(l.getText(), b);
-			frame.getContentPane().add(l);
-			frame.getContentPane().add(b);
+			this.getContainer().add(l);
+			this.getContainer().add(b);
 		}
 	}
 	
