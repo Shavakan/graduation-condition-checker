@@ -10,6 +10,7 @@ public class HangulExcelConfig extends ExcelConfig{
 		column_map.put("No", "index");
 		column_map.put("년도", "year");
 		column_map.put("학기", "semester");
+		column_map.put("학과", "dept");
 		column_map.put("교과목", "number");
 		column_map.put("과목번호", "code");
 		column_map.put("분반", "section");
@@ -17,7 +18,6 @@ public class HangulExcelConfig extends ExcelConfig{
 		column_map.put("학", "credit");
 		column_map.put("AU", "au");
 		column_map.put("성적", "grade");
-		
 		
 		value_map = new HashMap<String, Map<String, String> >();
 		Map<String, String> semester_map = new HashMap<>();
@@ -27,5 +27,7 @@ public class HangulExcelConfig extends ExcelConfig{
 		semester_map.put("여름학기", "summer");
 		semester_map.put("겨울학기", "winter");
 		value_map.put("학기", semester_map);
+		
+		
 	}
 }
