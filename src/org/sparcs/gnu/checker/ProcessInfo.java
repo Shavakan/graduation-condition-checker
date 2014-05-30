@@ -41,7 +41,7 @@ public class ProcessInfo {
 	{
 		Double ret = totalMap.get(key);
 		if(ret == null)
-			throw new RuntimeException("No key for total: " + key);
+			return -1;
 		return ret.doubleValue();
 	}
 	
@@ -49,7 +49,7 @@ public class ProcessInfo {
 	{
 		Double ret = exceptionMap.get(key);
 		if(ret == null)
-			throw new RuntimeException("No key for exception: " + key);
+			return -1;
 		return ret.doubleValue();
 	}
 	
@@ -57,7 +57,7 @@ public class ProcessInfo {
 	{
 		Double ret = completeMap.get(key);
 		if(ret == null)
-			throw new RuntimeException("No key for complete: " + key);
+			return -1;
 		return ret.doubleValue();
 	}
 }

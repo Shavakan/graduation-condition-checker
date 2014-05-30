@@ -9,6 +9,8 @@ import java.awt.Rectangle;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
+import java.io.File;
+import java.sql.Connection;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -16,8 +18,16 @@ import java.util.List;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 
+import org.sparcs.gnu.catalog.Catalog;
+import org.sparcs.gnu.checker.GraduationChecker;
+import org.sparcs.gnu.checker.ProcessInfo;
+import org.sparcs.gnu.converter.Converter;
+import org.sparcs.gnu.converter.SQLiteManager;
+import org.sparcs.gnu.course.GradeInfo;
+import org.sparcs.gnu.parser.Parse;
+
 public class VisualizeResult {
-	HashMap<String, Canvas> bars;
+	HashMap<String, BarGraph> bars;
 	private JFrame frame;
 
 	/**
@@ -27,7 +37,19 @@ public class VisualizeResult {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
+					Converter conv = Converter.converterObject("tmp" + File.separator + "근홍.xls");
+					conv.convert("tmp" + File.separator + "output.db");
+					Connection conn = SQLiteManager.createDatabase("tmp" + File.separator + "output.db", false);
+					Class.forName("org.sparcs.gnu.course.GradeInfo");
+					
+					GradeInfo info = new GradeInfo(conn);
+					Parse.parseRawInput("conf" + File.separator + "cs.conf", "tmp" + File.separator + "cs.xml");
+					Catalog catalog = Catalog.loadCatalog("tmp" + File.separator + "cs.xml");
+
+					GraduationChecker checker = new GraduationChecker(catalog);
+					ProcessInfo result = checker.process(info);
 					VisualizeResult window = new VisualizeResult();
+					window.update(result);
 					window.frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -40,7 +62,7 @@ public class VisualizeResult {
 	 * Create the application.
 	 */
 	public VisualizeResult() {
-		bars = new HashMap<String, Canvas>();
+		bars = new HashMap<String, BarGraph>();
 		initialize();
 	}
 
@@ -133,11 +155,36 @@ public class VisualizeResult {
 			frame.getContentPane().add(b);
 		}
 	}
+	
+	public void update(ProcessInfo info)
+	{
+		for(String barName : bars.keySet())
+		{
+			BarGraph bar = bars.get(barName);
+			double total = info.getTotal(barName);
+			double complete = info.getComplete(barName);
+			double exception = info.getException(barName);
+
+			if(total < 0 || complete < 0 || exception < 0)
+			{
+				System.err.println("No barname " + barName);
+				continue;
+			}
+			bar.setLength(complete, exception, total - complete - exception);
+		}
+	}
 
 	private class BarGraph extends Canvas
 	{
 		private boolean isMouseIn = false;
 		private String current = "None";
+		
+		private int green_start = 0;
+		private int green_len = 0;
+		private int yellow_start = 0;
+		private int yellow_len = 0;
+		private int red_start = 0;
+		private int red_len = 0;
 		public BarGraph(int x, int y, int w, int h)
 		{
 			setBounds(x, y, w, h);
@@ -206,6 +253,14 @@ public class VisualizeResult {
 					
 				}
 			});
+			
+			
+			green_start = 0;
+			green_len = getWidth()/3;
+			yellow_start = getWidth()/3;
+			yellow_len = getWidth()/3;
+			red_start = (getWidth() * 2)/3;
+			red_len = getWidth()/3;			
 		}
 		/**
 		 * 
@@ -216,19 +271,40 @@ public class VisualizeResult {
 		public void paint(Graphics g) {
 			g.clearRect(0, 0, getWidth(), getHeight());
 			g.setColor(Color.decode("#7CE700"));
-			g.fillRect(0, 0, getWidth()/3, getHeight());
+			g.fillRect(green_start, 0, green_len, getHeight());
 			g.setColor(Color.black);
-			g.drawRect(0, 0, getWidth()/3 , getHeight()-1);
+			g.drawRect(green_start, 0, green_len , getHeight()-1);
 			g.setColor(Color.decode("#FFDE00"));
-			g.fillRect(getWidth()/3, 0, getWidth()/3, getHeight());
+			g.fillRect(yellow_start, 0, yellow_len, getHeight());
 			g.setColor(Color.black);
-			g.drawRect(getWidth()/3, 0, getWidth()/3 , getHeight()-1);
+			g.drawRect(yellow_start, 0, yellow_len, getHeight()-1);
 			g.setColor(Color.decode("#FF0000"));
-			g.fillRect(getWidth()/3 * 2, 0, getWidth()/3, getHeight());
+			g.fillRect(red_start, 0, red_len, getHeight());
 			g.setColor(Color.black);
-			g.drawRect(getWidth()/3 * 2, 0, getWidth()/3, getHeight()-1);
+			g.drawRect(red_start, 0, red_len, getHeight()-1);
 		}
 		
+		public void setLength(double green, double yellow, double red)
+		{
+			double total = green + yellow + red;
+			double green_start_ratio = 0;
+			double red_start_ratio = 1-red/total;
+			double red_len_ratio = red/total;
+			double yellow_start_ratio = red_start_ratio - yellow/total;
+			double yellow_len_ratio = yellow/total;
+			double green_len_ratio = 1 - red_len_ratio - yellow_len_ratio;
+			
+			
+			this.green_start = (int)Math.round(this.getWidth() * green_start_ratio);
+			this.yellow_start = (int)Math.round(this.getWidth() * yellow_start_ratio);
+			this.red_start = (int)Math.round(this.getWidth() * red_start_ratio);
+			
+			this.green_len = (int)Math.round(this.getWidth() * green_len_ratio);
+			this.yellow_len = (int)Math.round(this.getWidth() * yellow_len_ratio);
+			this.red_len = (int)Math.round(this.getWidth() * red_len_ratio);
+			
+			this.invalidate();
+		}
 	}
 }
 
