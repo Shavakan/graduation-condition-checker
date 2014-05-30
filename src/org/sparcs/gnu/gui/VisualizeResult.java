@@ -20,7 +20,7 @@ import org.sparcs.gnu.checker.ProcessInfo;
 
 public class VisualizeResult extends GCCContainer{
 	private HashMap<String, BarGraph> bars;
-	
+
 	/**
 	 * Create the application.
 	 */
@@ -111,7 +111,7 @@ public class VisualizeResult extends GCCContainer{
 			this.getContainer().add(b);
 		}
 	}
-	
+
 	public void update(ProcessInfo info)
 	{
 		for(String barName : bars.keySet())
@@ -134,21 +134,21 @@ public class VisualizeResult extends GCCContainer{
 	{
 		private boolean isMouseIn = false;
 		private String current = "None";
-		
+
 		private int green_start = 0;
 		private int green_len = 0;
 		private int yellow_start = 0;
 		private int yellow_len = 0;
 		private int red_start = 0;
 		private int red_len = 0;
-		
+
 		private Point toolTipLocation;
 		public BarGraph(int x, int y, int w, int h)
 		{
 			setBounds(x, y, w, h);
 			setToolTipText("기본");
 			this.addMouseListener(new MouseListener() {
-				
+
 				private int prevInitDelay;
 				private int prevDismissDelay;
 				private int prevReshowDelay;
@@ -156,15 +156,15 @@ public class VisualizeResult extends GCCContainer{
 				@Override
 				public void mouseReleased(MouseEvent e) {
 					// TODO Auto-generated method stub
-					
+
 				}
-				
+
 				@Override
 				public void mousePressed(MouseEvent e) {
 					// TODO Auto-generated method stub
-					
+
 				}
-				
+
 				@Override
 				public void mouseExited(MouseEvent e) {
 					// TODO Auto-generated method stub
@@ -172,12 +172,12 @@ public class VisualizeResult extends GCCContainer{
 					System.out.println("Mouse Out");
 					current = "None";
 					toolTipLocation = null;
-					
+
 					ToolTipManager.sharedInstance().setInitialDelay(prevInitDelay);
 					ToolTipManager.sharedInstance().setDismissDelay(prevDismissDelay);
 					ToolTipManager.sharedInstance().setReshowDelay(prevReshowDelay);
 				}
-				
+
 				@Override
 				public void mouseEntered(MouseEvent e) {
 					// TODO Auto-generated method stub
@@ -185,7 +185,7 @@ public class VisualizeResult extends GCCContainer{
 					System.out.println("Mouse In");
 					current = "None";
 					toolTipLocation = e.getPoint();
-					
+
 					prevInitDelay = ToolTipManager.sharedInstance().getInitialDelay();
 					prevDismissDelay = ToolTipManager.sharedInstance().getDismissDelay();
 					prevReshowDelay = ToolTipManager.sharedInstance().getReshowDelay();
@@ -193,29 +193,29 @@ public class VisualizeResult extends GCCContainer{
 					ToolTipManager.sharedInstance().setDismissDelay(Integer.MAX_VALUE);
 					ToolTipManager.sharedInstance().setReshowDelay(0);
 				}
-				
+
 				@Override
 				public void mouseClicked(MouseEvent arg0) {
 					// TODO Auto-generated method stub
-					
+
 				}
-				
+
 			});
 			this.addMouseMotionListener(new MouseMotionListener() {
 				@Override
 				public void mouseMoved(MouseEvent arg0) {
 					// TODO Auto-generated method stub
-					
+
 				}
-				
+
 				@Override
 				public void mouseDragged(MouseEvent arg0) {
 					// TODO Auto-generated method stub
-					
+
 				}
 			});
-			
-			
+
+
 			green_start = 0;
 			green_len = getWidth()/3;
 			yellow_start = getWidth()/3;
@@ -223,7 +223,7 @@ public class VisualizeResult extends GCCContainer{
 			red_start = (getWidth() * 2)/3;
 			red_len = getWidth()/3;			
 		}
-		
+
 		@Override
 		public Point getToolTipLocation(MouseEvent e)
 		{
@@ -241,7 +241,7 @@ public class VisualizeResult extends GCCContainer{
 			{
 				current = "Yellow";
 				setToolTipText("옐로");
-				
+
 				x = yellow_start + yellow_len / 2;
 				y = this.getHeight()/2;
 			}
@@ -249,7 +249,7 @@ public class VisualizeResult extends GCCContainer{
 			{
 				current = "Red";
 				setToolTipText("레드");
-				
+
 				x = red_start + red_len / 2;
 				y = this.getHeight()/2;
 			}
@@ -258,14 +258,14 @@ public class VisualizeResult extends GCCContainer{
 				System.out.println(current + " " + x + " " + y);
 				toolTipLocation = new Point(x,y);
 			}
-			
+
 			return toolTipLocation;
 		}
 		/**
 		 * 
 		 */
 		private static final long serialVersionUID = 1L;
-		
+
 		@Override
 		public void paint(Graphics g) {
 			g.clearRect(0, 0, getWidth(), getHeight());
@@ -282,27 +282,37 @@ public class VisualizeResult extends GCCContainer{
 			g.setColor(Color.black);
 			g.drawRect(red_start, 0, Math.min(getWidth()-red_start-1,red_len), getHeight()-1);
 		}
-		
+
 		public void setLength(double green, double yellow, double red)
 		{
 			double total = green + yellow + red;
-			double green_start_ratio = 0;
-			double green_len_ratio = green / total;
-			double yellow_start_ratio = green_start_ratio + green_len_ratio;
-			double yellow_len_ratio = yellow/total;
+			if (total>0.00001)
+			{
+				double green_start_ratio = 0;
+				double green_len_ratio = green / total;
+				double yellow_start_ratio = green_start_ratio + green_len_ratio;
+				double yellow_len_ratio = yellow/total;
 
-			double red_start_ratio = yellow_start_ratio + yellow_len_ratio;
-			double red_len_ratio = red/total;
-			
-			
-			this.green_start = (int)Math.floor(this.getWidth() * green_start_ratio);
-			this.yellow_start = (int)Math.floor(this.getWidth() * yellow_start_ratio);
-			this.red_start = (int)Math.floor(this.getWidth() * red_start_ratio);
-			
-			this.green_len = (int)Math.floor(this.getWidth() * green_len_ratio);
-			this.yellow_len = (int)Math.floor(this.getWidth() * yellow_len_ratio);
-			this.red_len = (int)Math.floor(this.getWidth() * red_len_ratio);
-			
+				double red_start_ratio = yellow_start_ratio + yellow_len_ratio;
+				double red_len_ratio = red/total;
+
+
+				this.green_start = (int)Math.floor(this.getWidth() * green_start_ratio);
+				this.yellow_start = (int)Math.floor(this.getWidth() * yellow_start_ratio);
+				this.red_start = (int)Math.floor(this.getWidth() * red_start_ratio);
+
+				this.green_len = (int)Math.floor(this.getWidth() * green_len_ratio);
+				this.yellow_len = (int)Math.floor(this.getWidth() * yellow_len_ratio);
+				this.red_len = (int)Math.floor(this.getWidth() * red_len_ratio);
+			}
+			else
+			{
+				this.green_start = 0;
+				this.yellow_start = this.red_start = this.getWidth();
+				this.yellow_len = this.red_len = 0;
+				this.green_len = this.getWidth();
+			}
+
 			this.invalidate();
 		}
 	}
