@@ -1,9 +1,9 @@
 package org.sparcs.gnu.gui;
 
 
-import java.awt.Canvas;
 import java.awt.Color;
 import java.awt.Graphics;
+import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
@@ -13,6 +13,8 @@ import java.util.LinkedList;
 import java.util.List;
 
 import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.ToolTipManager;
 
 import org.sparcs.gnu.checker.ProcessInfo;
 
@@ -124,11 +126,11 @@ public class VisualizeResult extends GCCContainer{
 				System.err.println("No barname " + barName);
 				continue;
 			}
-			bar.setLength(complete, exception, total - complete - exception);
+			bar.setLength(Math.min(complete, total - exception), exception, Math.max(0, total - complete - exception));
 		}
 	}
 
-	private class BarGraph extends Canvas
+	private class BarGraph extends JPanel
 	{
 		private boolean isMouseIn = false;
 		private String current = "None";
@@ -139,11 +141,18 @@ public class VisualizeResult extends GCCContainer{
 		private int yellow_len = 0;
 		private int red_start = 0;
 		private int red_len = 0;
+		
+		private Point toolTipLocation;
 		public BarGraph(int x, int y, int w, int h)
 		{
 			setBounds(x, y, w, h);
+			setToolTipText("기본");
 			this.addMouseListener(new MouseListener() {
 				
+				private int prevInitDelay;
+				private int prevDismissDelay;
+				private int prevReshowDelay;
+
 				@Override
 				public void mouseReleased(MouseEvent e) {
 					// TODO Auto-generated method stub
@@ -161,6 +170,12 @@ public class VisualizeResult extends GCCContainer{
 					// TODO Auto-generated method stub
 					isMouseIn = false;
 					System.out.println("Mouse Out");
+					current = "None";
+					toolTipLocation = null;
+					
+					ToolTipManager.sharedInstance().setInitialDelay(prevInitDelay);
+					ToolTipManager.sharedInstance().setDismissDelay(prevDismissDelay);
+					ToolTipManager.sharedInstance().setReshowDelay(prevReshowDelay);
 				}
 				
 				@Override
@@ -169,6 +184,14 @@ public class VisualizeResult extends GCCContainer{
 					isMouseIn = true;
 					System.out.println("Mouse In");
 					current = "None";
+					toolTipLocation = e.getPoint();
+					
+					prevInitDelay = ToolTipManager.sharedInstance().getInitialDelay();
+					prevDismissDelay = ToolTipManager.sharedInstance().getDismissDelay();
+					prevReshowDelay = ToolTipManager.sharedInstance().getReshowDelay();
+					ToolTipManager.sharedInstance().setInitialDelay(0);
+					ToolTipManager.sharedInstance().setDismissDelay(Integer.MAX_VALUE);
+					ToolTipManager.sharedInstance().setReshowDelay(0);
 				}
 				
 				@Override
@@ -182,23 +205,7 @@ public class VisualizeResult extends GCCContainer{
 				@Override
 				public void mouseMoved(MouseEvent arg0) {
 					// TODO Auto-generated method stub
-					String prev = current;
-					if(arg0.getX() < green_start + green_len)
-					{
-						current = "Green";
-					}
-					else if(arg0.getX() < yellow_start + yellow_len)
-					{
-						current = "Yellow";
-					}
-					else
-					{
-						current = "Red";
-					}
-					if(!current.equals(prev))
-					{
-						System.out.println(current);
-					}
+					
 				}
 				
 				@Override
@@ -215,6 +222,44 @@ public class VisualizeResult extends GCCContainer{
 			yellow_len = getWidth()/3;
 			red_start = (getWidth() * 2)/3;
 			red_len = getWidth()/3;			
+		}
+		
+		@Override
+		public Point getToolTipLocation(MouseEvent e)
+		{
+			String prev = current;
+			int x = 0;
+			int y = 0;
+			if(e.getX() < green_start + green_len)
+			{
+				current = "Green";
+				setToolTipText("그린");
+				x = green_start + green_len / 2;
+				y = this.getHeight()/2;
+			}
+			else if(e.getX() < yellow_start + yellow_len)
+			{
+				current = "Yellow";
+				setToolTipText("옐로");
+				
+				x = yellow_start + yellow_len / 2;
+				y = this.getHeight()/2;
+			}
+			else
+			{
+				current = "Red";
+				setToolTipText("레드");
+				
+				x = red_start + red_len / 2;
+				y = this.getHeight()/2;
+			}
+			if(!current.equals(prev))
+			{
+				System.out.println(current + " " + x + " " + y);
+				toolTipLocation = new Point(x,y);
+			}
+			
+			return toolTipLocation;
 		}
 		/**
 		 * 
@@ -242,11 +287,12 @@ public class VisualizeResult extends GCCContainer{
 		{
 			double total = green + yellow + red;
 			double green_start_ratio = 0;
-			double red_start_ratio = 1-red/total;
-			double red_len_ratio = red/total;
-			double yellow_start_ratio = red_start_ratio - yellow/total;
+			double green_len_ratio = green / total;
+			double yellow_start_ratio = green_start_ratio + green_len_ratio;
 			double yellow_len_ratio = yellow/total;
-			double green_len_ratio = 1 - red_len_ratio - yellow_len_ratio;
+
+			double red_start_ratio = yellow_start_ratio + yellow_len_ratio;
+			double red_len_ratio = red/total;
 			
 			
 			this.green_start = (int)Math.floor(this.getWidth() * green_start_ratio);
