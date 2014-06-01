@@ -22,8 +22,8 @@ body {
 	    curCode = code;
 	}
 	
-	private void makeQuery(String value, String original, String min) {
-		String tName = value.equals("au") ? "AU" : "학점"; 
+	private void makeElement(String value, String original, String min) {
+		String tName = value.equals("au") ? "AU" : "학점";
 		Element e = new Element("조건");
 		e.setAttribute("name", curType+tName);
 		if(isM) {
@@ -69,9 +69,6 @@ private String DeptName =
 private void Total =
 	"총" w n1:Number w "학점" w "평점" w f1:FNumber w "/" w f2:FNumber w "이상"
 	{
-		//System.out.println("총 " + n1 + "학점");
-		//System.out.println("평점 " + f1 + "/" + f2 + " 이상");
-
 		curType = "이수학점";
 		curName = curType;
 		Element e = new Element("조건");
@@ -92,10 +89,8 @@ private void Total =
 	};
 
 private void General =
-	MdtrG w c1:Condition w EltvG w c2:Condition
+	MdtrG w Condition w EltvG w Condition
 	{
-		//System.out.println("교필 " + c1);
-		//System.out.println("인사선 " + c2);
 	};
 
 private void MdtrG =
@@ -115,10 +110,8 @@ private void EltvG =
 	};
 
 private void Basic =
-	MdtrB w c1:Condition w EltvB w c2:Condition
+	MdtrB w Condition w EltvB w Condition
 	{
-		//System.out.println("기필 " + c1);
-		//System.out.println("기선 " + c2);
 	};
 
 private void MdtrB =
@@ -138,10 +131,8 @@ private void EltvB =
 	};
 
 private void Major =
-	MdtrM w c1:Condition w EltvM w c2:Condition 
+	MdtrM w Condition w EltvM w Condition 
 	{
-		//System.out.println("전필 " + c1);
-		//System.out.println("전선 " + c2);
 	};
 
 private void MdtrM =
@@ -161,9 +152,8 @@ private void EltvM =
 	};
 
 private void Elective =
-	ElectiveName w c1:Condition
+	ElectiveName w Condition
 	{
-		//System.out.println("자선 " + c1);
 	};
 
 private void ElectiveName =
@@ -175,9 +165,8 @@ private void ElectiveName =
 	};
 
 private void Research =
-	ResearchName w c1:Condition
+	ResearchName w Condition
 	{
-		//System.out.println("연구 " + c1);
 	};
 
 private void ResearchName =
@@ -206,31 +195,23 @@ private Element Etc =
 		yyValue = new Element("복부전");
 	};
 
-private String Condition =
+private void Condition =
 		n1:Number w "학점" w n2:Number w "AU"
 		{
-			makeQuery("credit", "학점", n1);
-			makeQuery("au", "AU", n2);
-
-			yyValue = n1 + "학점 " + n2 + "AU";
+			makeElement("credit", "학점", n1);
+			makeElement("au", "AU", n2);
 		}
 	/	n1:Number w "학점" w "이상"
 		{
-			makeQuery("credit", "학점 이상", n1);
-
-			yyValue = n1 + "학점 이상";
+			makeElement("credit", "학점 이상", n1);
 		}
 	/	n1:Number w "학점"
 		{
-			makeQuery("credit", "학점", n1);
-
-			yyValue = n1 + "학점";
+			makeElement("credit", "학점", n1);
 		}
 	/	"없음"
 		{
-			makeQuery("credit", "없음", "0");
-
-			yyValue = "0학점";
+			makeElement("credit", "없음", "0");
 		};
 
 private String Number =

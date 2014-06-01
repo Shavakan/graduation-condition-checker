@@ -1,9 +1,13 @@
 package org.sparcs.gnu.parser;
 
+import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
+import java.util.List;
 
 import org.jdom2.Document;
+import org.jdom2.Element;
+import org.jdom2.input.SAXBuilder;
 import org.jdom2.output.Format;
 import org.jdom2.output.XMLOutputter;
 import org.sparcs.gnu.catalog.Catalog;
@@ -27,14 +31,15 @@ public class Parse {
 
 	/**
 	 * Parse user input to make intermediate representation
-	 * @param input
+	 * @param conf
+	 * @param xml
 	 * @return intermediate representation
-	 * @throws Exception 
+	 * @throws Exception
 	 */
-	public static boolean parseRawInput(String input, String output) {
+	public static boolean parseRawInput(String conf, String xml) {
 		try
 		{
-			String filename = input;
+			String filename = conf;
 
 			InputGrammar parse = new InputGrammar(new FileReader(filename), filename);
 			Object o = parse.pSpec(0);
@@ -42,14 +47,58 @@ public class Parse {
 				SemanticValue res = (SemanticValue) o;
 				Document d = res.semanticValue();
 				XMLOutputter out = new XMLOutputter(Format.getPrettyFormat());
-				FileWriter outfile = new FileWriter(output);
+				FileWriter outfile = new FileWriter(xml);
 				out.output(d, outfile);
 			}
 			else if(o instanceof ParseError) {
-				System.err.println("?");
+				System.err.println("ParseError");
 			}
 			else {
-				System.out.println("?");
+				System.err.println("Unknown state after parsing");
+			}
+
+			return true;
+		}
+		catch(Exception e)
+		{
+			e.printStackTrace(System.err);
+			return false;
+		}
+	}
+
+	/**
+	 * Parse exception input
+	 * @param conf
+	 * @param xml
+	 * @return
+	 */
+	public static boolean parseException(String conf, String xml) {
+		try
+		{
+			String filename = conf;
+			
+			ExceptionGrammar parse = new ExceptionGrammar(new FileReader(filename), filename);
+			Object o = parse.pSpec(0);
+			if(o instanceof SemanticValue) {
+				SemanticValue res = (SemanticValue) o;
+				List<Element> l = res.semanticValue();
+
+				SAXBuilder builder = new SAXBuilder();
+				Document prev = builder.build(new File(xml));
+
+				for(Element e : l){
+					prev.getRootElement().addContent(e);
+				}
+				
+				XMLOutputter out = new XMLOutputter(Format.getPrettyFormat());
+				FileWriter outfile = new FileWriter(xml);
+				out.output(prev, outfile);
+			}
+			else if(o instanceof ParseError) {
+				System.err.println("ParseError");
+			}
+			else {
+				System.err.println("Unknown state after parsing");
 			}
 
 			return true;
@@ -68,5 +117,9 @@ public class Parse {
 	 *//*
 	public static void main(String[] args) throws Exception {
 		parseRawInput("conf" + File.separator + "cs.conf", "tmp" + File.separator + "cs.xml");
+		parseException("conf" + File.separator + "cs_except_double.conf", "tmp" + File.separator + "cs.xml");
+		SAXBuilder s = new SAXBuilder();
+		XMLOutputter o = new XMLOutputter(Format.getPrettyFormat());
+		o.output(s.build("tmp" + File.separator + "cs.xml"), System.out);
 	}*/
 }

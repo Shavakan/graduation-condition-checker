@@ -1,0 +1,149 @@
+module org.sparcs.gnu.parser.ExceptionGrammar;
+
+header {
+import java.util.List;
+import java.util.LinkedList;
+import org.jdom2.Element;
+}
+
+body {
+	private List<Element> l;
+	private String curState;
+	private String curType;
+	private String curCode;
+	private boolean isM;
+
+	private void initL(String code) {
+		l = new LinkedList<Element>();
+		curCode = code;
+	}
+
+	private void makeElement(String value, String original, String min) {
+		String tName = value.equals("au") ? "AU" : "학점";
+		Element e;
+		if(isM) {
+			e = new Element("조건");
+			e.setAttribute("name", curState+curType+tName);
+			if(curType.equals("전공")) {
+				e.addContent((new Element("쿼리")).setText("SELECT SUM(`" + value + "`) FROM `grade` WHERE (`type`='전필' OR `type`='전선') AND `grade`!='F' AND `grade`!='U' AND `grade`!='W' AND `grade`!='I' AND `grade`!='R' AND SUBSTR(`number`,1,2)='" + curCode + "'"));
+				e.addContent((new Element("목록")).setText("SELECT `code`,`" + value + "` FROM `grade` WHERE (`type`='전필' OR `type`='전선') AND `grade`!='F' AND `grade`!='U' AND `grade`!='W' AND `grade`!='I' AND `grade`!='R' AND SUBSTR(`number`,1,2)='" + curCode + "' ORDER BY `code`"));
+			}
+			else {
+				e.addContent((new Element("쿼리")).setText("SELECT SUM(`" + value + "`) FROM `grade` WHERE `type`='" + curType + "' AND `grade`!='F' AND `grade`!='U' AND `grade`!='W' AND `grade`!='I' AND `grade`!='R' AND SUBSTR(`number`,1,2)='" + curCode + "'"));
+				e.addContent((new Element("목록")).setText("SELECT `code`,`" + value + "` FROM `grade` WHERE `type`='" + curType + "' AND `grade`!='F' AND `grade`!='U' AND `grade`!='W' AND `grade`!='I' AND `grade`!='R' AND SUBSTR(`number`,1,2)='" + curCode + "' ORDER BY `code`"));
+			}
+		}
+		else {
+			e = new Element("예외");
+			e.setAttribute("name", curType+tName);
+		}
+		e.addContent((new Element("최소")).setText(min));
+
+		l.add(e);
+	}
+}
+
+option parser(org.sparcs.gnu.parser.ExceptionGrammar);
+
+public List<Element> Spec =
+	Dept w (Rule w)* EndOfFile 
+	{
+		yyValue = l;
+	};
+
+private void Dept =
+	"[" DeptName "학과"? ":" n1:Number "]" w State
+	{
+		initL(n1);
+	};
+
+private String DeptName =
+	name:("전산"/"전자")
+	{
+		yyValue = name;
+	};
+
+private void State =
+		("복수전공"/"복전")
+		{
+			curState = "복전";
+		}
+	/	("부전공"/"부전")
+		{
+			curState = "부전";
+		};
+
+private void Rule =
+	CreditChange
+	{
+	};
+
+private void CreditChange =
+	Type w Condition
+	{
+	};
+
+private void Type =
+		"인문사회선택"
+		{
+			curType = "인선";
+			isM = false;
+		}
+	/	"기초선택"
+		{
+			curType = "기선";
+			isM = false;
+		}
+	/	"전공필수"
+		{
+			curType = "전필";
+			isM = true;
+		}
+	/	"전공"
+		{
+			curType = "전공";
+			isM = true;
+		};
+
+private void Condition =
+		n1:Number w "학점" w "이상"
+		{
+			makeElement("credit", "학점 이상", n1);
+		}
+	/	n1:Number w "학점"
+		{
+			makeElement("credit", "학점", n1);
+		};
+
+private String Number =
+	a:[0-9]+
+	{
+		String t = "";
+		for(Character c : a) t += c;
+		yyValue = t;
+	};
+
+private void	w =			Space*{/*System.out.println("blank");*/};
+private void	EndOfFile =!_{};
+
+private void Space =
+		EOL
+		{
+		}
+	/	'\t'
+		{
+		}
+	/	' '
+		{
+		};
+
+private void EOL =
+		'\r' '\n'
+		{
+		}
+	/	'\r'
+		{
+		}
+	/	'\n'
+		{
+		};
