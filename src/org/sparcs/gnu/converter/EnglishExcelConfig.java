@@ -5,7 +5,6 @@ import java.util.Map;
 
 public class EnglishExcelConfig extends ExcelConfig{
 	public EnglishExcelConfig(){
-		column_map = new HashMap<String, String>();
 		column_map.put("No", "index");
 		column_map.put("Year", "year");
 		column_map.put("Term", "semester");
@@ -23,7 +22,6 @@ public class EnglishExcelConfig extends ExcelConfig{
 		semester_map.put("Autumn", "autumn");
 		semester_map.put("Summer", "summer");
 		semester_map.put("Winter", "winter");
-		value_map = new HashMap<String, Map<String, String>>();
 		value_map.put("Term", semester_map);
 		
 		

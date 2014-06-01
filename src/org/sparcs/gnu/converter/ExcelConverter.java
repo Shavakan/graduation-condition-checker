@@ -30,20 +30,20 @@ class ExcelConverter extends Converter {
 	@Override
 	public boolean convert(String outputFilename) {
 		
-		ExcelConfig hangul = new HangulExcelConfig();
-		ExcelConfig eng = new EnglishExcelConfig();
+		List<ExcelConfig> allConfig = new LinkedList<>();
+		
+		allConfig.add(new HangulExcelConfig());
+		allConfig.add(new EnglishExcelConfig());
+		allConfig.add(new HangulSugangConfig());
 		
 		ExcelConfig finalConfig = null;
 		Set<String> finalFields = null;
-		
-		Set<String> hanFields = hangul.getAllColumn();
-		Set<String> engFields = eng.getAllColumn();
 		
 		try
 		{
 			Map<String, Integer> fieldToIndex = new HashMap<>();
 			Workbook xls = Workbook.getWorkbook(new File(xlsFilePath));
-			Sheet sheet = xls.getSheet("grade");
+			Sheet sheet = xls.getSheet(0);
 			int startRow = 0;
 			boolean found = false;
 			for(; startRow < sheet.getRows(); startRow++)
@@ -53,17 +53,19 @@ class ExcelConverter extends Converter {
 				for(Cell cell : cells)
 					allCell.add(cell.getContents().trim());
 				
-				if(allCell.containsAll(hanFields))
+				if(finalConfig == null)
 				{
-					finalFields = hanFields;
-					finalConfig = hangul;
+					for(ExcelConfig current : allConfig)
+					{
+						Set<String> currentColumns = current.getAllColumn();
+						if(allCell.containsAll(currentColumns))
+						{
+							finalConfig = current;
+							finalFields = currentColumns;
+						}
+							
+					}
 				}
-				else if(allCell.containsAll(engFields))
-				{
-					finalFields = engFields;
-					finalConfig = eng;
-				}
-					
 				
 				if(finalConfig != null)
 				{
@@ -88,7 +90,7 @@ class ExcelConverter extends Converter {
 				return false;
 			}
 			
-			Connection conn = SQLiteManager.createDatabase(outputFilename, true);
+			Connection conn = SQLiteManager.createDatabase(outputFilename, false);
 			
 			List<String> finalFieldList = new LinkedList<>();
 			for(String field : finalFields)

@@ -16,7 +16,7 @@ CREATE TABLE IF NOT EXISTS `grade` (
   `type` TEXT NOT NULL,
   `credit` INT NOT NULL,
   `au` INT NOT NULL,
-  `grade` TEXT NOT NULL)
+  `grade` TEXT NOT NULL DEFAULT 'S')
 ;
 
 CREATE TABLE IF NOT EXISTS `metadata` (

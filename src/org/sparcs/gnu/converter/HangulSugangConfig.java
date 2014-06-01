@@ -1,11 +1,9 @@
 package org.sparcs.gnu.converter;
 
-import java.util.HashMap;
 
-public class HangulSugangConfig extends SugangConfig {
+public class HangulSugangConfig extends ExcelConfig {
 	public HangulSugangConfig()
 	{
-		column_map = new HashMap<String, String>();
 		column_map.put("No", "index");
 		column_map.put("전산코드", "number");
 		column_map.put("과목번호", "code");

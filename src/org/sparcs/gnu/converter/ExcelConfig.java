@@ -1,5 +1,6 @@
 package org.sparcs.gnu.converter;
 
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
@@ -9,7 +10,8 @@ public abstract class ExcelConfig {
 	
 	protected ExcelConfig()
 	{
-		
+		column_map = new HashMap<String, String>();
+		value_map = new HashMap<String, Map<String,String>>();
 	}
 	
 	public Set<String> getAllColumn(){

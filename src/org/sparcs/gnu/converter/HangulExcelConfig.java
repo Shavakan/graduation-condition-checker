@@ -6,7 +6,6 @@ import java.util.Map;
 public class HangulExcelConfig extends ExcelConfig{
 	public HangulExcelConfig()
 	{
-		column_map = new HashMap<String, String>();
 		column_map.put("No", "index");
 		column_map.put("년도", "year");
 		column_map.put("학기", "semester");
@@ -18,7 +17,6 @@ public class HangulExcelConfig extends ExcelConfig{
 		column_map.put("AU", "au");
 		column_map.put("성적", "grade");
 		
-		value_map = new HashMap<String, Map<String, String> >();
 		Map<String, String> semester_map = new HashMap<>();
 		semester_map.put("기이수", "transfer");
 		semester_map.put("봄학기", "spring");

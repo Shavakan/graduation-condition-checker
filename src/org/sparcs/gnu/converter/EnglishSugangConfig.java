@@ -2,9 +2,8 @@ package org.sparcs.gnu.converter;
 
 import java.util.HashMap;
 
-public class EnglishSugangConfig extends SugangConfig {
+public class EnglishSugangConfig extends ExcelConfig {
 	public EnglishSugangConfig(){
-		column_map = new HashMap<String, String>();
 		column_map.put("No.", "index");
 		column_map.put("System Nbr.", "number");
 		column_map.put("Course Nbr.", "code");

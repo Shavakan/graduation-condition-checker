@@ -15,9 +15,13 @@ public class GCCMain {
 
 	public static void main(String[] args) throws Exception {
 		// TODO Auto-generated method stub
-		Converter conv = Converter.converterObject("tmp" + File.separator + "정민.xls");
+		Connection conn = SQLiteManager.createDatabase("tmp" + File.separator + "output.db", true);
+		Converter conv = Converter.converterObject("tmp" + File.separator + "근홍.xls");
 		conv.convert("tmp" + File.separator + "output.db");
-		Connection conn = SQLiteManager.createDatabase("tmp" + File.separator + "output.db", false);
+		
+		conv = Converter.converterObject("tmp" + File.separator + "근홍수강.xls");
+		conv.convert("tmp" + File.separator + "output.db");
+		
 		Class.forName("org.sparcs.gnu.course.GradeInfo");
 		
 		GradeInfo info = new GradeInfo(conn);
