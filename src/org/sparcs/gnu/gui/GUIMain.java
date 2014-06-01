@@ -1,23 +1,17 @@
 package org.sparcs.gnu.gui;
 
+import java.awt.Container;
 import java.awt.EventQueue;
-import java.io.File;
-import java.sql.Connection;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.swing.JFrame;
 
-import org.sparcs.gnu.catalog.Catalog;
-import org.sparcs.gnu.checker.GraduationChecker;
-import org.sparcs.gnu.checker.ProcessInfo;
-import org.sparcs.gnu.converter.Converter;
-import org.sparcs.gnu.converter.SQLiteManager;
-import org.sparcs.gnu.course.GradeInfo;
-import org.sparcs.gnu.parser.Parse;
-
 public class GUIMain {
-
-	protected SelectFile selectFile;
-	protected VisualizeResult vResult;
+	static String selectFile = "SelectFile";
+	static String visualizeResult = "VisualizeResult";
+	
+	private Map<String, Container> allContainer;
 	
 	protected JFrame frame;
 	/**
@@ -29,11 +23,11 @@ public class GUIMain {
 				try {
 					GUIMain window = new GUIMain();
 					
-					window.selectFile = new SelectFile(window);
-					window.vResult = new VisualizeResult(window);
+					window.addWindow(selectFile, new SelectFile(window));
+					window.addWindow(visualizeResult, new VisualizeResult(window));
 					
 					window.frame.setVisible(true);
-					window.frame.setContentPane(window.selectFile.getContainer());
+					window.changeWindow(GUIMain.selectFile);
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -45,12 +39,29 @@ public class GUIMain {
 	 * Create the application.
 	 */
 	public GUIMain() {
+		allContainer = new HashMap<>();
 		initialize();
 	}
 	
-	void showResult()
+	private void addWindow(String name, Container panel)
 	{
-		frame.getContentPane().invalidate();
+		allContainer.put(name, panel);
+	}
+	
+	Container getWindow(String name)
+	{
+		return allContainer.get(name);
+	}
+	
+	boolean changeWindow(String name)
+	{
+		if(allContainer.containsKey(name))
+		{
+			frame.setContentPane(allContainer.get(name));
+			frame.getContentPane().invalidate();
+			return true;
+		}
+		return false;
 	}
 
 	/**

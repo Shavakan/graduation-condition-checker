@@ -1,5 +1,6 @@
 package org.sparcs.gnu.gui;
 
+import java.awt.Container;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
@@ -8,7 +9,6 @@ import java.io.File;
 import java.sql.Connection;
 
 import javax.swing.JButton;
-import javax.swing.JDialog;
 import javax.swing.JFileChooser;
 import javax.swing.JLabel;
 import javax.swing.JTextField;
@@ -23,6 +23,10 @@ import org.sparcs.gnu.parser.Parse;
 
 public class SelectFile extends GCCContainer{
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private JTextField txtfldTranscript;
 	private JTextField txtfldMainProgram;
 	private JTextField txtfldSecondProgram;
@@ -48,13 +52,14 @@ public class SelectFile extends GCCContainer{
 	 */
 	private void initialize() {
 		/* GUI Arrangement */
+		final Container me = this;
 		JLabel lblEnterYourTranscript = new JLabel("Enter your transcript file (.csv):");
 		lblEnterYourTranscript.setBounds(12, 10, 183, 15);
-		this.getContainer().add(lblEnterYourTranscript);
+		this.add(lblEnterYourTranscript);
 
 		txtfldTranscript = new JTextField();
 		txtfldTranscript.setBounds(131, 35, 282, 21);
-		this.getContainer().add(txtfldTranscript);
+		this.add(txtfldTranscript);
 		txtfldTranscript.setColumns(10);
 
 		JButton btnSearchTranscript = new JButton("Search...");
@@ -62,7 +67,7 @@ public class SelectFile extends GCCContainer{
 			@Override
 			public void mouseClicked(MouseEvent arg0) {
 				fc = new JFileChooser();
-				int returnVal = fc.showOpenDialog(getContainer());
+				int returnVal = fc.showOpenDialog(root.frame);
 
 				if (returnVal == JFileChooser.APPROVE_OPTION) {
 					File file = fc.getSelectedFile();
@@ -75,15 +80,15 @@ public class SelectFile extends GCCContainer{
 			}
 		});
 		btnSearchTranscript.setBounds(22, 34, 97, 23);
-		this.getContainer().add(btnSearchTranscript);
+		this.add(btnSearchTranscript);
 
 		JLabel lblEnterYourCondition = new JLabel("Enter your condition files (.csv):");
 		lblEnterYourCondition.setBounds(12, 66, 188, 15);
-		this.getContainer().add(lblEnterYourCondition);
+		this.add(lblEnterYourCondition);
 
 		txtfldMainProgram = new JTextField();
 		txtfldMainProgram.setBounds(131, 86, 282, 21);
-		this.getContainer().add(txtfldMainProgram);
+		this.add(txtfldMainProgram);
 		txtfldMainProgram.setColumns(10);
 
 		JButton btnSearchMainProgram = new JButton("Search...");
@@ -91,7 +96,7 @@ public class SelectFile extends GCCContainer{
 			@Override
 			public void mouseClicked(MouseEvent arg0) {
 				fc = new JFileChooser();
-				int returnVal = fc.showOpenDialog(getContainer());
+				int returnVal = fc.showOpenDialog(me);
 
 				if (returnVal == JFileChooser.APPROVE_OPTION) {
 					File file = fc.getSelectedFile();
@@ -104,11 +109,11 @@ public class SelectFile extends GCCContainer{
 			}
 		});
 		btnSearchMainProgram.setBounds(22, 85, 97, 23);
-		this.getContainer().add(btnSearchMainProgram);
+		this.add(btnSearchMainProgram);
 
 		txtfldSecondProgram = new JTextField();
 		txtfldSecondProgram.setBounds(131, 117, 282, 21);
-		this.getContainer().add(txtfldSecondProgram);
+		this.add(txtfldSecondProgram);
 		txtfldSecondProgram.setColumns(10);
 
 		JButton btnSearchSecondProgram = new JButton("Search...");
@@ -116,7 +121,7 @@ public class SelectFile extends GCCContainer{
 			@Override
 			public void mouseClicked(MouseEvent e) {
 				fc = new JFileChooser();
-				int returnVal = fc.showOpenDialog(getContainer());
+				int returnVal = fc.showOpenDialog(me);
 
 				if (returnVal == JFileChooser.APPROVE_OPTION) {
 					File file = fc.getSelectedFile();
@@ -129,11 +134,11 @@ public class SelectFile extends GCCContainer{
 			}
 		});
 		btnSearchSecondProgram.setBounds(22, 116, 97, 23);
-		this.getContainer().add(btnSearchSecondProgram);
+		this.add(btnSearchSecondProgram);
 
 		txtfldThirdProgram = new JTextField();
 		txtfldThirdProgram.setBounds(131, 148, 282, 21);
-		this.getContainer().add(txtfldThirdProgram);
+		this.add(txtfldThirdProgram);
 		txtfldThirdProgram.setColumns(10);
 
 		JButton btnSearchThirdProgram = new JButton("Search...");
@@ -141,7 +146,7 @@ public class SelectFile extends GCCContainer{
 			@Override
 			public void mouseClicked(MouseEvent e) {
 				fc = new JFileChooser();
-				int returnVal = fc.showOpenDialog(getContainer());
+				int returnVal = fc.showOpenDialog(me);
 
 				if (returnVal == JFileChooser.APPROVE_OPTION) {
 					File file = fc.getSelectedFile();
@@ -154,7 +159,7 @@ public class SelectFile extends GCCContainer{
 			}
 		});
 		btnSearchThirdProgram.setBounds(22, 147, 97, 23);
-		this.getContainer().add(btnSearchThirdProgram);
+		this.add(btnSearchThirdProgram);
 
 		JButton btnNext = new JButton("Next >");
 		btnNext.addMouseListener(new MouseAdapter() {
@@ -180,8 +185,8 @@ public class SelectFile extends GCCContainer{
 					GraduationChecker checker = new GraduationChecker(catalog);	
 					ProcessInfo result = checker.process(info);
 					
-					root.vResult.update(result);
-					root.frame.setContentPane(root.vResult.getContainer());
+					((VisualizeResult)root.getWindow(GUIMain.visualizeResult)).update(result);
+					root.changeWindow(GUIMain.visualizeResult);
 				} catch (ClassNotFoundException e1) {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
@@ -194,6 +199,6 @@ public class SelectFile extends GCCContainer{
 			}
 		});
 		btnNext.setBounds(316, 179, 97, 23);
-		this.getContainer().add(btnNext);
+		this.add(btnNext);
 	}
 }

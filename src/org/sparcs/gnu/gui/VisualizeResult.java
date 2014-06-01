@@ -19,6 +19,10 @@ import javax.swing.ToolTipManager;
 import org.sparcs.gnu.checker.ProcessInfo;
 
 public class VisualizeResult extends GCCContainer{
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private HashMap<String, BarGraph> bars;
 	private HashMap<String, JLabel> scores;
 	
@@ -112,9 +116,9 @@ public class VisualizeResult extends GCCContainer{
 			JLabel label = new JLabel();
 			label.setBounds(710, r.y, 80, r.height);
 			scores.put(l.getText(), label);
-			this.getContainer().add(l);
-			this.getContainer().add(b);
-			this.getContainer().add(label);
+			this.add(l);
+			this.add(b);
+			this.add(label);
 		}
 	}
 
