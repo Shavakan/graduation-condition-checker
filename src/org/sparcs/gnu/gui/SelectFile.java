@@ -33,8 +33,6 @@ public class SelectFile extends GCCContainer{
 	private JTextField txtfldThirdProgram;
 	private JFileChooser fc;
 
-	private GUIMain root;
-
 	private String transcript, mainProgram, secondProgram, thirdProgram;
 
 
@@ -43,7 +41,6 @@ public class SelectFile extends GCCContainer{
 	 */
 	public SelectFile(GUIMain root) {
 		super(root);
-		this.root = root;
 		initialize();
 	}
 
