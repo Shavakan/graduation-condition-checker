@@ -76,6 +76,12 @@ public class GraduationChecker {
 				//TODO exception 처리
 			}
 			
+			if(rule.getSelectQuery() != null && rule.getSelectQuery().trim().length()>0)
+			{
+				for(String taken : info.checkList(rule.getSelectQuery()))
+					result.addTaken(resultKey, taken);
+			}
+			
 			result.addTotal(resultKey, resultTotal);
 			result.addException(resultKey, resultException);
 			result.addComplete(resultKey, resultComplete);

@@ -42,7 +42,7 @@ public class Catalog {
 
 			for(Element cond : rootElement.getChildren("조건"))
 			{
-				catalog.rules.add(new Rule(cond.getAttributeValue("name"), cond.getChildText("쿼리"), cond.getChildText("최소")));
+				catalog.rules.add(new Rule(cond.getAttributeValue("name"), cond.getChildText("쿼리"), cond.getChildText("최소"), cond.getChildText("목록")));
 			}
 			catalog.exception = new Exception();
 			return catalog;

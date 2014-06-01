@@ -4,6 +4,8 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.LinkedList;
+import java.util.List;
 
 /**
  * This class has information about user's taken courses.
@@ -126,6 +128,32 @@ public class GradeInfo {
 			if(result.next())
 			{
 				ret = result.getString(1);
+			}
+			result.close();
+			stmt.close();
+			return ret;
+		}
+		catch(java.lang.Exception e)
+		{
+			e.printStackTrace(System.err);
+			return null;
+		}
+	}
+	
+	public List<String> checkList(String sql){
+		try
+		{
+			PreparedStatement stmt = conn.prepareStatement(sql);
+			ResultSet result = stmt.executeQuery();
+
+			List<String> ret = new LinkedList<>();
+			while(result.next())
+			{
+				String code = result.getString(1);
+				String credit = result.getString(2);
+				if(credit.trim().equals("0"))
+					continue;
+				ret.add(code + ": " + credit);
 			}
 			result.close();
 			stmt.close();
