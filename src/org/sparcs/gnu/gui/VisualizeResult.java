@@ -126,6 +126,8 @@ public class VisualizeResult extends GCCContainer{
 	{
 		for(String barName : bars.keySet())
 		{
+			if(!info.checkKey(barName))
+				continue;
 			BarGraph bar = bars.get(barName);
 			double total = info.getTotal(barName);
 			double complete = info.getComplete(barName);
@@ -137,9 +139,22 @@ public class VisualizeResult extends GCCContainer{
 				continue;
 			}
 			bar.setLength(Math.min(complete, total - exception), exception, Math.max(0, total - complete - exception));
+			
+			List<String> taken = info.getTakenList(barName);
+			if(taken != null)
+			{
+				String greenText = "<html><body>";
+				for(String item : taken)
+				{
+					greenText += "<p><b>" + item + "</b></p><br>";
+				}
+				greenText += "<img src=\"http://puu.sh/90Txn.png\" width=200 height=243></body></html>";
+				bar.setGreenText(greenText);
+			}
+			
 			JLabel label = scores.get(barName);
 			if (barName.equals("평점"))
-				label.setText("["+complete+"/"+Math.round(total-exception)+"]");	
+				label.setText("["+String.format("%.02f", (complete))+"/"+String.format("%.01f", (total-exception))+"]");	
 			else
 				label.setText("["+Math.round(complete)+"/"+Math.round(total-exception)+"]");	
 		}
@@ -147,8 +162,11 @@ public class VisualizeResult extends GCCContainer{
 
 	private class BarGraph extends JPanel
 	{
-		private boolean isMouseIn = false;
 		private String current = "None";
+		
+		private String greenText = "";
+		private String yellowText = "";
+		private String redText = "";
 
 		private int green_start = 0;
 		private int green_len = 0;
@@ -183,7 +201,6 @@ public class VisualizeResult extends GCCContainer{
 				@Override
 				public void mouseExited(MouseEvent e) {
 					// TODO Auto-generated method stub
-					isMouseIn = false;
 					System.out.println("Mouse Out");
 					current = "None";
 					toolTipLocation = null;
@@ -196,7 +213,6 @@ public class VisualizeResult extends GCCContainer{
 				@Override
 				public void mouseEntered(MouseEvent e) {
 					// TODO Auto-generated method stub
-					isMouseIn = true;
 					System.out.println("Mouse In");
 					current = "None";
 					toolTipLocation = e.getPoint();
@@ -248,14 +264,14 @@ public class VisualizeResult extends GCCContainer{
 			if(e.getX() < green_start + green_len)
 			{
 				current = "Green";
-				setToolTipText("그린");
+				setToolTipText(greenText);
 				x = green_start + green_len / 2;
 				y = this.getHeight()/2;
 			}
 			else if(e.getX() < yellow_start + yellow_len)
 			{
 				current = "Yellow";
-				setToolTipText("옐로");
+				setToolTipText(yellowText);
 
 				x = yellow_start + yellow_len / 2;
 				y = this.getHeight()/2;
@@ -263,7 +279,7 @@ public class VisualizeResult extends GCCContainer{
 			else
 			{
 				current = "Red";
-				setToolTipText("레드");
+				setToolTipText(redText);
 
 				x = red_start + red_len / 2;
 				y = this.getHeight()/2;
@@ -296,6 +312,21 @@ public class VisualizeResult extends GCCContainer{
 			g.fillRect(red_start, 0, red_len, getHeight());
 			g.setColor(Color.black);
 			g.drawRect(red_start, 0, Math.min(getWidth()-red_start-1,red_len), getHeight()-1);
+		}
+		
+		public void setGreenText(String html)
+		{
+			greenText = html;
+		}
+		
+		public void setYellowText(String html)
+		{
+			yellowText = html;
+		}
+		
+		public void setRedText(String html)
+		{
+			redText = html;
 		}
 
 		public void setLength(double green, double yellow, double red)
