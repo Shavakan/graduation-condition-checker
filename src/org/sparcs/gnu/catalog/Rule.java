@@ -8,14 +8,16 @@ public class Rule {
 	private String query;
 	private String min;
 	private String name;
+	private String selectQuery;
 
 	/**
 	 * Constructor.
 	 */
-	public Rule(String name, String query, String min){
+	public Rule(String name, String query, String min, String selectQuery){
 		this.name = name;
 		this.query = query;
 		this.min = min;
+		this.selectQuery = selectQuery;
 	}
 	
 	public String getName()
@@ -26,6 +28,11 @@ public class Rule {
 	public String getQuery()
 	{
 		return query;
+	}
+	
+	public String getSelectQuery()
+	{
+		return selectQuery;
 	}
 	
 	public String getMinRequirement()
