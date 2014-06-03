@@ -26,6 +26,7 @@ public class GCCMain {
 		
 		GradeInfo info = new GradeInfo(conn);
 		Parse.parseRawInput("conf" + File.separator + "cs.conf", "tmp" + File.separator + "cs.xml");
+		Parse.parseException("conf" + File.separator + "cs_except_double.conf", "tmp" + File.separator + "cs.xml");
 		Catalog catalog = Catalog.loadCatalog("tmp" + File.separator + "cs.xml");
 
 		GraduationChecker checker = new GraduationChecker(catalog);
