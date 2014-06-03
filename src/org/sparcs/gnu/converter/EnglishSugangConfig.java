@@ -1,6 +1,5 @@
 package org.sparcs.gnu.converter;
 
-import java.util.HashMap;
 
 public class EnglishSugangConfig extends ExcelConfig {
 	public EnglishSugangConfig(){
