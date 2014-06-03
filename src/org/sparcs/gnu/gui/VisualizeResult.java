@@ -23,6 +23,7 @@ public class VisualizeResult extends GCCContainer{
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
+	private HashMap<String, JLabel> names;
 	private HashMap<String, BarGraph> bars;
 	private HashMap<String, JLabel> scores;
 	
@@ -31,6 +32,7 @@ public class VisualizeResult extends GCCContainer{
 	 */
 	public VisualizeResult(GUIMain root) {
 		super(root);
+		names = new HashMap<String, JLabel>();
 		bars = new HashMap<String, BarGraph>();
 		scores = new HashMap<String, JLabel>();
 		initialize();
@@ -40,75 +42,85 @@ public class VisualizeResult extends GCCContainer{
 	 * Initialize the contents of the frame.
 	 */
 	private void initialize() {
-		List<JLabel> allLabel = new LinkedList<>();
 		{
 			JLabel label = new JLabel();
 			label.setText("기필학점");
-			label.setBounds(50, 50, 80, 23);
-			allLabel.add(label);
+			label.setBounds(50, 30, 80, 23);
+			names.put(label.getText(), label);
 		}
 		{
 			JLabel label = new JLabel();
 			label.setText("기선학점");
-			label.setBounds(50, 90, 80, 23);
-			allLabel.add(label);
+			label.setBounds(50, 70, 80, 23);
+			names.put(label.getText(), label);
 		}
 		{
 			JLabel label = new JLabel();
 			label.setText("전필학점");
-			label.setBounds(50, 130, 80, 23);
-			allLabel.add(label);
+			label.setBounds(50, 110, 80, 23);
+			names.put(label.getText(), label);
 		}
 		{
 			JLabel label = new JLabel();
 			label.setText("전선학점");
-			label.setBounds(50, 170, 80, 23);
-			allLabel.add(label);
+			label.setBounds(50, 150, 80, 23);
+			names.put(label.getText(), label);
 		}
 		{
 			JLabel label = new JLabel();
 			label.setText("연구학점");
-			label.setBounds(50, 210, 80, 23);
-			allLabel.add(label);
+			label.setBounds(50, 190, 80, 23);
+			names.put(label.getText(), label);
 		}
 		{
 			JLabel label = new JLabel();
 			label.setText("교필학점");
-			label.setBounds(50, 250, 80, 23);
-			allLabel.add(label);
+			label.setBounds(50, 230, 80, 23);
+			names.put(label.getText(), label);
 		}
 		{
 			JLabel label = new JLabel();
 			label.setText("인선학점");
-			label.setBounds(50, 290, 80, 23);
-			allLabel.add(label);
+			label.setBounds(50, 270, 80, 23);
+			names.put(label.getText(), label);
 		}
 		{
 			JLabel label = new JLabel();
 			label.setText("교필AU");
-			label.setBounds(50, 330, 80, 23);
-			allLabel.add(label);
+			label.setBounds(50, 310, 80, 23);
+			names.put(label.getText(), label);
 		}
 		{
 			JLabel label = new JLabel();
 			label.setText("자선학점");
-			label.setBounds(50, 370, 80, 23);
-			allLabel.add(label);
+			label.setBounds(50, 350, 80, 23);
+			names.put(label.getText(), label);
+		}
+		{
+			JLabel label = new JLabel();
+			label.setText("전필수");
+			label.setBounds(50, 390, 80, 23);
+			names.put(label.getText(), label);
+		}
+		{
+			JLabel label = new JLabel();
+			label.setText("전학점");
+			label.setBounds(50, 430, 80, 23);
+			names.put(label.getText(), label);
 		}
 		{
 			JLabel label = new JLabel();
 			label.setText("평점");
-			label.setBounds(50, 410, 80, 23);
-			allLabel.add(label);
-		}
+			label.setBounds(50, 470, 80, 23);
+			names.put(label.getText(), label);
+		}	
 		{
 			JLabel label = new JLabel();
 			label.setText("이수학점");
-			label.setBounds(50, 450, 80, 23);
-			allLabel.add(label);
+			label.setBounds(50, 510, 80, 23);
+			names.put(label.getText(), label);
 		}
-
-		for(JLabel l : allLabel)
+		for(JLabel l : names.values())
 		{
 			Rectangle r = l.getBounds();
 			BarGraph b = new BarGraph(150, r.y, 550, r.height);
@@ -126,21 +138,45 @@ public class VisualizeResult extends GCCContainer{
 	{
 		for(String barName : bars.keySet())
 		{
+			String keyName = barName;
 			if(!info.checkKey(barName))
-				continue;
+			{
+				if (barName.equals("전필수")||barName.equals("전학점"))
+				{
+					int flag = 0;
+					for(String k : info.getKeys())
+					{
+						if(k.endsWith(barName))
+						{
+							flag = 1;
+							keyName = k;
+							break;
+						}
+					}
+					if (flag != 1)
+					{
+						bars.get(barName).setVisible(false);
+						scores.get(barName).setVisible(false);
+						names.get(barName).setVisible(false);
+					}
+					
+				}
+				else
+					continue;
+			}
 			BarGraph bar = bars.get(barName);
-			double total = info.getTotal(barName);
-			double complete = info.getComplete(barName);
-			double exception = info.getException(barName);
+			double total = info.getTotal(keyName);
+			double complete = info.getComplete(keyName);
+			double exception = info.getException(keyName);
 
 			if(total < 0 || complete < 0 || exception < 0)
 			{
-				System.err.println("No barname " + barName);
+				System.err.println("No barname " + keyName);
 				continue;
 			}
 			bar.setLength(Math.min(complete, total - exception), exception, Math.max(0, total - complete - exception));
 			
-			List<String> taken = info.getTakenList(barName);
+			List<String> taken = info.getTakenList(keyName);
 			if(taken != null)
 			{
 				String greenText = "<html><body>";
@@ -179,7 +215,7 @@ public class VisualizeResult extends GCCContainer{
 		public BarGraph(int x, int y, int w, int h)
 		{
 			setBounds(x, y, w, h);
-			setToolTipText("기본");
+			setToolTipText("");
 			this.addMouseListener(new MouseListener() {
 
 				private int prevInitDelay;

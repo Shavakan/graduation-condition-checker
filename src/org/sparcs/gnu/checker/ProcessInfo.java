@@ -91,6 +91,10 @@ public class ProcessInfo {
 		return allKeys.contains(key);
 	}
 	
+	public Set<String> getKeys()
+	{
+		return allKeys;
+	}
 	public List<String> getTakenList(String key)
 	{
 		return takenMap.get(key);
