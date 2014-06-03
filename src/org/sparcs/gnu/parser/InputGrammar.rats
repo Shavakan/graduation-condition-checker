@@ -1,6 +1,9 @@
 module org.sparcs.gnu.parser.InputGrammar;
 
 header {
+import java.util.List;
+import java.util.ArrayList;
+
 import org.jdom2.Document;
 import org.jdom2.Element;
 }
@@ -22,7 +25,7 @@ body {
 	    curCode = code;
 	}
 	
-	private void makeElement(String value, String original, String min) {
+	private void makeElement(String value, String original, String min, List<Element> l1, List<Element> l2) {
 		String tName = value.equals("au") ? "AU" : "학점";
 		Element e = new Element("조건");
 		e.setAttribute("name", curType+tName);
@@ -40,6 +43,18 @@ body {
 		}
 		else {
 			e.addContent((new Element("원문")).setText(curName + " " + min + original));
+		}
+		
+		if(l1 != null) {
+			for(Element elem : l1) {
+				e.addContent(elem);
+			}
+		}
+		
+		if(l2 != null) {
+			for(Element elem : l2) {
+				e.addContent(elem);
+			}
 		}
 		
 		root.addContent(e);
@@ -196,23 +211,104 @@ private Element Etc =
 	};
 
 private void Condition =
-		n1:Number w "학점" w n2:Number w "AU"
+		n1:Number w "학점" w n2:Number w "AU" w e1:MandCourse? w e2:ReplCourse?
 		{
-			makeElement("credit", "학점", n1);
-			makeElement("au", "AU", n2);
+			makeElement("credit", "학점", n1, e1, e2);
+			makeElement("au", "AU", n2, e1, e2);
 		}
-	/	n1:Number w "학점" w "이상"
+	/	n1:Number w "학점" w "이상" w e1:MandCourse? w e2:ReplCourse?
 		{
-			makeElement("credit", "학점 이상", n1);
+			makeElement("credit", "학점 이상", n1, e1, e2);
 		}
-	/	n1:Number w "학점"
+	/	n1:Number w "학점" w e1:MandCourse? w e2:ReplCourse?
 		{
-			makeElement("credit", "학점", n1);
+			makeElement("credit", "학점", n1, e1, e2);
 		}
-	/	"없음"
+	/	"없음" w e1:MandCourse? w e2:ReplCourse?
 		{
-			makeElement("credit", "없음", "0");
+			makeElement("credit", "없음", "0", e1, e2);
 		};
+
+private List<Element> MandCourse =
+	"(" w l:Courses w ")"
+	{
+		yyValue = l;
+	};
+
+private List<Element> Courses =
+		e:Course1 w "," w l:Courses
+		{
+			l.add(0, e);
+			
+			yyValue = l;
+		}
+	/	e:Course1
+		{
+			List<Element> l = new ArrayList<Element>();
+			l.add(e);
+			
+			yyValue = l;
+		};
+
+private List<Element> ReplCourse =
+	"[" w l:Repls w "]"
+	{
+		yyValue = l;
+	};
+
+private List<Element> Repls =
+		e:Repl w "," w l:Repls
+		{
+			l.add(0, e);
+
+			yyValue = l;
+		}
+	/	e:Repl
+		{
+			List<Element> l = new ArrayList<Element>();
+			l.add(e);
+
+			yyValue = l;
+		};
+
+private Element Repl =
+	c1:Course2 w "->" w c2:Course2
+	{
+		Element e = new Element("예외");
+		e.addContent((new Element("쿼리")).setText("SELECT COUNT(*) = 0 FROM `grade` WHERE `code`='" + c2 + "' AND `grade`!='F' AND `grade`!='U' AND `grade`!='W' AND `grade`!='I' AND `grade`!='R'"));
+		e.addContent((new Element("좌변")).setText(c1));
+		e.addContent((new Element("우변")).setText(c2));
+
+		yyValue = e;
+	};
+
+private Element Course1 =
+	f:[a-zA-Z]+ n1:Number n2:Credit
+	{
+		String s = "";
+		for(Character c : f) s += c;
+		Element e = new Element("필수");
+		e.addContent((new Element("쿼리")).setText("SELECT COUNT(*) > 0 FROM `grade` WHERE `code`='" + s + n1 + "' AND `grade`!='F' AND `grade`!='U' AND `grade`!='W' AND `grade`!='I' AND `grade`!='R'"));
+		e.addContent((new Element("코드")).setText(s+n1));
+		e.addContent((new Element("학점")).setText(n2));
+
+		yyValue = e;
+	};
+
+private String Course2 =
+	f:[a-zA-Z]+ b:Number
+	{
+		String s = "";
+		for(Character c : f) s += c;
+
+		yyValue = s + b;
+	};
+
+private String Credit =
+	"(" w n:Number w ")"
+	{
+		yyValue = n;
+	};
 
 private String Number =
 	a:[0-9]+

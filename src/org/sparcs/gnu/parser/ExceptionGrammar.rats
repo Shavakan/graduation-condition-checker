@@ -3,11 +3,14 @@ module org.sparcs.gnu.parser.ExceptionGrammar;
 header {
 import java.util.List;
 import java.util.LinkedList;
+import java.util.ArrayList;
+
 import org.jdom2.Element;
 }
 
 body {
 	private List<Element> l;
+	private String curDept;
 	private String curState;
 	private String curType;
 	private String curCode;
@@ -18,12 +21,12 @@ body {
 		curCode = code;
 	}
 
-	private void makeElement(String value, String original, String min) {
+	private void makeElement(String value, String original, String min, List<Element> l1, List<Element> l2) {
 		String tName = value.equals("au") ? "AU" : "학점";
 		Element e;
 		if(isM) {
 			e = new Element("조건");
-			e.setAttribute("name", curState+curType+tName);
+			e.setAttribute("name", curDept+curState+curType+tName);
 			if(curType.equals("전공")) {
 				e.addContent((new Element("쿼리")).setText("SELECT SUM(`" + value + "`) FROM `grade` WHERE (`type`='전필' OR `type`='전선') AND `grade`!='F' AND `grade`!='U' AND `grade`!='W' AND `grade`!='I' AND `grade`!='R' AND SUBSTR(`number`,1,2)='" + curCode + "'"));
 				e.addContent((new Element("목록")).setText("SELECT `code`,`" + value + "` FROM `grade` WHERE (`type`='전필' OR `type`='전선') AND `grade`!='F' AND `grade`!='U' AND `grade`!='W' AND `grade`!='I' AND `grade`!='R' AND SUBSTR(`number`,1,2)='" + curCode + "' ORDER BY `code`"));
@@ -38,6 +41,18 @@ body {
 			e.setAttribute("name", curType+tName);
 		}
 		e.addContent((new Element("최소")).setText(min));
+		
+		if(l1 != null) {
+			for(Element elem : l1) {
+				e.addContent(elem);
+			}
+		}
+		
+		if(l2 != null) {
+			for(Element elem : l2) {
+				e.addContent(elem);
+			}
+		}
 
 		l.add(e);
 	}
@@ -57,10 +72,10 @@ private void Dept =
 		initL(n1);
 	};
 
-private String DeptName =
+private void DeptName =
 	name:("전산"/"전자")
 	{
-		yyValue = name;
+		curDept = name;
 	};
 
 private void State =
@@ -84,19 +99,29 @@ private void CreditChange =
 	};
 
 private void Type =
-		"인문사회선택"
+		("인문사회선택"/"인사선"/"인선")
 		{
 			curType = "인선";
 			isM = false;
 		}
-	/	"기초선택"
+	/	("기초필수"/"기필")
+		{
+			curType = "기필";
+			isM = false;
+		}
+	/	("기초선택"/"기선")
 		{
 			curType = "기선";
 			isM = false;
 		}
-	/	"전공필수"
+	/	("전공필수"/"전필")
 		{
 			curType = "전필";
+			isM = true;
+		}
+	/	("전공선택"/"전선")
+		{
+			curType = "전선";
 			isM = true;
 		}
 	/	"전공"
@@ -106,14 +131,95 @@ private void Type =
 		};
 
 private void Condition =
-		n1:Number w "학점" w "이상"
+		n1:Number w "학점" w "이상" w e1:MandCourse? w e2:ReplCourse?
 		{
-			makeElement("credit", "학점 이상", n1);
+			makeElement("credit", "학점 이상", n1, e1, e2);
 		}
-	/	n1:Number w "학점"
+	/	n1:Number w "학점" w e1:MandCourse? w e2:ReplCourse?
 		{
-			makeElement("credit", "학점", n1);
+			makeElement("credit", "학점", n1, e1, e2);
 		};
+
+private List<Element> MandCourse =
+	"(" w l:Courses w ")"
+	{
+		yyValue = l;
+	};
+
+private List<Element> Courses =
+		e:Course1 w "," w l:Courses
+		{
+			l.add(0, e);
+			
+			yyValue = l;
+		}
+	/	e:Course1
+		{
+			List<Element> l = new ArrayList<Element>();
+			l.add(e);
+			
+			yyValue = l;
+		};
+
+private List<Element> ReplCourse =
+	"[" w l:Repls w "]"
+	{
+		yyValue = l;
+	};
+
+private List<Element> Repls =
+		e:Repl w "," w l:Repls
+		{
+			l.add(0, e);
+
+			yyValue = l;
+		}
+	/	e:Repl
+		{
+			List<Element> l = new ArrayList<Element>();
+			l.add(e);
+
+			yyValue = l;
+		};
+
+private Element Repl =
+	c1:Course2 w "->" w c2:Course2
+	{
+		Element e = new Element("예외");
+		e.addContent((new Element("쿼리")).setText("SELECT COUNT(*) = 0 FROM `grade` WHERE `code`='" + c2 + "' AND `grade`!='F' AND `grade`!='U' AND `grade`!='W' AND `grade`!='I' AND `grade`!='R'"));
+		e.addContent((new Element("좌변")).setText(c1));
+		e.addContent((new Element("우변")).setText(c2));
+
+		yyValue = e;
+	};
+
+private Element Course1 =
+	f:[a-zA-Z]+ n1:Number n2:Credit
+	{
+		String s = "";
+		for(Character c : f) s += c;
+		Element e = new Element("필수");
+		e.addContent((new Element("쿼리")).setText("SELECT COUNT(*) > 0 FROM `grade` WHERE `code`='" + s + n1 + "' AND `grade`!='F' AND `grade`!='U' AND `grade`!='W' AND `grade`!='I' AND `grade`!='R'"));
+		e.addContent((new Element("코드")).setText(s+n1));
+		e.addContent((new Element("학점")).setText(n2));
+
+		yyValue = e;
+	};
+
+private String Course2 =
+	f:[a-zA-Z]+ b:Number
+	{
+		String s = "";
+		for(Character c : f) s += c;
+
+		yyValue = s + b;
+	};
+
+private String Credit =
+	"(" w n:Number w ")"
+	{
+		yyValue = n;
+	};
 
 private String Number =
 	a:[0-9]+
