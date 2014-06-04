@@ -4,8 +4,6 @@ import java.awt.Color;
 import java.awt.Container;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
 import java.io.File;
 import java.sql.Connection;
 
@@ -67,9 +65,10 @@ public class SelectFile extends GCCContainer{
 		final Container me = this;
 
 		JButton btnNext = new JButton("Next >");
-		btnNext.addMouseListener(new MouseAdapter() {
+		btnNext.addActionListener(new ActionListener() {
+
 			@Override
-			public void mouseClicked(MouseEvent e) {
+			public void actionPerformed(ActionEvent e) {
 				/*
 				GUIFileInputVerification next = new GUIFileInputVerification(
 						txtfldTranscript.getText() , txtfldMainProgram.getText(), txtfldSecondProgram.getText(), txtfldThirdProgram.getText());
@@ -117,7 +116,7 @@ public class SelectFile extends GCCContainer{
 		gradePanel.setBounds(0, 0, 434, 72);
 		add(gradePanel);
 		gradePanel.setLayout(null);
-		
+
 		JLabel lblEnterYourTranscript = new JLabel("성적 정보를 입력하세요 (.xls):");
 		lblEnterYourTranscript.setBounds(12, 10, 183, 15);
 		gradePanel.add(lblEnterYourTranscript);
@@ -193,9 +192,10 @@ public class SelectFile extends GCCContainer{
 		JLabel subConfeLabel = new JLabel("복/부 전공 졸업요건 (.conf):");
 		subConfeLabel.setBounds(12, 17, 188, 15);
 		subConfPanel.add(subConfeLabel);
-		subConfButton.addMouseListener(new MouseAdapter() {
+		subConfButton.addActionListener(new ActionListener() {
+
 			@Override
-			public void mouseClicked(MouseEvent e) {
+			public void actionPerformed(ActionEvent e) {
 				fc = new JFileChooser();
 				int returnVal = fc.showOpenDialog(me);
 
@@ -209,9 +209,10 @@ public class SelectFile extends GCCContainer{
 				}
 			}
 		});
-		mainConfButton.addMouseListener(new MouseAdapter() {
+		mainConfButton.addActionListener(new ActionListener() {
+
 			@Override
-			public void mouseClicked(MouseEvent arg0) {
+			public void actionPerformed(ActionEvent e) {
 				fc = new JFileChooser();
 				int returnVal = fc.showOpenDialog(me);
 
@@ -225,9 +226,10 @@ public class SelectFile extends GCCContainer{
 				}
 			}
 		});
-		currentSugangButton.addMouseListener(new MouseAdapter() {
+		currentSugangButton.addActionListener(new ActionListener() {
+
 			@Override
-			public void mouseClicked(MouseEvent arg0) {
+			public void actionPerformed(ActionEvent e) {
 				fc = new JFileChooser();
 				int returnVal = fc.showOpenDialog(root.frame);
 
@@ -241,9 +243,10 @@ public class SelectFile extends GCCContainer{
 				}
 			}
 		});
-		btnSearchTranscript.addMouseListener(new MouseAdapter() {
+		btnSearchTranscript.addActionListener(new ActionListener() {
+
 			@Override
-			public void mouseClicked(MouseEvent arg0) {
+			public void actionPerformed(ActionEvent e) {
 				fc = new JFileChooser();
 				int returnVal = fc.showOpenDialog(root.frame);
 
@@ -257,7 +260,7 @@ public class SelectFile extends GCCContainer{
 				}
 			}
 		});
-		
+
 		transcriptListener = new FileDrop.Listener(){
 			public void  filesDropped( java.io.File[] files ){
 				if(files.length > 0)
@@ -268,7 +271,7 @@ public class SelectFile extends GCCContainer{
 				}
 			}
 		};
-		
+
 		currentSugangListener = new FileDrop.Listener(){
 			public void  filesDropped( java.io.File[] files ){
 				if(files.length > 0)
@@ -279,7 +282,7 @@ public class SelectFile extends GCCContainer{
 				}
 			}
 		};
-		
+
 		mainConfListener = new FileDrop.Listener(){
 			public void  filesDropped( java.io.File[] files ){
 				if(files.length > 0)
@@ -290,7 +293,7 @@ public class SelectFile extends GCCContainer{
 				}
 			}
 		};
-		
+
 		subConfListener = new FileDrop.Listener(){
 			public void  filesDropped( java.io.File[] files ){
 				if(files.length > 0)
@@ -301,7 +304,7 @@ public class SelectFile extends GCCContainer{
 				}
 			}
 		};
-		
+
 		new FileDrop(gradePanel, fileBoarder, true, transcriptListener);
 		new FileDrop(currentSugangPanel, fileBoarder, true, currentSugangListener);
 		new FileDrop(mainConfPanel, fileBoarder, true, mainConfListener);

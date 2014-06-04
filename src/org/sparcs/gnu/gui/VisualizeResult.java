@@ -19,6 +19,9 @@ import javax.swing.JPanel;
 import javax.swing.ToolTipManager;
 
 import org.sparcs.gnu.checker.ProcessInfo;
+import javax.swing.JButton;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
 
 public class VisualizeResult extends GCCContainer{
 	/**
@@ -34,6 +37,7 @@ public class VisualizeResult extends GCCContainer{
 	 */
 	public VisualizeResult(GUIMain root) {
 		super(root);
+		
 		names = new HashMap<String, JLabel>();
 		bars = new HashMap<String, BarGraph>();
 		scores = new HashMap<String, JLabel>();
@@ -134,6 +138,15 @@ public class VisualizeResult extends GCCContainer{
 			this.add(b);
 			this.add(label);
 		}
+		
+		JButton goBackButton = new JButton("뒤로가기");
+		goBackButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				root.changeWindow(GUIMain.selectFile);
+			}
+		});
+		goBackButton.setBounds(0, 538, 97, 23);
+		add(goBackButton);
 	}
 
 	public void update(ProcessInfo info)
