@@ -183,13 +183,14 @@ private List<Element> Repls =
 		};
 
 private Element Repl =
-	c1:Course2 w "->" w c2:Course2
+	c1:Course2 w "->" w c2:Course2 (w n:Credit)?
 	{
 		Element e = new Element("예외");
 		e.addContent((new Element("쿼리")).setText("SELECT (`left`.`count` = 1) AND (`right`.`count` = 0) FROM (SELECT COUNT(*) AS `count` FROM `grade` WHERE `code`='"+c1+"' AND `grade`!='F' AND `grade`!='U' AND `grade`!='W' AND `grade`!='I' AND `grade`!='R') AS `left`, (SELECT COUNT(*) AS `count` FROM `grade` WHERE `code`='"+c2+"' AND `grade`!='F' AND `grade`!='U' AND `grade`!='W' AND `grade`!='I' AND `grade`!='R') AS `right`"));
 		e.addContent((new Element("좌변")).setText(c1));
 		e.addContent((new Element("우변")).setText(c2));
 		e.addContent((new Element("우변코드")).setText(curCode));
+		e.addContent((new Element("학점")).setText((n!=null)?n:"3"));
 
 		yyValue = e;
 	};
