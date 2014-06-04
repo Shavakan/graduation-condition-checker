@@ -1,4 +1,10 @@
 package org.sparcs.gnu.catalog;
+
+import java.util.LinkedList;
+import java.util.List;
+
+import org.jdom2.Element;
+
 /**
  * Having rule information
  * @author Alphamin
@@ -9,15 +15,31 @@ public class Rule {
 	private String min;
 	private String name;
 	private String selectQuery;
+	private String originalText;
+	private List<MutualRecog> mutualRecogs;
 
 	/**
 	 * Constructor.
 	 */
-	public Rule(String name, String query, String min, String selectQuery){
-		this.name = name;
-		this.query = query;
-		this.min = min;
-		this.selectQuery = selectQuery;
+	public Rule(Element cond){
+		this.name = cond.getAttributeValue("name");
+		this.query = cond.getChildText("쿼리");
+		this.min = cond.getChildText("최소");
+		this.selectQuery = cond.getChildText("목록");
+		this.originalText = cond.getChildText("원문");
+		
+		mutualRecogs = new LinkedList<>();
+		for(Element exception : cond.getChildren("예외"))
+			mutualRecogs.add(new MutualRecog(exception));
+	}
+	
+	public List<MutualRecog> getMutualRecogs() {
+		return mutualRecogs;
+	}
+
+	public String getOriginalText()
+	{
+		return originalText;
 	}
 	
 	public String getName()

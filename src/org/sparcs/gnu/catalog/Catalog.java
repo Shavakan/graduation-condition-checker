@@ -16,6 +16,7 @@ public class Catalog {
 	private Replace replace;
 	private Set<Rule> rules;
 	private Exception exception;
+	private String departmentCode;
 	/**
 	 * Constructor.
 	 */
@@ -33,16 +34,17 @@ public class Catalog {
 			Document document = builder.build(path);
 
 			Element rootElement = document.getRootElement();
+			
 
 			Catalog catalog = new Catalog();
-			//TODO fill in.
+			catalog.departmentCode = rootElement.getAttributeValue("code");
 			catalog.replace = new Replace();
 			catalog.rules = new HashSet<>();
 
 
 			for(Element cond : rootElement.getChildren("조건"))
 			{
-				catalog.rules.add(new Rule(cond.getAttributeValue("name"), cond.getChildText("쿼리"), cond.getChildText("최소"), cond.getChildText("목록")));
+				catalog.rules.add(new Rule(cond)); 
 			}
 			catalog.exception = new Exception();
 			return catalog;
@@ -58,5 +60,10 @@ public class Catalog {
 	public Set<Rule> getRules()
 	{
 		return rules;
+	}
+	
+	public String getDepartmentCode()
+	{
+		return departmentCode;
 	}
 }

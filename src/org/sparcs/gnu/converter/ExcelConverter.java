@@ -10,8 +10,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.sparcs.gnu.course.GradeInfo;
-
 import jxl.Cell;
 import jxl.Sheet;
 import jxl.Workbook;

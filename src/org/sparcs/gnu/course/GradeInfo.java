@@ -140,6 +140,38 @@ public class GradeInfo {
 		}
 	}
 	
+	public boolean insertMutualRecog(String checkSQL, String departmentCode, String originalCode, String newCode)
+	{
+		try
+		{
+			PreparedStatement checkStatement = conn.prepareStatement(checkSQL);
+			ResultSet result = checkStatement.executeQuery();
+			if(result.next() && result.getBoolean(1))
+			{
+				result.close();
+				checkStatement.close();
+				
+				PreparedStatement updateStatement = conn.prepareStatement("INSERT INTO `grade` (`number`, `code`, `type`, `replace_from`) VALUES (?,?,?,?)");
+				updateStatement.setString(1, departmentCode);
+				updateStatement.setString(2, newCode);
+				updateStatement.setString(3, "상호인정");
+				updateStatement.setString(4, originalCode);
+				updateStatement.executeUpdate();
+				updateStatement.close();
+				
+				return true;
+			}
+			result.close();
+			checkStatement.close();
+			return false;		
+		}
+		catch(java.lang.Exception e)
+		{
+			e.printStackTrace(System.err);
+			return false;
+		}
+	}
+	
 	public List<String> checkList(String sql){
 		try
 		{

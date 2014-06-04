@@ -14,9 +14,10 @@ CREATE TABLE IF NOT EXISTS `grade` (
   `code` TEXT NOT NULL,
   `section` TEXT NULL,
   `type` TEXT NOT NULL,
-  `credit` INT NOT NULL,
-  `au` INT NOT NULL,
-  `grade` TEXT NOT NULL DEFAULT 'S')
+  `credit` INT NOT NULL DEFAULT '0',
+  `au` INT NOT NULL DEFAULT '0',
+  `grade` TEXT NOT NULL DEFAULT 'S',
+  `replace_from` TEXT NULL)
 ;
 
 CREATE TABLE IF NOT EXISTS `metadata` (

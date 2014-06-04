@@ -1,6 +1,7 @@
 package org.sparcs.gnu.checker;
 
 import org.sparcs.gnu.catalog.Catalog;
+import org.sparcs.gnu.catalog.MutualRecog;
 import org.sparcs.gnu.catalog.Rule;
 import org.sparcs.gnu.course.GradeInfo;
 
@@ -44,6 +45,16 @@ public class GraduationChecker {
 			double resultTotal = 0.0;
 			double resultComplete = 0.0;
 			double resultException = 0.0;
+			
+			for(MutualRecog mutual : rule.getMutualRecogs())
+			{
+				if(info.insertMutualRecog(mutual.getExceptionQuery(), catalog.getDepartmentCode(), mutual.getExceptionOrigin(), mutual.getExceptionNew()))
+				{
+					result.addMutualRecog(mutual.getExceptionCredit());
+					result.addException(resultKey, mutual.getExceptionCredit());
+					result.addExceptionMessage(resultKey, mutual.getExceptionOrigin() + " -> " + mutual.getExceptionNew() + " (" + Math.round(mutual.getExceptionCredit()) + ")");
+				}
+			}
 			
 			if(value.contains("."))
 			{
