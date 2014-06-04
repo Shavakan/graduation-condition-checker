@@ -6,6 +6,9 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
+
+import org.sparcs.gnu.catalog.Replace;
 
 /**
  * This class has information about user's taken courses.
@@ -207,9 +210,17 @@ public class GradeInfo {
 			{
 				String code = result.getString(1);
 				String credit = result.getString(2);
+				String before = result.getString(3);
 				if(credit.trim().equals("0"))
 					continue;
-				ret.add(code + ": " + credit);
+				if(before == null || before.trim().length() == 0)
+				{
+					ret.add(code + ": " + credit);
+				}
+				else
+				{
+					ret.add(before + " -> " + code + ": " + credit);
+				}
 			}
 			result.close();
 			stmt.close();
@@ -219,6 +230,31 @@ public class GradeInfo {
 		{
 			e.printStackTrace(System.err);
 			return null;
+		}
+	}
+	
+	public void doReplace(Set<Replace> replaces)
+	{
+		try
+		{
+			PreparedStatement stmt = conn.prepareStatement("UPDATE `grade` SET `number`=?, `code`=?, `type`=?, `credit`=?, `replace_from`=? WHERE `code`=?");
+			for(Replace replace : replaces)
+			{
+				stmt.clearParameters();
+				stmt.setString(1, replace.getReplaceNumber());
+				stmt.setString(2, replace.getReplaceNew());
+				stmt.setString(3, replace.getReplaceType());
+				stmt.setString(4, replace.getReplaceCredit());
+				stmt.setString(5, replace.getReplaceOriginal());
+				stmt.setString(6, replace.getReplaceOriginal());
+				
+				stmt.executeUpdate();
+			}
+			stmt.close();
+		}
+		catch(Exception e)
+		{
+			e.printStackTrace(System.err);
 		}
 	}
 }

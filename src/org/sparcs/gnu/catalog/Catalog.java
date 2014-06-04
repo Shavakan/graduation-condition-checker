@@ -15,7 +15,7 @@ import org.jdom2.input.SAXBuilder;
  *
  */
 public class Catalog {
-	private Replace replace;
+	private Set<Replace> replaces;
 	private Set<Rule> rules;
 	private Map<String, Exception> exceptionMap;
 	private String departmentCode;
@@ -40,7 +40,7 @@ public class Catalog {
 
 			Catalog catalog = new Catalog();
 			catalog.departmentCode = rootElement.getAttributeValue("code");
-			catalog.replace = new Replace();
+			catalog.replaces = new HashSet<>();
 			catalog.rules = new HashSet<>();
 			catalog.exceptionMap = new HashMap<>();
 
@@ -53,6 +53,10 @@ public class Catalog {
 			{
 				Exception e = new Exception(exception);
 				catalog.exceptionMap.put(e.getTarget(), e); 
+			}
+			for(Element replace : rootElement.getChildren("대체"))
+			{
+				catalog.replaces.add(new Replace(replace));
 			}
 			return catalog;
 		}
@@ -67,6 +71,11 @@ public class Catalog {
 	public Set<Rule> getRules()
 	{
 		return rules;
+	}
+	
+	public Set<Replace> getReplaces()
+	{
+		return replaces;
 	}
 	
 	public String getDepartmentCode()

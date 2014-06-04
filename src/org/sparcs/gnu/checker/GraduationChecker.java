@@ -3,6 +3,7 @@ package org.sparcs.gnu.checker;
 import org.sparcs.gnu.catalog.Catalog;
 import org.sparcs.gnu.catalog.Essential;
 import org.sparcs.gnu.catalog.MutualRecog;
+import org.sparcs.gnu.catalog.Replace;
 import org.sparcs.gnu.catalog.Rule;
 import org.sparcs.gnu.catalog.Exception;
 import org.sparcs.gnu.course.GradeInfo;
@@ -36,6 +37,8 @@ public class GraduationChecker {
 		//TODO fill in
 		
 		ProcessInfo result = new ProcessInfo();
+		
+		info.doReplace(catalog.getReplaces());
 
 		for(Rule rule : catalog.getRules())
 		{

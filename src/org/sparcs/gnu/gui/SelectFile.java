@@ -76,6 +76,10 @@ public class SelectFile extends GCCContainer{
 				next.setVisible(true);
 				 */
 				try {
+					transcript = txtfldTranscript.getText().trim();
+					currentSugang = currentSugangText.getText().trim();
+					mainProgram = mainConfText.getText().trim();
+					secondProgram = subConfText.getText().trim();
 					Connection conn = SQLiteManager.createDatabase("tmp" + File.separator + "output.db", true);
 					Converter conv = Converter.converterObject(transcript);
 					conv.convert("tmp" + File.separator + "output.db");
@@ -88,9 +92,16 @@ public class SelectFile extends GCCContainer{
 					Class.forName("org.sparcs.gnu.course.GradeInfo");
 
 					GradeInfo info = new GradeInfo(conn);
+					
 					Parse.parseRawInput(mainProgram, "tmp" + File.separator + "cs.xml");
 					if(secondProgram != null && secondProgram.trim().length()>0)
 						Parse.parseException(secondProgram, "tmp" + File.separator + "cs.xml");
+					File replace = new File("conf" + File.separator + "replace.conf");
+					if(replace.exists() && replace.isFile())
+					{
+						Parse.parseReplace(replace.getAbsolutePath(), "tmp" + File.separator + "cs.xml");
+					}
+					
 					Catalog catalog = Catalog.loadCatalog("tmp" + File.separator + "cs.xml");
 
 					GraduationChecker checker = new GraduationChecker(catalog);	

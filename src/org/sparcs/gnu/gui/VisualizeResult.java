@@ -328,8 +328,6 @@ public class VisualizeResult extends GCCContainer{
 
 				@Override
 				public void mouseExited(MouseEvent e) {
-					// TODO Auto-generated method stub
-					System.out.println("Mouse Out");
 					current = "None";
 					toolTipLocation = null;
 
@@ -340,8 +338,6 @@ public class VisualizeResult extends GCCContainer{
 
 				@Override
 				public void mouseEntered(MouseEvent e) {
-					// TODO Auto-generated method stub
-					System.out.println("Mouse In");
 					current = "None";
 					toolTipLocation = e.getPoint();
 
@@ -414,7 +410,6 @@ public class VisualizeResult extends GCCContainer{
 			}
 			if(!current.equals(prev))
 			{
-				System.out.println(current + " " + x + " " + y);
 				toolTipLocation = new Point(x,y);
 			}
 
