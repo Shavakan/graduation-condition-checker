@@ -6,6 +6,7 @@ public class MutualRecog {
 	private String exceptionQuery;
 	private String exceptionOrigin;
 	private String exceptionNew;
+	private String exceptionCode;
 	private double exceptionCredit;
 	
 	public MutualRecog(Element mutual)
@@ -13,6 +14,7 @@ public class MutualRecog {
 		exceptionQuery = mutual.getChildText("쿼리");
 		exceptionOrigin = mutual.getChildText("좌변");
 		exceptionNew = mutual.getChildText("우변");
+		exceptionCode = mutual.getChildText("우변코드");
 		String exceptionCreditString = mutual.getChildText("학점");
 		
 		if(exceptionCreditString == null || exceptionCreditString.length() == 0)
@@ -36,5 +38,9 @@ public class MutualRecog {
 
 	public String getExceptionNew() {
 		return exceptionNew;
+	}
+	
+	public String getExceptionCode() {
+		return exceptionCode;
 	}
 }

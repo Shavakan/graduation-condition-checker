@@ -48,7 +48,7 @@ public class GraduationChecker {
 			
 			for(MutualRecog mutual : rule.getMutualRecogs())
 			{
-				if(info.insertMutualRecog(mutual.getExceptionQuery(), catalog.getDepartmentCode(), mutual.getExceptionOrigin(), mutual.getExceptionNew()))
+				if(info.insertMutualRecog(mutual.getExceptionQuery(), mutual.getExceptionCode(), mutual.getExceptionOrigin(), mutual.getExceptionNew()))
 				{
 					result.addMutualRecog(mutual.getExceptionCredit());
 					result.addException(resultKey, mutual.getExceptionCredit());
