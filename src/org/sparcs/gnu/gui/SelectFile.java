@@ -79,8 +79,11 @@ public class SelectFile extends GCCContainer{
 					Connection conn = SQLiteManager.createDatabase("tmp" + File.separator + "output.db", true);
 					Converter conv = Converter.converterObject(transcript);
 					conv.convert("tmp" + File.separator + "output.db");
-					conv = Converter.converterObject(currentSugang);
-					conv.convert("tmp" + File.separator + "output.db");
+					if(currentSugang != null && currentSugang.length()>0)
+					{
+						conv = Converter.converterObject(currentSugang);
+						conv.convert("tmp" + File.separator + "output.db");
+					}
 
 					Class.forName("org.sparcs.gnu.course.GradeInfo");
 
