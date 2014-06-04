@@ -47,79 +47,79 @@ public class VisualizeResult extends GCCContainer{
 		{
 			JLabel label = new JLabel();
 			label.setText("기필학점");
-			label.setBounds(50, 30, 80, 23);
+			label.setBounds(20, 30, 110, 23);
 			names.put(label.getText(), label);
 		}
 		{
 			JLabel label = new JLabel();
 			label.setText("기선학점");
-			label.setBounds(50, 70, 80, 23);
+			label.setBounds(20, 70, 110, 23);
 			names.put(label.getText(), label);
 		}
 		{
 			JLabel label = new JLabel();
 			label.setText("전필학점");
-			label.setBounds(50, 110, 80, 23);
+			label.setBounds(20, 110, 110, 23);
 			names.put(label.getText(), label);
 		}
 		{
 			JLabel label = new JLabel();
 			label.setText("전선학점");
-			label.setBounds(50, 150, 80, 23);
+			label.setBounds(20, 150, 110, 23);
 			names.put(label.getText(), label);
 		}
 		{
 			JLabel label = new JLabel();
 			label.setText("연구학점");
-			label.setBounds(50, 190, 80, 23);
+			label.setBounds(20, 190, 110, 23);
 			names.put(label.getText(), label);
 		}
 		{
 			JLabel label = new JLabel();
 			label.setText("교필학점");
-			label.setBounds(50, 230, 80, 23);
+			label.setBounds(20, 230, 110, 23);
 			names.put(label.getText(), label);
 		}
 		{
 			JLabel label = new JLabel();
 			label.setText("인선학점");
-			label.setBounds(50, 270, 80, 23);
+			label.setBounds(20, 270, 110, 23);
 			names.put(label.getText(), label);
 		}
 		{
 			JLabel label = new JLabel();
 			label.setText("교필AU");
-			label.setBounds(50, 310, 80, 23);
+			label.setBounds(20, 310, 110, 23);
 			names.put(label.getText(), label);
 		}
 		{
 			JLabel label = new JLabel();
 			label.setText("자선학점");
-			label.setBounds(50, 350, 80, 23);
+			label.setBounds(20, 350, 110, 23);
 			names.put(label.getText(), label);
 		}
 		{
 			JLabel label = new JLabel();
-			label.setText("전필수");
-			label.setBounds(50, 390, 80, 23);
+			label.setText("전전공필수");
+			label.setBounds(20, 390, 110, 23);
 			names.put(label.getText(), label);
 		}
 		{
 			JLabel label = new JLabel();
-			label.setText("전학점");
-			label.setBounds(50, 430, 80, 23);
+			label.setText("전전공학점");
+			label.setBounds(20, 430, 110, 23);
 			names.put(label.getText(), label);
 		}
 		{
 			JLabel label = new JLabel();
 			label.setText("평점");
-			label.setBounds(50, 470, 80, 23);
+			label.setBounds(20, 470, 110, 23);
 			names.put(label.getText(), label);
 		}	
 		{
 			JLabel label = new JLabel();
 			label.setText("이수학점");
-			label.setBounds(50, 510, 80, 23);
+			label.setBounds(20, 510, 110, 23);
 			names.put(label.getText(), label);
 		}
 		for(JLabel l : names.values())
@@ -143,7 +143,7 @@ public class VisualizeResult extends GCCContainer{
 			String keyName = barName;
 			if(!info.checkKey(barName))
 			{
-				if (barName.equals("전필수")||barName.equals("전학점"))
+				if (barName.equals("전전공학점")||barName.equals("전전공필수"))
 				{
 					int flag = 0;
 					for(String k : info.getKeys())
@@ -161,7 +161,13 @@ public class VisualizeResult extends GCCContainer{
 						scores.get(barName).setVisible(false);
 						names.get(barName).setVisible(false);
 					}
-
+					else
+					{
+						names.get(barName).setText(keyName);
+						bars.get(barName).setVisible(true);
+						scores.get(barName).setVisible(true);
+						names.get(barName).setVisible(true);
+					}
 				}
 				else
 					continue;
