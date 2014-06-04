@@ -24,6 +24,14 @@
 		</condition>
 	</target>
 
+	<target name="checkRGUptodate">
+		<condition property="RGparser.uptodate">
+			<uptodate targetfile="${parser}/ReplaceGrammar.java">
+				<srcfiles dir="${parser}" includes="ReplaceGrammar.rats"/>
+			</uptodate>
+		</condition>
+	</target>
+
 	<macrodef name="buildparser">
 		<attribute name="name"/>
 		<attribute name="file"/>
@@ -52,6 +60,7 @@
 	<target name="parser" depends="resolve">
 		<ant target="EGparser"/>
 		<ant target="IGparser"/>
+		<ant target="RGparser"/>
 	</target>
 
 	<target name="EGparser"
@@ -64,5 +73,11 @@
 			unless="IGparser.uptodate"
 			depends="checkIGUptodate">
 		<buildparser name="IG" dir="${parser}" file="InputGrammar.rats"/>
+	</target>
+
+	<target name="RGparser"
+			unless="RGparser.uptodate"
+			depends="checkRGUptodate">
+		<buildparser name="RG" dir="${parser}" file="ReplaceGrammar.rats"/>
 	</target>
 </project>

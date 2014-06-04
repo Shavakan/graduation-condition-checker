@@ -109,6 +109,50 @@ public class Parse {
 			return false;
 		}
 	}
+
+	/**
+	 * Parse replace input
+	 * @param conf
+	 * @param xml
+	 * @return
+	 */
+	public static boolean parseReplace(String conf, String xml) {
+		try
+		{
+			String filename = conf;
+			
+			ReplaceGrammar parse = new ReplaceGrammar(new FileReader(filename), filename);
+			Object o = parse.pSpec(0);
+			if(o instanceof SemanticValue) {
+				SemanticValue res = (SemanticValue) o;
+				List<Element> l = res.semanticValue();
+
+				SAXBuilder builder = new SAXBuilder();
+				Document prev = builder.build(new File(xml));
+
+				for(Element e : l){
+					prev.getRootElement().addContent(e);
+				}
+				
+				XMLOutputter out = new XMLOutputter(Format.getPrettyFormat());
+				FileWriter outfile = new FileWriter(xml);
+				out.output(prev, outfile);
+			}
+			else if(o instanceof ParseError) {
+				System.err.println("ParseError");
+			}
+			else {
+				System.err.println("Unknown state after parsing");
+			}
+
+			return true;
+		}
+		catch(Exception e)
+		{
+			e.printStackTrace(System.err);
+			return false;
+		}
+	}
 	
 	/** this main method is for testing above functions.
 	 * free to remove this function
@@ -117,7 +161,8 @@ public class Parse {
 	 *//*
 	public static void main(String[] args) throws Exception {
 		parseRawInput("conf" + File.separator + "cs.conf", "tmp" + File.separator + "cs.xml");
-		parseException("conf" + File.separator + "cs_except_double.conf", "tmp" + File.separator + "cs.xml");
+		parseException("conf" + File.separator + "ee_minor.conf", "tmp" + File.separator + "cs.xml");
+		parseReplace("conf" + File.separator + "replace.conf", "tmp" + File.separator + "cs.xml");
 		SAXBuilder s = new SAXBuilder();
 		XMLOutputter o = new XMLOutputter(Format.getPrettyFormat());
 		o.output(s.build("tmp" + File.separator + "cs.xml"), System.out);

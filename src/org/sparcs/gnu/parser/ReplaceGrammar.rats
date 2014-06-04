@@ -1,0 +1,141 @@
+module org.sparcs.gnu.parser.ReplaceGrammar;
+
+header {
+import java.util.List;
+import java.util.ArrayList;
+
+import org.jdom2.Element;
+}
+
+body {
+}
+
+option parser(org.sparcs.gnu.parser.ReplaceGrammar);
+
+public List<Element> Spec =
+	Title w l:Repls w EndOfFile 
+	{
+		yyValue = l;
+	};
+
+private void Title =
+	"대체" w "과목"?
+	{
+	};
+
+private List<Element> Repls =
+		e:Repl w ","? w l:Repls
+		{
+			l.add(0, e);
+
+			yyValue = l;
+		}
+	/	e:Repl
+		{
+			List<Element> l = new ArrayList<Element>();
+			l.add(e);
+
+			yyValue = l;
+		};
+
+private Element Repl =
+	c1:Course w "->" w c2:Course w f:fNumber w t:Type w n:Credit?
+	{
+		Element e = new Element("대체");
+		e.addContent((new Element("좌변")).setText(c1));
+		e.addContent((new Element("코드")).setText(f));
+		e.addContent((new Element("우변")).setText(c2));
+		e.addContent((new Element("타입")).setText(t));
+		e.addContent((new Element("학점")).setText((n!=null)?n:"3"));
+
+		yyValue = e;
+	};
+
+private String Course =
+	f:[a-zA-Z]+ b:Number
+	{
+		String s = "";
+		for(Character c : f) s += c;
+		System.out.println(s+b);
+
+		yyValue = s + b;
+	};
+
+private String Type =
+		("기초필수"/"기필")
+		{
+			yyValue = "기필";
+		}
+	/	("기초선택"/"기선")
+		{
+			yyValue = "기선";
+		}
+	/	("자유선택"/"자선")
+		{
+			yyValue = "자선";
+		}
+	/	("전공필수"/"전필")
+		{
+			yyValue = "전필";
+		}
+	/	("전공선택"/"전선")
+		{
+			yyValue = "전선";
+		}
+	/	("교양필수"/"교필")
+		{
+			yyValue = "교필";
+		}
+	/	("인문사회선택"/"인사선"/"인선")
+		{
+			yyValue = "인선";
+		};
+
+private String Credit =
+	n:Number w "학점"
+	{
+		yyValue = n;
+	};
+
+private String Number =
+	a:[0-9]+
+	{
+		String t = "";
+		for(Character c : a) t += c;
+		yyValue = t;
+	};
+
+private String fNumber =
+	a:[0-9]+ '.' aa:[0-9]+
+	{
+		String t = "";
+		for(Character c : a) t += c;
+		t += '.';
+		for(Character c : aa) t += c;
+		yyValue = t;
+	};
+
+private void	w =			Space*{/*System.out.println("blank");*/};
+private void	EndOfFile =!_{};
+
+private void Space =
+		EOL
+		{
+		}
+	/	'\t'
+		{
+		}
+	/	' '
+		{
+		};
+
+private void EOL =
+		'\r' '\n'
+		{
+		}
+	/	'\r'
+		{
+		}
+	/	'\n'
+		{
+		};
