@@ -53,38 +53,53 @@ public class GraduationChecker {
 					result.addMutualRecog(mutual.getExceptionCredit());
 					result.addException(resultKey, mutual.getExceptionCredit());
 					result.addExceptionMessage(resultKey, mutual.getExceptionOrigin() + " -> " + mutual.getExceptionNew() + " (" + Math.round(mutual.getExceptionCredit()) + ")");
+					resultException += mutual.getExceptionCredit();
 				}
 			}
 			
 			if(value.contains("."))
 			{
-				double comp = Double.parseDouble(value);
+				double total = Double.parseDouble(value);
+				double comp = total - resultException;
 				String checkData = info.check(rule.getQuery());
 				if(checkData == null)
 					checkData = "0.0";
 				double myComp = Double.parseDouble(checkData);
 				if(myComp >= comp)
 					ret = true;
-				msg = "" + myComp + "/" + comp;
+				if(resultException > 0.00001)
+				{
+					msg = "" + myComp + "/(" + total + " - " + resultException + ")";
+				}
+				else
+				{
+					msg = "" + myComp + "/" + total;
+				}
 				
-				resultTotal = comp;
+				resultTotal = total;
 				resultComplete = myComp;
-				//TODO exception 처리
 			}
 			else
 			{
-				long comp = Long.parseLong(value);
+				long total = Long.parseLong(value);
+				double comp = total - Math.round(resultException);
 				String checkData = info.check(rule.getQuery());
 				if(checkData == null)
 					checkData = "0";
 				long myComp = Long.parseLong(checkData);
 				if(myComp >= comp)
 					ret = true;
-				msg = "" + myComp + "/" + comp;
+				if(resultException > 0.00001)
+				{
+					msg = "" + myComp + "/(" + total + " - " + resultException + ")";
+				}
+				else
+				{
+					msg = "" + myComp + "/" + total;
+				}
 				
 				resultTotal = comp;
 				resultComplete = myComp;
-				//TODO exception 처리
 			}
 			
 			if(rule.getSelectQuery() != null && rule.getSelectQuery().trim().length()>0)

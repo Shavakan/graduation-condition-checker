@@ -8,10 +8,12 @@ import java.awt.Rectangle;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
+import java.awt.image.BufferedImage;
+import java.io.File;
 import java.util.HashMap;
-import java.util.LinkedList;
 import java.util.List;
 
+import javax.imageio.ImageIO;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.ToolTipManager;
@@ -26,7 +28,7 @@ public class VisualizeResult extends GCCContainer{
 	private HashMap<String, JLabel> names;
 	private HashMap<String, BarGraph> bars;
 	private HashMap<String, JLabel> scores;
-	
+
 	/**
 	 * Create the application.
 	 */
@@ -159,7 +161,7 @@ public class VisualizeResult extends GCCContainer{
 						scores.get(barName).setVisible(false);
 						names.get(barName).setVisible(false);
 					}
-					
+
 				}
 				else
 					continue;
@@ -175,7 +177,7 @@ public class VisualizeResult extends GCCContainer{
 				continue;
 			}
 			bar.setLength(Math.min(complete, total - exception), exception, Math.max(0, total - complete - exception));
-			
+
 			List<String> taken = info.getTakenList(keyName);
 			if(taken != null)
 			{
@@ -184,10 +186,80 @@ public class VisualizeResult extends GCCContainer{
 				{
 					greenText += "<p><b>" + item + "</b></p><br>";
 				}
-				greenText += "<img src=\"http://puu.sh/90Txn.png\" width=200 height=243></body></html>";
+				File pic = new File("resource" + File.separator + "green.jpg");
+				long defaultWidth = 200;
+				long defaultHeight = 200;
+				try
+				{
+					BufferedImage bimg = ImageIO.read(pic);
+					defaultHeight = bimg.getHeight();
+					defaultWidth = bimg.getWidth();
+				}
+				catch(Exception e)
+				{
+					e.printStackTrace(System.err);
+				}
+				double ratio = (double)defaultWidth / 200;
+				defaultWidth = 200;
+				defaultHeight = Math.round((double)defaultHeight / ratio);
+				greenText += "<img src=\"" + pic.toURI() + "\" height=" + defaultHeight + " width=" + defaultWidth + "></body></html>";
 				bar.setGreenText(greenText);
 			}
-			
+			List<String> exceptionList = info.getExceptionList(keyName);
+			if(exceptionList != null)
+			{
+				String yellowText = "<html><body>";
+				for(String item : exceptionList)
+				{
+					yellowText += "<p><b>" + item + "</b></p><br>";
+				}
+				File pic = new File("resource" + File.separator + "yellow.jpg");
+				long defaultWidth = 200;
+				long defaultHeight = 200;
+				try
+				{
+					BufferedImage bimg = ImageIO.read(pic);
+					defaultHeight = bimg.getHeight();
+					defaultWidth = bimg.getWidth();
+				}
+				catch(Exception e)
+				{
+					e.printStackTrace(System.err);
+				}
+				double ratio = (double)defaultWidth / 200;
+				defaultWidth = 200;
+				defaultHeight = Math.round((double)defaultHeight / ratio);
+				yellowText += "<img src=\"" + pic.toURI() + "\" height=" + defaultHeight + " width=" + defaultWidth + "></body></html>";
+				bar.setYellowText(yellowText);
+			}
+			List<String> failList = info.getFailList(keyName);
+			if(failList != null)
+			{
+				String redText = "<html><body>";
+				for(String item : failList)
+				{
+					redText += "<p><b>" + item + "</b></p><br>";
+				}
+				File pic = new File("resource" + File.separator + "red.jpg");
+				long defaultWidth = 200;
+				long defaultHeight = 200;
+				try
+				{
+					BufferedImage bimg = ImageIO.read(pic);
+					defaultHeight = bimg.getHeight();
+					defaultWidth = bimg.getWidth();
+				}
+				catch(Exception e)
+				{
+					e.printStackTrace(System.err);
+				}
+				double ratio = (double)defaultWidth / 200;
+				defaultWidth = 200;
+				defaultHeight = Math.round((double)defaultHeight / ratio);
+				redText += "<img src=\"" + pic.toURI() + "\" height=" + defaultHeight + " width=" + defaultWidth + "></body></html>";
+				bar.setRedText(redText);
+			}
+
 			JLabel label = scores.get(barName);
 			if (barName.equals("평점"))
 				label.setText("["+String.format("%.02f", (complete))+"/"+String.format("%.01f", (total-exception))+"]");	
@@ -199,7 +271,7 @@ public class VisualizeResult extends GCCContainer{
 	private class BarGraph extends JPanel
 	{
 		private String current = "None";
-		
+
 		private String greenText = "";
 		private String yellowText = "";
 		private String redText = "";
@@ -349,17 +421,17 @@ public class VisualizeResult extends GCCContainer{
 			g.setColor(Color.black);
 			g.drawRect(red_start, 0, Math.min(getWidth()-red_start-1,red_len), getHeight()-1);
 		}
-		
+
 		public void setGreenText(String html)
 		{
 			greenText = html;
 		}
-		
+
 		public void setYellowText(String html)
 		{
 			yellowText = html;
 		}
-		
+
 		public void setRedText(String html)
 		{
 			redText = html;

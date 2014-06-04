@@ -20,6 +20,7 @@ public class ProcessInfo {
 	private Map<String, Double> completeMap;
 	private Map<String, List<String>> takenMap;
 	private Map<String, List<String>> exceptionMessageMap;
+	private Map<String, List<String>> failMessageMap;
 	private Set<String> allKeys;
 	private double mutualRecogTotal;
 	
@@ -31,6 +32,7 @@ public class ProcessInfo {
 		completeMap = new HashMap<>();
 		takenMap = new HashMap<>();
 		exceptionMessageMap = new HashMap<>();
+		failMessageMap = new HashMap<>();
 		mutualRecogTotal = 0;
 	}
 
@@ -66,6 +68,20 @@ public class ProcessInfo {
 		{
 			list = new LinkedList<>();
 			takenMap.put(key, list);
+		}
+		list.add(value);
+	}
+	
+	void addFailList(String key, String value)
+	{
+		allKeys.add(key);
+		List<String> list = null;
+		if(failMessageMap.containsKey(key))
+			list = failMessageMap.get(key);
+		else
+		{
+			list = new LinkedList<>();
+			failMessageMap.put(key, list);
 		}
 		list.add(value);
 	}
@@ -128,5 +144,9 @@ public class ProcessInfo {
 	public List<String> getExceptionList(String key)
 	{
 		return exceptionMessageMap.get(key);
+	}
+	public List<String> getFailList(String key)
+	{
+		return failMessageMap.get(key);
 	}
 }

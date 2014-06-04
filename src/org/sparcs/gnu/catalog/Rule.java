@@ -17,6 +17,7 @@ public class Rule {
 	private String selectQuery;
 	private String originalText;
 	private List<MutualRecog> mutualRecogs;
+	private List<Exception> exceptionList;
 
 	/**
 	 * Constructor.
@@ -27,6 +28,7 @@ public class Rule {
 		this.min = cond.getChildText("최소");
 		this.selectQuery = cond.getChildText("목록");
 		this.originalText = cond.getChildText("원문");
+		this.exceptionList = new LinkedList<>();
 		
 		mutualRecogs = new LinkedList<>();
 		for(Element exception : cond.getChildren("예외"))
@@ -76,5 +78,15 @@ public class Rule {
 		}
 		else
 			return false;
+	}
+	
+	public void addException(Exception e)
+	{
+		exceptionList.add(e);
+	}
+	
+	public List<Exception> getExceptionList()
+	{
+		return exceptionList;
 	}
 }
