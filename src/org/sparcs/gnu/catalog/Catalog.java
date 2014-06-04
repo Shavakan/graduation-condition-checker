@@ -1,6 +1,8 @@
 package org.sparcs.gnu.catalog;
 
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
 import org.jdom2.Document;
@@ -15,7 +17,7 @@ import org.jdom2.input.SAXBuilder;
 public class Catalog {
 	private Replace replace;
 	private Set<Rule> rules;
-	private Exception exception;
+	private Map<String, Exception> exceptionMap;
 	private String departmentCode;
 	/**
 	 * Constructor.
@@ -40,13 +42,18 @@ public class Catalog {
 			catalog.departmentCode = rootElement.getAttributeValue("code");
 			catalog.replace = new Replace();
 			catalog.rules = new HashSet<>();
+			catalog.exceptionMap = new HashMap<>();
 
 
 			for(Element cond : rootElement.getChildren("조건"))
 			{
 				catalog.rules.add(new Rule(cond)); 
 			}
-			catalog.exception = new Exception();
+			for(Element exception : rootElement.getChildren("예외"))
+			{
+				Exception e = new Exception(exception);
+				catalog.exceptionMap.put(e.getTarget(), e); 
+			}
 			return catalog;
 		}
 		catch(java.lang.Exception e)
@@ -65,5 +72,10 @@ public class Catalog {
 	public String getDepartmentCode()
 	{
 		return departmentCode;
+	}
+	
+	public Exception getException(String key)
+	{
+		return exceptionMap.get(key);
 	}
 }

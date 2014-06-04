@@ -4,6 +4,7 @@ import org.sparcs.gnu.catalog.Catalog;
 import org.sparcs.gnu.catalog.Essential;
 import org.sparcs.gnu.catalog.MutualRecog;
 import org.sparcs.gnu.catalog.Rule;
+import org.sparcs.gnu.catalog.Exception;
 import org.sparcs.gnu.course.GradeInfo;
 
 /**
@@ -43,7 +44,7 @@ public class GraduationChecker {
 			boolean ret = false;
 			
 			String resultKey = rule.getName();
-			double resultTotal = 0.0;
+			double resultTotal = Double.parseDouble(value);
 			double resultComplete = 0.0;
 			double resultException = 0.0;
 			double resultFail = 0.0;
@@ -58,16 +59,24 @@ public class GraduationChecker {
 					resultException += mutual.getExceptionCredit();
 				}
 			}
-			
-			for(Essential essence : rule.getEssentialList())
+
+			Exception except = catalog.getException(resultKey);
+			if(except != null)
 			{
-				if(!info.checkEssential(essence.getEssentialQuery()))
-				{
-					resultFail += essence.getEssentialCredit();
-					result.addFailList(resultKey, "필수과목: " + essence.getEssentialCode() + "(" + Math.round(essence.getEssentialCredit()) + ")");
-				}
+				resultException += resultTotal - except.getMinRequirement();
+				result.addExceptionMessage(resultKey, resultKey + ": " + resultTotal + " -> " + except.getMinRequirement());
 			}
-			
+
+			if(resultTotal > 0.0001)
+				for(Essential essence : rule.getEssentialList())
+				{
+					if(!info.checkEssential(essence.getEssentialQuery()))
+					{
+						resultFail += essence.getEssentialCredit();
+						result.addFailList(resultKey, "필수과목: " + essence.getEssentialCode() + "(" + Math.round(essence.getEssentialCredit()) + ")");
+					}
+				}
+
 			if(value.contains("."))
 			{
 				double total = Double.parseDouble(value);
@@ -87,7 +96,6 @@ public class GraduationChecker {
 					msg = "" + myComp + "/" + total;
 				}
 				
-				resultTotal = total;
 				resultComplete = myComp;
 			}
 			else
@@ -109,7 +117,6 @@ public class GraduationChecker {
 					msg = "" + myComp + "/" + total;
 				}
 				
-				resultTotal = comp;
 				resultComplete = myComp;
 			}
 			

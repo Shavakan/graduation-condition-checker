@@ -183,7 +183,7 @@ public class VisualizeResult extends GCCContainer{
 				System.err.println("No barname " + keyName);
 				continue;
 			}
-			bar.setLength(Math.min(complete, total - exception - mustFail), exception, Math.max(mustFail, total - complete - exception));
+			bar.setLength(Math.max(complete/10,Math.min(complete, total - exception - mustFail)), exception, Math.max(mustFail, total - complete - exception));
 
 			List<String> taken = info.getTakenList(keyName);
 			if(taken != null)
