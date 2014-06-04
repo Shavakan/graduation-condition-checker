@@ -140,6 +140,30 @@ public class GradeInfo {
 		}
 	}
 	
+	public boolean checkEssential(String sql)
+	{
+		try
+		{
+			PreparedStatement stmt = conn.prepareStatement(sql);
+			ResultSet result = stmt.executeQuery();
+
+			if(result.next() && result.getBoolean(1))
+			{
+				result.close();
+				stmt.close();
+				return true;
+			}
+			result.close();
+			stmt.close();
+			return false;
+		}
+		catch(java.lang.Exception e)
+		{
+			e.printStackTrace(System.err);
+			return false;
+		}
+	}
+	
 	public boolean insertMutualRecog(String checkSQL, String departmentCode, String originalCode, String newCode)
 	{
 		try

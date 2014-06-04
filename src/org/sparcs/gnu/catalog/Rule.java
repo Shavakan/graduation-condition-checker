@@ -18,6 +18,7 @@ public class Rule {
 	private String originalText;
 	private List<MutualRecog> mutualRecogs;
 	private List<Exception> exceptionList;
+	private List<Essential> essentialList;
 
 	/**
 	 * Constructor.
@@ -29,14 +30,21 @@ public class Rule {
 		this.selectQuery = cond.getChildText("목록");
 		this.originalText = cond.getChildText("원문");
 		this.exceptionList = new LinkedList<>();
+		this.essentialList = new LinkedList<>();
 		
 		mutualRecogs = new LinkedList<>();
 		for(Element exception : cond.getChildren("예외"))
 			mutualRecogs.add(new MutualRecog(exception));
+		for(Element essence : cond.getChildren("필수"))
+			essentialList.add(new Essential(essence));
 	}
 	
 	public List<MutualRecog> getMutualRecogs() {
 		return mutualRecogs;
+	}
+	
+	public List<Essential> getEssentialList() {
+		return essentialList;
 	}
 
 	public String getOriginalText()

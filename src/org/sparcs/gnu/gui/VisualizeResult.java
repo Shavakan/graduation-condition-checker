@@ -176,13 +176,14 @@ public class VisualizeResult extends GCCContainer{
 			double total = info.getTotal(keyName);
 			double complete = info.getComplete(keyName);
 			double exception = info.getException(keyName);
+			double mustFail = info.getFail(keyName);
 
-			if(total < 0 || complete < 0 || exception < 0)
+			if(total < 0 || complete < 0 || exception < 0 || mustFail < 0)
 			{
 				System.err.println("No barname " + keyName);
 				continue;
 			}
-			bar.setLength(Math.min(complete, total - exception), exception, Math.max(0, total - complete - exception));
+			bar.setLength(Math.min(complete, total - exception - mustFail), exception, Math.max(mustFail, total - complete - exception));
 
 			List<String> taken = info.getTakenList(keyName);
 			if(taken != null)

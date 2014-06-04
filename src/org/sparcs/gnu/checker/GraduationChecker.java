@@ -1,6 +1,7 @@
 package org.sparcs.gnu.checker;
 
 import org.sparcs.gnu.catalog.Catalog;
+import org.sparcs.gnu.catalog.Essential;
 import org.sparcs.gnu.catalog.MutualRecog;
 import org.sparcs.gnu.catalog.Rule;
 import org.sparcs.gnu.course.GradeInfo;
@@ -45,15 +46,25 @@ public class GraduationChecker {
 			double resultTotal = 0.0;
 			double resultComplete = 0.0;
 			double resultException = 0.0;
+			double resultFail = 0.0;
 			
 			for(MutualRecog mutual : rule.getMutualRecogs())
 			{
 				if(info.insertMutualRecog(mutual.getExceptionQuery(), mutual.getExceptionCode(), mutual.getExceptionOrigin(), mutual.getExceptionNew()))
 				{
 					result.addMutualRecog(mutual.getExceptionCredit());
-					result.addException(resultKey, mutual.getExceptionCredit());
+					result.setException(resultKey, mutual.getExceptionCredit());
 					result.addExceptionMessage(resultKey, mutual.getExceptionOrigin() + " -> " + mutual.getExceptionNew() + " (" + Math.round(mutual.getExceptionCredit()) + ")");
 					resultException += mutual.getExceptionCredit();
+				}
+			}
+			
+			for(Essential essence : rule.getEssentialList())
+			{
+				if(!info.checkEssential(essence.getEssentialQuery()))
+				{
+					resultFail += essence.getEssentialCredit();
+					result.addFailList(resultKey, "필수과목: " + essence.getEssentialCode() + "(" + Math.round(essence.getEssentialCredit()) + ")");
 				}
 			}
 			
@@ -107,10 +118,14 @@ public class GraduationChecker {
 				for(String taken : info.checkList(rule.getSelectQuery()))
 					result.addTaken(resultKey, taken);
 			}
-			
-			result.addTotal(resultKey, resultTotal);
-			result.addException(resultKey, resultException);
-			result.addComplete(resultKey, resultComplete);
+			if(resultFail > 0.0001)
+			{
+				ret = false;
+			}
+			result.setTotal(resultKey, resultTotal);
+			result.setException(resultKey, resultException);
+			result.setComplete(resultKey, resultComplete);
+			result.setFail(resultKey, resultFail);
 			System.out.println("" + ret + " " + msg);
 		}
 		return result;
