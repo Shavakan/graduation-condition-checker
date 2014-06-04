@@ -85,6 +85,8 @@ public class SelectFile extends GCCContainer{
 
 					GradeInfo info = new GradeInfo(conn);
 					Parse.parseRawInput(mainProgram, "tmp" + File.separator + "cs.xml");
+					if(secondProgram != null && secondProgram.trim().length()>0)
+						Parse.parseException(secondProgram, "tmp" + File.separator + "cs.xml");
 					Catalog catalog = Catalog.loadCatalog("tmp" + File.separator + "cs.xml");
 
 					GraduationChecker checker = new GraduationChecker(catalog);	
