@@ -112,7 +112,10 @@ public class SelectFile extends GCCContainer{
 					List<MutualRecog> param = new LinkedList<>();
 					for(Rule rule : root.currentCatalog.getRules())
 						for(MutualRecog m : rule.getMutualRecogs())
-							param.add(m);
+						{
+							if(info.checkMutualRecog(m.getExceptionQuery()))
+								param.add(m);
+						}
 					
 					if(param.size() > 0)
 					{
