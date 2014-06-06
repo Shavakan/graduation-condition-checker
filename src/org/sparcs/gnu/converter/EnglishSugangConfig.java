@@ -10,5 +10,6 @@ public class EnglishSugangConfig extends ExcelConfig {
 		column_map.put("Course Type", "type");
 		column_map.put("Credit", "credit");
 		column_map.put("AU", "au");
+		column_map.put("Course Title", "common_name");
 	}
 }

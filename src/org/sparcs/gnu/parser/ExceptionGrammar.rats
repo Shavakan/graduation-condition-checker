@@ -29,11 +29,11 @@ body {
 			e.setAttribute("name", curDept+curState+curType+tName);
 			if(curType.equals("전공")) {
 				e.addContent((new Element("쿼리")).setText("SELECT SUM(`" + value + "`) FROM `grade` WHERE (`type`='전필' OR `type`='전선') AND `grade`!='F' AND `grade`!='U' AND `grade`!='W' AND `grade`!='I' AND `grade`!='R' AND SUBSTR(`number`,1,2)='" + curCode + "'"));
-				e.addContent((new Element("목록")).setText("SELECT `code`,`" + value + "`, `replace_from` FROM `grade` WHERE (`type`='전필' OR `type`='전선') AND `grade`!='F' AND `grade`!='U' AND `grade`!='W' AND `grade`!='I' AND `grade`!='R' AND SUBSTR(`number`,1,2)='" + curCode + "' ORDER BY `code`"));
+				e.addContent((new Element("목록")).setText("SELECT `code`,`" + value + "`, `replace_from`, `common_name` FROM `grade` WHERE (`type`='전필' OR `type`='전선') AND `grade`!='F' AND `grade`!='U' AND `grade`!='W' AND `grade`!='I' AND `grade`!='R' AND SUBSTR(`number`,1,2)='" + curCode + "' ORDER BY `code`"));
 			}
 			else {
 				e.addContent((new Element("쿼리")).setText("SELECT SUM(`" + value + "`) FROM `grade` WHERE `type`='" + curType + "' AND `grade`!='F' AND `grade`!='U' AND `grade`!='W' AND `grade`!='I' AND `grade`!='R' AND SUBSTR(`number`,1,2)='" + curCode + "'"));
-				e.addContent((new Element("목록")).setText("SELECT `code`,`" + value + "`, `replace_from` FROM `grade` WHERE `type`='" + curType + "' AND `grade`!='F' AND `grade`!='U' AND `grade`!='W' AND `grade`!='I' AND `grade`!='R' AND SUBSTR(`number`,1,2)='" + curCode + "' ORDER BY `code`"));
+				e.addContent((new Element("목록")).setText("SELECT `code`,`" + value + "`, `replace_from`, `common_name` FROM `grade` WHERE `type`='" + curType + "' AND `grade`!='F' AND `grade`!='U' AND `grade`!='W' AND `grade`!='I' AND `grade`!='R' AND SUBSTR(`number`,1,2)='" + curCode + "' ORDER BY `code`"));
 			}
 		}
 		else {
