@@ -7,6 +7,10 @@ import java.util.Map;
 
 import javax.swing.JFrame;
 
+import org.sparcs.gnu.catalog.Catalog;
+import org.sparcs.gnu.checker.GraduationChecker;
+import org.sparcs.gnu.course.GradeInfo;
+
 public class GUIMain {
 	static String selectFile = "SelectFile";
 	static String visualizeResult = "VisualizeResult";
@@ -15,6 +19,10 @@ public class GUIMain {
 	private Map<String, Container> allContainer;
 	
 	protected JFrame frame;
+	
+	GradeInfo currentInfo;
+	Catalog currentCatalog;
+	GraduationChecker currentChecker;
 	/**
 	 * Launch the application.
 	 */

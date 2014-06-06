@@ -101,7 +101,7 @@ public class SelectMutual extends GCCContainer {
 		add(btnNext);
 	}
 	
-	public void update(MutualRecog mutual)
+	public void update(List<MutualRecog> mutualList)
 	{
 		
 	}

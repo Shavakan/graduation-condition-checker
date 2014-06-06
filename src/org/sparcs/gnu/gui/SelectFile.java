@@ -6,6 +6,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 import java.sql.Connection;
+import java.util.LinkedList;
+import java.util.List;
 
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
@@ -18,6 +20,8 @@ import javax.swing.border.MatteBorder;
 import net.iharder.dnd.FileDrop;
 
 import org.sparcs.gnu.catalog.Catalog;
+import org.sparcs.gnu.catalog.MutualRecog;
+import org.sparcs.gnu.catalog.Rule;
 import org.sparcs.gnu.checker.GraduationChecker;
 import org.sparcs.gnu.checker.ProcessInfo;
 import org.sparcs.gnu.converter.Converter;
@@ -102,13 +106,25 @@ public class SelectFile extends GCCContainer{
 						Parse.parseReplace(replace.getAbsolutePath(), "tmp" + File.separator + "cs.xml");
 					}
 					
-					Catalog catalog = Catalog.loadCatalog("tmp" + File.separator + "cs.xml");
-
-					GraduationChecker checker = new GraduationChecker(catalog);	
-					ProcessInfo result = checker.process(info);
-
-					((VisualizeResult)root.getWindow(GUIMain.visualizeResult)).update(result);
-					root.changeWindow(GUIMain.visualizeResult);
+					root.currentCatalog = Catalog.loadCatalog("tmp" + File.separator + "cs.xml");
+					root.currentChecker = new GraduationChecker(root.currentCatalog);
+					
+					List<MutualRecog> param = new LinkedList<>();
+					for(Rule rule : root.currentCatalog.getRules())
+						for(MutualRecog m : rule.getMutualRecogs())
+							param.add(m);
+					
+					if(param.size() > 0)
+					{
+						((SelectMutual)root.getWindow(GUIMain.selectMutual)).update(param);
+						root.changeWindow(GUIMain.selectMutual);
+					}
+					else
+					{
+						ProcessInfo result = root.currentChecker.process(info);
+						((VisualizeResult)root.getWindow(GUIMain.visualizeResult)).update(result);
+						root.changeWindow(GUIMain.visualizeResult);
+					}
 				} catch (ClassNotFoundException e1) {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();

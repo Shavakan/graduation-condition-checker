@@ -2,10 +2,8 @@ package org.sparcs.gnu.checker;
 
 import org.sparcs.gnu.catalog.Catalog;
 import org.sparcs.gnu.catalog.Essential;
-import org.sparcs.gnu.catalog.MutualRecog;
-import org.sparcs.gnu.catalog.Replace;
-import org.sparcs.gnu.catalog.Rule;
 import org.sparcs.gnu.catalog.Exception;
+import org.sparcs.gnu.catalog.Rule;
 import org.sparcs.gnu.course.GradeInfo;
 
 /**
@@ -51,17 +49,6 @@ public class GraduationChecker {
 			double resultComplete = 0.0;
 			double resultException = 0.0;
 			double resultFail = 0.0;
-			
-			for(MutualRecog mutual : rule.getMutualRecogs())
-			{
-				if(info.insertMutualRecog(mutual.getExceptionQuery(), mutual.getExceptionCode(), mutual.getExceptionOrigin(), mutual.getExceptionNew()))
-				{
-					result.addMutualRecog(mutual.getExceptionCredit());
-					result.setException(resultKey, mutual.getExceptionCredit());
-					result.addExceptionMessage(resultKey, mutual.getExceptionOrigin() + " -> " + mutual.getExceptionNew() + " (" + Math.round(mutual.getExceptionCredit()) + ")");
-					resultException += mutual.getExceptionCredit();
-				}
-			}
 
 			Exception except = catalog.getException(resultKey);
 			if(except != null)
