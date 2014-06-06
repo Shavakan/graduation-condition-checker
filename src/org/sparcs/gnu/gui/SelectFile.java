@@ -23,7 +23,6 @@ import org.sparcs.gnu.catalog.Catalog;
 import org.sparcs.gnu.catalog.MutualRecog;
 import org.sparcs.gnu.catalog.Rule;
 import org.sparcs.gnu.checker.GraduationChecker;
-import org.sparcs.gnu.checker.ProcessInfo;
 import org.sparcs.gnu.converter.Converter;
 import org.sparcs.gnu.converter.SQLiteManager;
 import org.sparcs.gnu.course.GradeInfo;
@@ -92,10 +91,6 @@ public class SelectFile extends GCCContainer{
 						conv = Converter.converterObject(currentSugang);
 						conv.convert("tmp" + File.separator + "output.db");
 					}
-
-					Class.forName("org.sparcs.gnu.course.GradeInfo");
-
-					GradeInfo info = new GradeInfo(conn);
 					
 					Parse.parseRawInput(mainProgram, "tmp" + File.separator + "cs.xml");
 					if(secondProgram != null && secondProgram.trim().length()>0)
@@ -108,27 +103,19 @@ public class SelectFile extends GCCContainer{
 					
 					root.currentCatalog = Catalog.loadCatalog("tmp" + File.separator + "cs.xml");
 					root.currentChecker = new GraduationChecker(root.currentCatalog);
+					root.currentInfo = new GradeInfo(conn);
 					
 					List<MutualRecog> param = new LinkedList<>();
 					for(Rule rule : root.currentCatalog.getRules())
 						for(MutualRecog m : rule.getMutualRecogs())
 						{
-							if(info.checkMutualRecog(m.getExceptionQuery()))
+							if(root.currentInfo.checkMutualRecog(m.getExceptionQuery()))
 								param.add(m);
 						}
-					
-					if(param.size() > 0)
-					{
-						((SelectMutual)root.getWindow(GUIMain.selectMutual)).update(param);
-						root.changeWindow(GUIMain.selectMutual);
-					}
-					else
-					{
-						ProcessInfo result = root.currentChecker.process(info);
-						((VisualizeResult)root.getWindow(GUIMain.visualizeResult)).update(result);
-						root.changeWindow(GUIMain.visualizeResult);
-					}
-				} catch (ClassNotFoundException e1) {
+
+					((SelectMutual)root.getWindow(GUIMain.selectMutual)).update(param);
+					root.changeWindow(GUIMain.selectMutual);
+				} catch (Exception e1) {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
 				}

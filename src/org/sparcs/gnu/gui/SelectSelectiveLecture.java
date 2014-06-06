@@ -11,35 +11,35 @@ import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.border.LineBorder;
 
-import org.sparcs.gnu.catalog.MutualRecog;
+import org.sparcs.gnu.catalog.SelectiveLecture;
 
-public class SelectMutual extends GCCContainer {
+public class SelectSelectiveLecture extends GCCContainer {
 	
 	private static final long serialVersionUID = 1L;
-	private JList<MutualRecog> listAllCourses;
-	private JList<MutualRecog> listSelectedCourses;
+	private JList<SelectiveLecture> listAllCourses;
+	private JList<SelectiveLecture> listSelectedCourses;
 
 	/**
 	 * Create the panel.
 	 */
-	public SelectMutual(GUIMain root) {
+	public SelectSelectiveLecture(GUIMain root) {
 		super(root);
 
 		initialize();
 	}
 	
 	private void initialize() {
-		JLabel lblInstruction = new JLabel("Select mutually recognized courses for your double major / minor:");
+		JLabel lblInstruction = new JLabel("학석 통합 과목 선택");
 		lblInstruction.setBounds(6, 6, 419, 16);
 		add(lblInstruction);
 		
-		JLabel lblCoursesTaken = new JLabel("Courses Taken:");
-		lblCoursesTaken.setBounds(16, 34, 97, 16);
-		add(lblCoursesTaken);
+		JLabel lblMasterCandidate = new JLabel("석사 인정");
+		lblMasterCandidate.setBounds(16, 34, 97, 16);
+		add(lblMasterCandidate);
 		
-		JLabel lblMutuallyRecognized = new JLabel("Mutually recognized:");
-		lblMutuallyRecognized.setBounds(327, 33, 131, 16);
-		add(lblMutuallyRecognized);
+		JLabel lblUnder = new JLabel("학사 인정");
+		lblUnder.setBounds(327, 33, 131, 16);
+		add(lblUnder);
 		
 		listAllCourses = new JList<>();
 		listAllCourses.setBorder(new LineBorder(new Color(0, 0, 0)));
@@ -54,25 +54,25 @@ public class SelectMutual extends GCCContainer {
 		JButton btnAdd = new JButton("Add >");
 		btnAdd.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				List<MutualRecog> selectedList = listAllCourses.getSelectedValuesList();
+				List<SelectiveLecture> selectedList = listAllCourses.getSelectedValuesList();
 				if (selectedList.size() == 0) {
 					return;
 				}
 				else {
-					MutualRecog[] newList = new MutualRecog[listSelectedCourses.getModel().getSize() + selectedList.size()];
+					SelectiveLecture[] newList = new SelectiveLecture[listSelectedCourses.getModel().getSize() + selectedList.size()];
 					for(int k=0; k<listSelectedCourses.getModel().getSize(); k++)
 						newList[k] = listSelectedCourses.getModel().getElementAt(k);
 					for(int k=0; k<selectedList.size(); k++)
 						newList[k + listSelectedCourses.getModel().getSize()] = selectedList.get(k);
 					listSelectedCourses.setListData(newList);
 					
-					MutualRecog[] removeList = new MutualRecog[listAllCourses.getModel().getSize() - selectedList.size()];
+					SelectiveLecture[] removeList = new SelectiveLecture[listAllCourses.getModel().getSize() - selectedList.size()];
 					int k=0;
 					for(int j=0; j<listAllCourses.getModel().getSize(); j++)
 					{
-						MutualRecog recog = listAllCourses.getModel().getElementAt(j);
+						SelectiveLecture recog = listAllCourses.getModel().getElementAt(j);
 						boolean found = false;
-						for(MutualRecog remove : selectedList)
+						for(SelectiveLecture remove : selectedList)
 						{
 							if(remove == recog)
 							{
@@ -96,25 +96,25 @@ public class SelectMutual extends GCCContainer {
 		JButton buttonRemove = new JButton("< Remove");
 		buttonRemove.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				List<MutualRecog> selectedList = listSelectedCourses.getSelectedValuesList();
+				List<SelectiveLecture> selectedList = listSelectedCourses.getSelectedValuesList();
 				if (selectedList.size() == 0) {
 					return;
 				}
 				else {
-					MutualRecog[] newList = new MutualRecog[listAllCourses.getModel().getSize() + selectedList.size()];
+					SelectiveLecture[] newList = new SelectiveLecture[listAllCourses.getModel().getSize() + selectedList.size()];
 					for(int k=0; k<listAllCourses.getModel().getSize(); k++)
 						newList[k] = listAllCourses.getModel().getElementAt(k);
 					for(int k=0; k<selectedList.size(); k++)
 						newList[k + listAllCourses.getModel().getSize()] = selectedList.get(k);
 					listAllCourses.setListData(newList);
 					
-					MutualRecog[] removeList = new MutualRecog[listSelectedCourses.getModel().getSize() - selectedList.size()];
+					SelectiveLecture[] removeList = new SelectiveLecture[listSelectedCourses.getModel().getSize() - selectedList.size()];
 					int k=0;
 					for(int j=0; j<listSelectedCourses.getModel().getSize(); j++)
 					{
-						MutualRecog recog = listSelectedCourses.getModel().getElementAt(j);
+						SelectiveLecture recog = listSelectedCourses.getModel().getElementAt(j);
 						boolean found = false;
-						for(MutualRecog remove : selectedList)
+						for(SelectiveLecture remove : selectedList)
 						{
 							if(remove == recog)
 							{
@@ -146,34 +146,35 @@ public class SelectMutual extends GCCContainer {
 		
 		JButton btnNext = new JButton("Next >>");
 		btnNext.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
+			public void actionPerformed(ActionEvent e) {
 				int size = listSelectedCourses.getModel().getSize();
-				List<MutualRecog> ret = new LinkedList<>();
+				List<SelectiveLecture> ret = new LinkedList<>();
 				for(int k=0; k<size; k++)
 				{
 					ret.add(listSelectedCourses.getModel().getElementAt(k));
 				}
-				root.currentMutualList = ret;
+				root.currentSelectiveLectureList = ret;
 				
-				((SelectSelectiveLecture)root.getWindow(GUIMain.selectSelectiveLecture)).update(root.currentInfo.getSelectiveList());
-				root.changeWindow(GUIMain.selectSelectiveLecture);
+				((VisualizeResult)root.getWindow(GUIMain.visualizeResult)).update(root.processAll());
+				root.changeWindow(GUIMain.visualizeResult);
 			}
 		});
 		btnNext.setBounds(413, 174, 110, 29);
 		add(btnNext);
 	}
 	
-	public void update(List<MutualRecog> mutualList)
+	public void update(List<SelectiveLecture> selectionList)
 	{
-		root.currentMutualList = null;
-		MutualRecog[] newList = new MutualRecog[mutualList.size()];
+		root.currentSelectiveLectureList = new LinkedList<>();
+		SelectiveLecture[] newList = new SelectiveLecture[selectionList.size()];
 		for(int k=0; k<newList.length; k++)
-			newList[k] = mutualList.get(k);
+			newList[k] = selectionList.get(k);
 		listAllCourses.setListData(newList);
+		
 		if(newList.length == 0)
 		{
-			((SelectSelectiveLecture)root.getWindow(GUIMain.selectSelectiveLecture)).update(root.currentInfo.getSelectiveList());
-			root.changeWindow(GUIMain.selectSelectiveLecture);
+			((VisualizeResult)root.getWindow(GUIMain.visualizeResult)).update(root.processAll());
+			root.changeWindow(GUIMain.visualizeResult);
 		}
 	}
 }

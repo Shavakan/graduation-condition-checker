@@ -29,4 +29,10 @@ public class SelectiveLecture {
 	{
 		return new Replace(selectionCode, selectionCode, selectionNumber, "전선", selectionCredit);
 	}
+	
+	@Override
+	public String toString()
+	{
+		return "[학/석] " + selectionCode + " (" + selectionCredit + ")";
+	}
 }

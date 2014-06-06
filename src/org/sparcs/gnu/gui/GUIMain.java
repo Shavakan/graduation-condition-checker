@@ -3,18 +3,26 @@ package org.sparcs.gnu.gui;
 import java.awt.Container;
 import java.awt.EventQueue;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import javax.swing.JFrame;
 
 import org.sparcs.gnu.catalog.Catalog;
+import org.sparcs.gnu.catalog.MutualRecog;
+import org.sparcs.gnu.catalog.Replace;
+import org.sparcs.gnu.catalog.SelectiveLecture;
 import org.sparcs.gnu.checker.GraduationChecker;
+import org.sparcs.gnu.checker.ProcessInfo;
 import org.sparcs.gnu.course.GradeInfo;
 
 public class GUIMain {
-	static String selectFile = "SelectFile";
-	static String visualizeResult = "VisualizeResult";
-	static String selectMutual = "SelectMutual";
+	static final String selectFile = "SelectFile";
+	static final String visualizeResult = "VisualizeResult";
+	static final String selectMutual = "SelectMutual";
+	static final String selectSelectiveLecture = "SelectSelectiveLecture";
 	
 	private Map<String, Container> allContainer;
 	
@@ -23,6 +31,8 @@ public class GUIMain {
 	GradeInfo currentInfo;
 	Catalog currentCatalog;
 	GraduationChecker currentChecker;
+	List<MutualRecog> currentMutualList;
+	List<SelectiveLecture> currentSelectiveLectureList;
 	/**
 	 * Launch the application.
 	 */
@@ -35,6 +45,7 @@ public class GUIMain {
 					window.addWindow(selectFile, new SelectFile(window));
 					window.addWindow(visualizeResult, new VisualizeResult(window));
 					window.addWindow(selectMutual, new SelectMutual(window));
+					window.addWindow(selectSelectiveLecture, new SelectSelectiveLecture(window));
 					
 					window.frame.setVisible(true);
 					window.changeWindow(GUIMain.selectFile);
@@ -83,5 +94,14 @@ public class GUIMain {
 		frame.setResizable(false);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
+	}
+	
+	ProcessInfo processAll()
+	{
+		Set<Replace> replaces = new HashSet<>();
+		for(SelectiveLecture lec : this.currentSelectiveLectureList)
+			replaces.add(lec.getReplace());
+		this.currentInfo.doReplace(replaces);
+		return currentChecker.process(currentInfo, this.currentMutualList);
 	}
 }

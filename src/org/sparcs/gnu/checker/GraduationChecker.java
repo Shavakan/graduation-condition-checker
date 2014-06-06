@@ -1,7 +1,9 @@
 package org.sparcs.gnu.checker;
 
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 import org.sparcs.gnu.catalog.Catalog;
 import org.sparcs.gnu.catalog.Essential;
@@ -45,20 +47,12 @@ public class GraduationChecker {
 		ProcessInfo result = new ProcessInfo();
 		
 		info.doReplace(catalog.getReplaces());
-
+		
+		Map<String, Double> mutualMap = new HashMap<>();
 		for(Rule rule : catalog.getRules())
 		{
-			String msg = "";
-			String value = rule.getMinRequirement();
-			boolean ret = false;
-			
-			String resultKey = rule.getName();
-			double resultTotal = Double.parseDouble(value);
-			double resultComplete = 0.0;
-			double resultException = 0.0;
 			double resultMutual = 0.0;
-			double resultFail = 0.0;
-			
+			String resultKey = rule.getName();
 			for(MutualRecog mutual : mutualRecogs)
 			{
 				if(mutual.getOrigin() == rule)
@@ -71,6 +65,21 @@ public class GraduationChecker {
 					}
 				}
 			}
+			mutualMap.put(resultKey, resultMutual);
+		}
+
+		for(Rule rule : catalog.getRules())
+		{
+			String msg = "";
+			String value = rule.getMinRequirement();
+			boolean ret = false;
+			
+			String resultKey = rule.getName();
+			double resultTotal = Double.parseDouble(value);
+			double resultComplete = 0.0;
+			double resultException = 0.0;
+			double resultMutual = mutualMap.get(resultKey);
+			double resultFail = 0.0;
 
 			Exception except = catalog.getException(resultKey);
 			if(except != null)

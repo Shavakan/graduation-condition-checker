@@ -218,7 +218,12 @@ public class GradeInfo {
 				}
 				else
 				{
-					temp += (before + " -> ");
+					if(before.equals(code))
+					{
+						temp += ("[선택(전선)] " + code);
+					}
+					else
+						temp += (before + " -> " + code);
 				}
 				if(commonName != null && commonName.length() > 0)
 					temp += (" " + commonName);
