@@ -28,6 +28,10 @@ class ExcelConverter extends Converter {
 	@Override
 	public boolean convert(String outputFilename) {
 		
+		ExcelAltConverter alt = new ExcelAltConverter(xlsFilePath);
+		if(alt.convert(outputFilename))
+			return true;
+		
 		List<ExcelConfig> allConfig = new LinkedList<>();
 		
 		allConfig.add(new HangulExcelConfig());

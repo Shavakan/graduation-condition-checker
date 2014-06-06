@@ -14,6 +14,16 @@ public class Replace {
 	private String replaceType;
 	private String replaceCredit;
 	
+	Replace(String replaceOriginal, String replaceNew, String replaceNumber,
+			String replaceType, String replaceCredit) {
+		super();
+		this.replaceOriginal = replaceOriginal;
+		this.replaceNew = replaceNew;
+		this.replaceNumber = replaceNumber;
+		this.replaceType = replaceType;
+		this.replaceCredit = replaceCredit;
+	}
+
 	/**
 	 * Constructor.
 	 */
