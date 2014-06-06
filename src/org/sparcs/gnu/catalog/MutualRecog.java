@@ -50,4 +50,10 @@ public class MutualRecog {
 	public String getExceptionCode() {
 		return exceptionCode;
 	}
+	
+	@Override
+	public String toString()
+	{
+		return "" + exceptionOrigin + " -> " + exceptionNew;
+	}
 }

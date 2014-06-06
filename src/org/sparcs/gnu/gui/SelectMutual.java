@@ -3,9 +3,9 @@ package org.sparcs.gnu.gui;
 import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Set;
 
 import javax.swing.AbstractListModel;
 import javax.swing.JButton;
@@ -19,8 +19,8 @@ import org.sparcs.gnu.catalog.MutualRecog;
 public class SelectMutual extends GCCContainer {
 	
 	private static final long serialVersionUID = 1L;
-	private HashMap<String, MutualRecog> mutualAll;
-	private HashMap<String, MutualRecog> mutualSelected;
+	private JList<MutualRecog> listAllCourses;
+	private JList<MutualRecog> listSelectedCourses;
 
 	/**
 	 * Create the panel.
@@ -28,8 +28,6 @@ public class SelectMutual extends GCCContainer {
 	public SelectMutual(GUIMain root) {
 		super(root);
 
-		mutualAll = new HashMap<String, MutualRecog>();
-		mutualSelected = new HashMap<String, MutualRecog>();
 		initialize();
 	}
 	
@@ -43,63 +41,101 @@ public class SelectMutual extends GCCContainer {
 		add(lblCoursesTaken);
 		
 		JLabel lblMutuallyRecognized = new JLabel("Mutually recognized:");
-		lblMutuallyRecognized.setBounds(285, 34, 131, 16);
+		lblMutuallyRecognized.setBounds(327, 33, 131, 16);
 		add(lblMutuallyRecognized);
 		
-		final JList listAllCourses = new JList();
-		listAllCourses.setModel(new AbstractListModel() {
-			// TODO: Get model from mutualAll
-			// @undead, @shavakan
-			String[] values = new String[] {"A", "b", "c", "d"};
-			public int getSize() {
-				return values.length;
-			}
-			public Object getElementAt(int index) {
-				return values[index];
-			}
-		});
+		listAllCourses = new JList<>();
 		listAllCourses.setBorder(new LineBorder(new Color(0, 0, 0)));
 		listAllCourses.setBounds(26, 62, 160, 100);
 		add(listAllCourses);
 		
-		final JList listSelectedCourses = new JList();
+		listSelectedCourses = new JList<>();
 		listSelectedCourses.setBorder(new LineBorder(new Color(0, 0, 0)));
-		listSelectedCourses.setBounds(295, 63, 160, 100);
+		listSelectedCourses.setBounds(337, 62, 160, 100);
 		add(listSelectedCourses);
 		
 		JButton btnAdd = new JButton("Add >");
 		btnAdd.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				List<String> selectedList = listAllCourses.getSelectedValuesList();
+				List<MutualRecog> selectedList = listAllCourses.getSelectedValuesList();
 				if (selectedList.size() == 0) {
 					return;
 				}
 				else {
-					ListModel update = listSelectedCourses.getModel();
-					for (String str : selectedList) {
+					MutualRecog[] newList = new MutualRecog[listSelectedCourses.getModel().getSize() + selectedList.size()];
+					for(int k=0; k<listSelectedCourses.getModel().getSize(); k++)
+						newList[k] = listSelectedCourses.getModel().getElementAt(k);
+					for(int k=0; k<selectedList.size(); k++)
+						newList[k + listSelectedCourses.getModel().getSize()] = selectedList.get(k);
+					listSelectedCourses.setListData(newList);
+					
+					MutualRecog[] removeList = new MutualRecog[listAllCourses.getModel().getSize() - selectedList.size()];
+					int k=0;
+					for(int j=0; j<listAllCourses.getModel().getSize(); j++)
+					{
+						MutualRecog recog = listAllCourses.getModel().getElementAt(j);
+						boolean found = false;
+						for(MutualRecog remove : selectedList)
+						{
+							if(remove == recog)
+							{
+								found = true;
+								break;
+							}
+						}
+						
+						if(found == false)
+						{
+							removeList[k++] = recog;
+						}
 					}
-					listSelectedCourses.setModel(update);
+					listAllCourses.setListData(removeList);
 				}
 			}
 		});
-		btnAdd.setBounds(198, 83, 88, 29);
+		btnAdd.setBounds(198, 83, 110, 29);
 		add(btnAdd);
 		
 		JButton buttonRemove = new JButton("< Remove");
 		buttonRemove.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				int[] selectedIdx = listSelectedCourses.getSelectedIndices();
-				if (selectedIdx.length == 0) {
+				List<MutualRecog> selectedList = listSelectedCourses.getSelectedValuesList();
+				if (selectedList.size() == 0) {
 					return;
 				}
 				else {
-					for (int selected : selectedIdx) {
-						listSelectedCourses.remove(selected);
+					MutualRecog[] newList = new MutualRecog[listAllCourses.getModel().getSize() + selectedList.size()];
+					for(int k=0; k<listAllCourses.getModel().getSize(); k++)
+						newList[k] = listAllCourses.getModel().getElementAt(k);
+					for(int k=0; k<selectedList.size(); k++)
+						newList[k + listAllCourses.getModel().getSize()] = selectedList.get(k);
+					listAllCourses.setListData(newList);
+					
+					MutualRecog[] removeList = new MutualRecog[listSelectedCourses.getModel().getSize() - selectedList.size()];
+					int k=0;
+					for(int j=0; j<listSelectedCourses.getModel().getSize(); j++)
+					{
+						MutualRecog recog = listSelectedCourses.getModel().getElementAt(j);
+						boolean found = false;
+						for(MutualRecog remove : selectedList)
+						{
+							if(remove == recog)
+							{
+								found = true;
+								break;
+							}
+						}
+						
+						if(found == false)
+						{
+							removeList[k++] = recog;
+						}
 					}
+					listSelectedCourses.setListData(removeList);
 				}
 			}
 		});
-		buttonRemove.setBounds(198, 109, 88, 29);
+		buttonRemove.setBounds(198, 109, 110, 29);
 		add(buttonRemove);
 		
 		JButton buttonPrev = new JButton("<< Previous");
@@ -112,14 +148,15 @@ public class SelectMutual extends GCCContainer {
 		add(buttonPrev);
 		
 		JButton btnNext = new JButton("Next >>");
-		btnNext.setBounds(371, 175, 110, 29);
+		btnNext.setBounds(413, 174, 110, 29);
 		add(btnNext);
 	}
 	
 	public void update(List<MutualRecog> mutualList)
 	{
-		for(MutualRecog mutual : mutualList) {
-			mutualSelected.put(mutual.getExceptionOrigin(), mutual);
-		}
+		MutualRecog[] newList = new MutualRecog[mutualList.size()];
+		for(int k=0; k<newList.length; k++)
+			newList[k] = mutualList.get(k);
+		listAllCourses.setListData(newList);
 	}
 }
