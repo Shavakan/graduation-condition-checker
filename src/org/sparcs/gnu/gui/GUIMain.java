@@ -10,6 +10,7 @@ import javax.swing.JFrame;
 public class GUIMain {
 	static String selectFile = "SelectFile";
 	static String visualizeResult = "VisualizeResult";
+	static String selectMutual = "SelectMutual";
 	
 	private Map<String, Container> allContainer;
 	
@@ -25,6 +26,7 @@ public class GUIMain {
 					
 					window.addWindow(selectFile, new SelectFile(window));
 					window.addWindow(visualizeResult, new VisualizeResult(window));
+					window.addWindow(selectMutual, new SelectMutual(window));
 					
 					window.frame.setVisible(true);
 					window.changeWindow(GUIMain.selectFile);
