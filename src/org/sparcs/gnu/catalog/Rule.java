@@ -34,7 +34,7 @@ public class Rule {
 		
 		mutualRecogs = new LinkedList<>();
 		for(Element exception : cond.getChildren("예외"))
-			mutualRecogs.add(new MutualRecog(exception));
+			mutualRecogs.add(new MutualRecog(exception, this));
 		for(Element essence : cond.getChildren("필수"))
 			essentialList.add(new Essential(essence));
 	}

@@ -284,4 +284,30 @@ public class GradeInfo {
 		
 		return ret;
 	}
+	
+	public boolean applyMutualRecog(String departmentCode, String originalCode, String newCode)
+	{
+		try
+		{
+			PreparedStatement updateStatement = conn.prepareStatement("INSERT INTO `grade` (`number`, `code`, `type`, `replace_from`) VALUES (?,?,?,?)");
+			updateStatement.setString(1, departmentCode);
+			updateStatement.setString(2, newCode);
+			updateStatement.setString(3, "상호인정");
+			updateStatement.setString(4, originalCode);
+			updateStatement.executeUpdate();
+			updateStatement.close();
+			
+			updateStatement = conn.prepareStatement("DELETE FROM `grade` WHERE `code`=?");
+			updateStatement.setString(1, originalCode);
+			updateStatement.executeUpdate();
+
+			return true;
+		}
+		catch(java.lang.Exception e)
+		{
+			e.printStackTrace(System.err);
+			return false;
+		}
+	}
+	
 }

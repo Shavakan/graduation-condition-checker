@@ -1,8 +1,12 @@
 package org.sparcs.gnu.checker;
 
+import java.util.LinkedList;
+import java.util.List;
+
 import org.sparcs.gnu.catalog.Catalog;
 import org.sparcs.gnu.catalog.Essential;
 import org.sparcs.gnu.catalog.Exception;
+import org.sparcs.gnu.catalog.MutualRecog;
 import org.sparcs.gnu.catalog.Rule;
 import org.sparcs.gnu.course.GradeInfo;
 
@@ -31,6 +35,10 @@ public class GraduationChecker {
 	 */
 	public ProcessInfo process(GradeInfo info)
 	{
+		return process(info, new LinkedList<MutualRecog>());
+	}
+	public ProcessInfo process(GradeInfo info, List<MutualRecog> mutualRecogs)
+	{
 		info.preprocess();
 		//TODO fill in
 		
@@ -48,7 +56,21 @@ public class GraduationChecker {
 			double resultTotal = Double.parseDouble(value);
 			double resultComplete = 0.0;
 			double resultException = 0.0;
+			double resultMutual = 0.0;
 			double resultFail = 0.0;
+			
+			for(MutualRecog mutual : mutualRecogs)
+			{
+				if(mutual.getOrigin() == rule)
+				{
+					if(info.applyMutualRecog(mutual.getExceptionCode(), mutual.getExceptionOrigin(), mutual.getExceptionNew()))
+					{
+						result.setException(resultKey, mutual.getExceptionCredit());
+						result.addTaken(resultKey, "[상호인정] " + mutual.getExceptionOrigin() + " -> " + mutual.getExceptionNew() + " (" + Math.round(mutual.getExceptionCredit()) + ")");
+						resultMutual += mutual.getExceptionCredit();
+					}
+				}
+			}
 
 			Exception except = catalog.getException(resultKey);
 			if(except != null)
@@ -63,7 +85,7 @@ public class GraduationChecker {
 					if(!info.checkEssential(essence.getEssentialQuery()))
 					{
 						resultFail += essence.getEssentialCredit();
-						result.addFailList(resultKey, "필수과목: " + essence.getEssentialCode() + "(" + Math.round(essence.getEssentialCredit()) + ")");
+						result.addFailList(resultKey, "[필수과목] " + essence.getEssentialCode() + "(" + Math.round(essence.getEssentialCredit()) + ")");
 					}
 				}
 
@@ -75,6 +97,7 @@ public class GraduationChecker {
 				if(checkData == null)
 					checkData = "0.0";
 				double myComp = Double.parseDouble(checkData);
+				myComp += resultMutual;
 				if(myComp >= comp)
 					ret = true;
 				if(resultException > 0.00001)
@@ -96,6 +119,7 @@ public class GraduationChecker {
 				if(checkData == null)
 					checkData = "0";
 				long myComp = Long.parseLong(checkData);
+				myComp += Math.round(resultMutual);
 				if(myComp >= comp)
 					ret = true;
 				if(resultException > 0.00001)

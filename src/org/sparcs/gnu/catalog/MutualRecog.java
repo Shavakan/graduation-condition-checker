@@ -8,9 +8,16 @@ public class MutualRecog {
 	private String exceptionNew;
 	private String exceptionCode;
 	private double exceptionCredit;
+	private Rule origin;
 	
-	public MutualRecog(Element mutual)
+	public Rule getOrigin()
 	{
+		return origin;
+	}
+	
+	public MutualRecog(Element mutual, Rule origin)
+	{
+		this.origin = origin;
 		exceptionQuery = mutual.getChildText("쿼리");
 		exceptionOrigin = mutual.getChildText("좌변");
 		exceptionNew = mutual.getChildText("우변");
