@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Set;
 
 import org.sparcs.gnu.catalog.Replace;
+import org.sparcs.gnu.catalog.SelectiveLecture;
 
 /**
  * This class has information about user's taken courses.
@@ -27,6 +28,7 @@ public class GradeInfo {
 		{
 			PreparedStatement stmt = conn.prepareStatement("SELECT `credit`,`grade` FROM `grade`");
 			long intcredit = 0;
+			long effectivecredit = 0;
 			ResultSet result = stmt.executeQuery();
 			double totalCredit = 0.0;
 			double totalGrade = 0.0;
@@ -81,12 +83,15 @@ public class GradeInfo {
 					grade = 0.0;
 					break;
 				case "S":
-					intcredit += Long.parseLong(result.getString("credit"));
+					intcredit += credit;
+					effectivecredit += Math.round(credit);
 				default:
 					continue result_loop;
 				}
 
-				intcredit += Long.parseLong(result.getString("credit"));
+				if(!result.getString("grade").equals("F"))
+					effectivecredit += Math.round(credit);
+				intcredit += Math.round(credit);
 				totalCredit += credit;
 				totalGrade += grade * credit;
 			}
@@ -109,7 +114,12 @@ public class GradeInfo {
 				updateStmt.setString(2, total_credit);
 				updateStmt.executeUpdate();
 			}
-			
+			{
+				updateStmt.clearParameters();
+				updateStmt.setString(1, "effective_credit");
+				updateStmt.setString(2, Long.toString(effectivecredit));
+				updateStmt.executeUpdate();
+			}
 			
 			updateStmt.close();
 			stmt.close();
@@ -262,5 +272,29 @@ public class GradeInfo {
 		{
 			e.printStackTrace(System.err);
 		}
+	}
+	
+	public List<SelectiveLecture> getSelectiveList()
+	{
+		List<SelectiveLecture> ret = new LinkedList<>();
+		try
+		{
+			PreparedStatement stmt = conn.prepareStatement("SELECT * FROM `grade` WHERE `type`='선택' AND `grade`!='F' AND `grade`!='U' AND `grade`!='W' AND `grade`!='I' AND `grade`!='R'");
+			
+			ResultSet result = stmt.executeQuery();
+			while(result.next())
+			{
+				ret.add(new SelectiveLecture(result.getString("number"), result.getString("code"), "선택(석/박사)", "전선", result.getString("credit")));
+			}
+			
+			result.close();
+			stmt.close();
+		}
+		catch(Exception e)
+		{
+			e.printStackTrace(System.err);
+		}
+		
+		return ret;
 	}
 }

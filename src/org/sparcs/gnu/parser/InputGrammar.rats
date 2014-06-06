@@ -88,7 +88,7 @@ private void Total =
 		curName = curType;
 		Element e = new Element("조건");
 		e.setAttribute("name", curType);
-		e.addContent((new Element("쿼리")).setText("SELECT `value` FROM `metadata` WHERE `index`='total_credit'"));
+		e.addContent((new Element("쿼리")).setText("SELECT `value` FROM `metadata` WHERE `index`='effective_credit'"));
 		e.addContent((new Element("최소")).setText(n1));
 		e.addContent((new Element("원문")).setText("총 " + n1 + "학점"));
 		root.addContent(e);

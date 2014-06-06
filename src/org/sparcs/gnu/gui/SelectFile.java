@@ -323,5 +323,17 @@ public class SelectFile extends GCCContainer{
 		new FileDrop(currentSugangPanel, fileBoarder, true, currentSugangListener);
 		new FileDrop(mainConfPanel, fileBoarder, true, mainConfListener);
 		new FileDrop(subConfPanel, fileBoarder, true, subConfListener);
+		
+		JButton clearButton = new JButton("Clear");
+		clearButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				txtfldTranscript.setText("");
+				mainConfText.setText("");
+				subConfText.setText("");
+				currentSugangText.setText("");
+			}
+		});
+		clearButton.setBounds(209, 313, 97, 23);
+		add(clearButton);
 	}
 }
