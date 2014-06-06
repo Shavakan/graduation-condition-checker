@@ -17,7 +17,8 @@ CREATE TABLE IF NOT EXISTS `grade` (
   `credit` INT NOT NULL DEFAULT '0',
   `au` INT NOT NULL DEFAULT '0',
   `grade` TEXT NOT NULL DEFAULT 'S',
-  `replace_from` TEXT NULL)
+  `replace_from` TEXT NULL,
+  `common_name` TEXT NULL)
 ;
 
 CREATE TABLE IF NOT EXISTS `metadata` (

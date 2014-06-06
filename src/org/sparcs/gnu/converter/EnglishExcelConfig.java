@@ -15,6 +15,7 @@ public class EnglishExcelConfig extends ExcelConfig{
 		column_map.put("Credit", "credit");
 		column_map.put("AU", "au");
 		column_map.put("Grade", "grade");
+		column_map.put("CourseName in Korean", "common_name");
 
 		Map<String, String> semester_map = new HashMap<>();
 		semester_map.put("Transfer", "transfer");

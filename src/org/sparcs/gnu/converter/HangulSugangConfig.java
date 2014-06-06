@@ -11,5 +11,6 @@ public class HangulSugangConfig extends ExcelConfig {
 		column_map.put("과목구분", "type");
 		column_map.put("학점", "credit");
 		column_map.put("AU", "au");
+		column_map.put("과목명", "common_name");
 	}
 }

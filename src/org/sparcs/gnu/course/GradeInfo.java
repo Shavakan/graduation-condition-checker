@@ -211,16 +211,22 @@ public class GradeInfo {
 				String code = result.getString(1);
 				String credit = result.getString(2);
 				String before = result.getString(3);
+				String commonName = result.getString(4);
 				if(credit.trim().equals("0"))
 					continue;
+				String temp = "";
 				if(before == null || before.trim().length() == 0)
 				{
-					ret.add(code + ": " + credit);
+					temp += (code);
 				}
 				else
 				{
-					ret.add(before + " -> " + code + ": " + credit);
+					temp += (before + " -> ");
 				}
+				if(commonName != null && commonName.length() > 0)
+					temp += (" " + commonName);
+				temp +=  " (" + credit + ")";
+				ret.add(temp);
 			}
 			result.close();
 			stmt.close();

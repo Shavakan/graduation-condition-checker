@@ -16,6 +16,7 @@ public class HangulExcelConfig extends ExcelConfig{
 		column_map.put("학", "credit");
 		column_map.put("AU", "au");
 		column_map.put("성적", "grade");
+		column_map.put("교과목명", "common_name");
 		
 		Map<String, String> semester_map = new HashMap<>();
 		semester_map.put("기이수", "transfer");
