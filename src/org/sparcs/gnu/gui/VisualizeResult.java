@@ -484,6 +484,9 @@ public class VisualizeResult extends GCCContainer{
 
 			this.invalidate();
 		}
+		
+		// TODO: Override toString (possibly in two ways?)
+		// @undead. @shavakan
 	}
 }
 

@@ -1,32 +1,39 @@
 package org.sparcs.gnu.gui;
 
-import javax.swing.DefaultListModel;
-import javax.swing.JPanel;
+import java.awt.Color;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Set;
+
+import javax.swing.AbstractListModel;
+import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.ListModel;
 import javax.swing.border.LineBorder;
 
-import java.awt.Color;
-
-import javax.swing.JButton;
-import javax.swing.AbstractListModel;
-
 import org.sparcs.gnu.catalog.MutualRecog;
 
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import java.util.List;
-
 public class SelectMutual extends GCCContainer {
+	
+	private static final long serialVersionUID = 1L;
+	private HashMap<String, MutualRecog> mutualAll;
+	private HashMap<String, MutualRecog> mutualSelected;
 
 	/**
 	 * Create the panel.
 	 */
 	public SelectMutual(GUIMain root) {
 		super(root);
-		setLayout(null);
-		
+
+		mutualAll = new HashMap<String, MutualRecog>();
+		mutualSelected = new HashMap<String, MutualRecog>();
+		initialize();
+	}
+	
+	private void initialize() {
 		JLabel lblInstruction = new JLabel("Select mutually recognized courses for your double major / minor:");
 		lblInstruction.setBounds(6, 6, 419, 16);
 		add(lblInstruction);
@@ -41,7 +48,9 @@ public class SelectMutual extends GCCContainer {
 		
 		final JList listAllCourses = new JList();
 		listAllCourses.setModel(new AbstractListModel() {
-			String[] values = new String[] {"피카츄", "라이츄", "파이리", "꼬부기", "버터플", "야도란", "피죤투", "또가스"};
+			// TODO: Get model from mutualAll
+			// @undead, @shavakan
+			String[] values = new String[] {"A", "b", "c", "d"};
 			public int getSize() {
 				return values.length;
 			}
@@ -59,9 +68,8 @@ public class SelectMutual extends GCCContainer {
 		add(listSelectedCourses);
 		
 		JButton btnAdd = new JButton("Add >");
-		btnAdd.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseClicked(MouseEvent e) {
+		btnAdd.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
 				List<String> selectedList = listAllCourses.getSelectedValuesList();
 				if (selectedList.size() == 0) {
 					return;
@@ -69,7 +77,6 @@ public class SelectMutual extends GCCContainer {
 				else {
 					ListModel update = listSelectedCourses.getModel();
 					for (String str : selectedList) {
-						((DefaultListModel) update).addElement(str);
 					}
 					listSelectedCourses.setModel(update);
 				}
@@ -79,9 +86,8 @@ public class SelectMutual extends GCCContainer {
 		add(btnAdd);
 		
 		JButton buttonRemove = new JButton("< Remove");
-		buttonRemove.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseClicked(MouseEvent e) {
+		buttonRemove.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
 				int[] selectedIdx = listSelectedCourses.getSelectedIndices();
 				if (selectedIdx.length == 0) {
 					return;
@@ -96,6 +102,15 @@ public class SelectMutual extends GCCContainer {
 		buttonRemove.setBounds(198, 109, 88, 29);
 		add(buttonRemove);
 		
+		JButton buttonPrev = new JButton("<< Previous");
+		buttonPrev.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				root.changeWindow(GUIMain.selectFile);
+			}
+		});
+		buttonPrev.setBounds(6, 175, 107, 29);
+		add(buttonPrev);
+		
 		JButton btnNext = new JButton("Next >>");
 		btnNext.setBounds(371, 175, 110, 29);
 		add(btnNext);
@@ -103,6 +118,8 @@ public class SelectMutual extends GCCContainer {
 	
 	public void update(List<MutualRecog> mutualList)
 	{
-		
+		for(MutualRecog mutual : mutualList) {
+			mutualSelected.put(mutual.getExceptionOrigin(), mutual);
+		}
 	}
 }
