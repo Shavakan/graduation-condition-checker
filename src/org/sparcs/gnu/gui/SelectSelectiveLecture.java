@@ -170,6 +170,7 @@ public class SelectSelectiveLecture extends GCCContainer {
 		for(int k=0; k<newList.length; k++)
 			newList[k] = selectionList.get(k);
 		listAllCourses.setListData(newList);
+		listSelectedCourses.setListData(new SelectiveLecture[0]);
 		
 		if(newList.length == 0)
 		{

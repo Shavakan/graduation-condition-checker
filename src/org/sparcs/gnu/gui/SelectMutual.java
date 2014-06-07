@@ -170,6 +170,7 @@ public class SelectMutual extends GCCContainer {
 		for(int k=0; k<newList.length; k++)
 			newList[k] = mutualList.get(k);
 		listAllCourses.setListData(newList);
+		listSelectedCourses.setListData(new MutualRecog[0]);
 		if(newList.length == 0)
 		{
 			root.changeWindow(GUIMain.selectSelectiveLecture);
