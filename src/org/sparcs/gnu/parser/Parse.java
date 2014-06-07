@@ -10,25 +10,14 @@ import org.jdom2.Element;
 import org.jdom2.input.SAXBuilder;
 import org.jdom2.output.Format;
 import org.jdom2.output.XMLOutputter;
-import org.sparcs.gnu.catalog.Catalog;
 
 import xtc.parser.ParseError;
 import xtc.parser.SemanticValue;
 
 public class Parse {
-
-	/**
-	 * Parse specification written in intermediate representation 
-	 * @param input
-	 * @return {@link Catalog} instance
-	 */
-	public static Catalog parseCatalog(String input) {
-		Catalog result = null;
-		//TODO implement
-		
-		return result;
-	}
-
+	
+	private Parse() {}
+	
 	/**
 	 * Parse user input to make intermediate representation
 	 * @param conf
