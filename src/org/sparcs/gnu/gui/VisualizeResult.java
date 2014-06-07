@@ -5,23 +5,21 @@ import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Point;
 import java.awt.Rectangle;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
-import java.awt.image.BufferedImage;
-import java.io.File;
 import java.util.HashMap;
 import java.util.List;
 
-import javax.imageio.ImageIO;
+import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.ToolTipManager;
 
+import org.apache.commons.lang3.StringEscapeUtils;
 import org.sparcs.gnu.checker.ProcessInfo;
-import javax.swing.JButton;
-import java.awt.event.ActionListener;
-import java.awt.event.ActionEvent;
 
 public class VisualizeResult extends GCCContainer{
 	/**
@@ -201,82 +199,32 @@ public class VisualizeResult extends GCCContainer{
 			List<String> taken = info.getTakenList(keyName);
 			if(taken != null)
 			{
-				String greenText = "<html><body>";
+				String greenText = "<html><head><style type=\"text/css\">body{color:#423018;}p{margin-bottom:5px;}#h{margin-top:3px;}</style></head><body><p id=\"h\"><b>수강과목 :</b></p>";
 				for(String item : taken)
 				{
-					greenText += "<p><b>" + escapeHtml(item) + "</b></p><br>";
+					greenText += "<p><b>" + StringEscapeUtils.escapeHtml4(item) + "</b></p>";
 				}
-				File pic = new File("resource" + File.separator + "green.jpg");
-				long defaultWidth = 200;
-				long defaultHeight = 200;
-				try
-				{
-					BufferedImage bimg = ImageIO.read(pic);
-					defaultHeight = bimg.getHeight();
-					defaultWidth = bimg.getWidth();
-				}
-				catch(Exception e)
-				{
-					e.printStackTrace(System.err);
-				}
-				double ratio = (double)defaultWidth / 200;
-				defaultWidth = 200;
-				defaultHeight = Math.round((double)defaultHeight / ratio);
-				greenText += "<img src=\"" + pic.toURI() + "\" height=" + defaultHeight + " width=" + defaultWidth + "></body></html>";
+				greenText += "</body></html>";
 				bar.setGreenText(greenText);
 			}
 			List<String> exceptionList = info.getExceptionList(keyName);
 			if(exceptionList != null)
 			{
-				String yellowText = "<html><body>";
+				String yellowText = "<html><head><style type=\"text/css\">p{margin-bottom:5px;}</style></head><body>";
 				for(String item : exceptionList)
 				{
-					yellowText += "<p><b>" + escapeHtml(item) + "</b></p><br>";
+					yellowText += "<p><b>" + StringEscapeUtils.escapeHtml4(item) + "</b></p>";
 				}
-				File pic = new File("resource" + File.separator + "yellow.jpg");
-				long defaultWidth = 200;
-				long defaultHeight = 200;
-				try
-				{
-					BufferedImage bimg = ImageIO.read(pic);
-					defaultHeight = bimg.getHeight();
-					defaultWidth = bimg.getWidth();
-				}
-				catch(Exception e)
-				{
-					e.printStackTrace(System.err);
-				}
-				double ratio = (double)defaultWidth / 200;
-				defaultWidth = 200;
-				defaultHeight = Math.round((double)defaultHeight / ratio);
-				yellowText += "<img src=\"" + pic.toURI() + "\" height=" + defaultHeight + " width=" + defaultWidth + "></body></html>";
 				bar.setYellowText(yellowText);
 			}
 			List<String> failList = info.getFailList(keyName);
 			if(failList != null)
 			{
-				String redText = "<html><body>";
+				String redText = "<html><head><style type=\"text/css\">p{color:#ff0000;margin-bottom:5px;}</style></head><body>";
 				for(String item : failList)
 				{
-					redText += "<p><b>" + escapeHtml(item) + "</b></p><br>";
+					redText += "<p><b>" + StringEscapeUtils.escapeHtml4(item) + "</b></p>";
 				}
-				File pic = new File("resource" + File.separator + "red.jpg");
-				long defaultWidth = 200;
-				long defaultHeight = 200;
-				try
-				{
-					BufferedImage bimg = ImageIO.read(pic);
-					defaultHeight = bimg.getHeight();
-					defaultWidth = bimg.getWidth();
-				}
-				catch(Exception e)
-				{
-					e.printStackTrace(System.err);
-				}
-				double ratio = (double)defaultWidth / 200;
-				defaultWidth = 200;
-				defaultHeight = Math.round((double)defaultHeight / ratio);
-				redText += "<img src=\"" + pic.toURI() + "\" height=" + defaultHeight + " width=" + defaultWidth + "></body></html>";
 				bar.setRedText(redText);
 			}
 
@@ -284,13 +232,12 @@ public class VisualizeResult extends GCCContainer{
 			if (barName.equals("평점"))
 				label.setText("["+String.format("%.02f", (complete))+"/"+String.format("%.01f", (total-exception))+"]");	
 			else
-				label.setText("["+Math.round(complete)+"/"+Math.round(total-exception)+"]");	
+				label.setText("["+Math.round(complete)+"/"+Math.round(total-exception)+"]");
+			if (barName.equals("이수학점"))
+				bar.setRedText("<html><head><style type=\"text/css\">p{color:#ff0000;margin-top:3px;margin-bottom:3px;}</style></head><body><p><b>" + (Math.round(total-exception)-Math.round(complete)) + "학점이 부족합니다!</b></p></body></html>");
+			if (barName.equals("인선학점"))
+				bar.setRedText("<html><head><style type=\"text/css\">p{color:#ff0000;margin-top:3px;margin-bottom:3px;}</style></head><body><p><b>인문사회선택 " + (Math.round(total-exception)-Math.round(complete))/3 + "과목이 부족합니다!</b></p></body></html>");
 		}
-	}
-	
-	private String escapeHtml(String input) {
-		String ret = input.replace("&", "&amp;").replace("\"", "&quot;").replace("<", "&lt;").replace(">", "&gt;");
-		return ret;
 	}
 
 	private class BarGraph extends JPanel
