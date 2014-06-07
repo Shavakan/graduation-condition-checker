@@ -26,7 +26,6 @@ public class GraduationChecker {
 	 */
 	public GraduationChecker(Catalog catalog)
 	{
-		//TODO fill in
 		this.catalog = catalog;
 	}
 	
@@ -42,7 +41,6 @@ public class GraduationChecker {
 	public ProcessInfo process(GradeInfo info, List<MutualRecog> mutualRecogs)
 	{
 		info.preprocess();
-		//TODO fill in
 		
 		ProcessInfo result = new ProcessInfo();
 		
