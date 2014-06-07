@@ -56,7 +56,6 @@ private String Course =
 	{
 		String s = "";
 		for(Character c : f) s += c;
-		System.out.println(s+b);
 
 		yyValue = s + b;
 	};
