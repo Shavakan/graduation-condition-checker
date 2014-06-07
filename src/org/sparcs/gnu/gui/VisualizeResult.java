@@ -204,7 +204,7 @@ public class VisualizeResult extends GCCContainer{
 				String greenText = "<html><body>";
 				for(String item : taken)
 				{
-					greenText += "<p><b>" + item + "</b></p><br>";
+					greenText += "<p><b>" + escapeHtml(item) + "</b></p><br>";
 				}
 				File pic = new File("resource" + File.separator + "green.jpg");
 				long defaultWidth = 200;
@@ -231,7 +231,7 @@ public class VisualizeResult extends GCCContainer{
 				String yellowText = "<html><body>";
 				for(String item : exceptionList)
 				{
-					yellowText += "<p><b>" + item + "</b></p><br>";
+					yellowText += "<p><b>" + escapeHtml(item) + "</b></p><br>";
 				}
 				File pic = new File("resource" + File.separator + "yellow.jpg");
 				long defaultWidth = 200;
@@ -258,7 +258,7 @@ public class VisualizeResult extends GCCContainer{
 				String redText = "<html><body>";
 				for(String item : failList)
 				{
-					redText += "<p><b>" + item + "</b></p><br>";
+					redText += "<p><b>" + escapeHtml(item) + "</b></p><br>";
 				}
 				File pic = new File("resource" + File.separator + "red.jpg");
 				long defaultWidth = 200;
@@ -286,6 +286,11 @@ public class VisualizeResult extends GCCContainer{
 			else
 				label.setText("["+Math.round(complete)+"/"+Math.round(total-exception)+"]");	
 		}
+	}
+	
+	private String escapeHtml(String input) {
+		String ret = input.replace("&", "&amp;").replace("\"", "&quot;").replace("<", "&lt;").replace(">", "&gt;");
+		return ret;
 	}
 
 	private class BarGraph extends JPanel
