@@ -113,8 +113,8 @@ public class SelectFile extends GCCContainer{
 								param.add(m);
 						}
 
-					((SelectMutual)root.getWindow(GUIMain.selectMutual)).update(param);
 					root.changeWindow(GUIMain.selectMutual);
+					((SelectMutual)root.getWindow(GUIMain.selectMutual)).update(param);
 				} catch (Exception e1) {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();

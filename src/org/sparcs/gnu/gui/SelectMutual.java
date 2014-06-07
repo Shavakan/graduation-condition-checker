@@ -155,8 +155,8 @@ public class SelectMutual extends GCCContainer {
 				}
 				root.currentMutualList = ret;
 				
-				((SelectSelectiveLecture)root.getWindow(GUIMain.selectSelectiveLecture)).update(root.currentInfo.getSelectiveList());
 				root.changeWindow(GUIMain.selectSelectiveLecture);
+				((SelectSelectiveLecture)root.getWindow(GUIMain.selectSelectiveLecture)).update(root.currentInfo.getSelectiveList());
 			}
 		});
 		btnNext.setBounds(413, 174, 110, 29);
@@ -165,15 +165,15 @@ public class SelectMutual extends GCCContainer {
 	
 	public void update(List<MutualRecog> mutualList)
 	{
-		root.currentMutualList = null;
+		root.currentMutualList = mutualList;
 		MutualRecog[] newList = new MutualRecog[mutualList.size()];
 		for(int k=0; k<newList.length; k++)
 			newList[k] = mutualList.get(k);
 		listAllCourses.setListData(newList);
 		if(newList.length == 0)
 		{
-			((SelectSelectiveLecture)root.getWindow(GUIMain.selectSelectiveLecture)).update(root.currentInfo.getSelectiveList());
 			root.changeWindow(GUIMain.selectSelectiveLecture);
+			((SelectSelectiveLecture)root.getWindow(GUIMain.selectSelectiveLecture)).update(root.currentInfo.getSelectiveList());
 		}
 	}
 }

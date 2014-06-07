@@ -165,7 +165,7 @@ public class SelectSelectiveLecture extends GCCContainer {
 	
 	public void update(List<SelectiveLecture> selectionList)
 	{
-		root.currentSelectiveLectureList = new LinkedList<>();
+		root.currentSelectiveLectureList = selectionList;
 		SelectiveLecture[] newList = new SelectiveLecture[selectionList.size()];
 		for(int k=0; k<newList.length; k++)
 			newList[k] = selectionList.get(k);
@@ -173,8 +173,8 @@ public class SelectSelectiveLecture extends GCCContainer {
 		
 		if(newList.length == 0)
 		{
-			((VisualizeResult)root.getWindow(GUIMain.visualizeResult)).update(root.processAll());
 			root.changeWindow(GUIMain.visualizeResult);
+			((VisualizeResult)root.getWindow(GUIMain.visualizeResult)).update(root.processAll());
 		}
 	}
 }
