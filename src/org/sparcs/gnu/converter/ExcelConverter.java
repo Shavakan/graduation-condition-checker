@@ -115,7 +115,7 @@ class ExcelConverter extends Converter {
 			}
 			
 			PreparedStatement stmt = conn.prepareStatement("INSERT INTO `grade`(" + sqlFields + ") VALUES(" + format + ")");
-			for(startRow = startRow + 1; startRow < sheet.getRows(); startRow++)
+			skip_empty_row : for(startRow = startRow + 1; startRow < sheet.getRows(); startRow++)
 			{
 				Cell[] cells = sheet.getRow(startRow);
 				stmt.clearParameters();
@@ -124,6 +124,8 @@ class ExcelConverter extends Converter {
 					int index = fieldToIndex.get(key);
 					String finalKey = finalConfig.transformColumn(key);
 					String finalValue = finalConfig.transformValue(key, cells[index].getContents().trim());
+					if(finalValue.length() == 0)
+						continue skip_empty_row;
 					
 					int sqlIndex = finalFieldList.indexOf(finalKey);
 					stmt.setString(sqlIndex + 1, finalValue);
